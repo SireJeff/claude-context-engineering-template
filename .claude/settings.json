@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "context_engineering": {
+    "enabled": true,
+    "max_context_tokens": 200000,
+    "max_output_tokens": 30000,
+    "target_utilization": 0.40,
+    "compact_trigger": 0.35
+  },
+  "rpi_workflow": {
+    "enabled": true,
+    "phases": ["research", "plan", "implement"],
+    "require_human_approval": true,
+    "auto_doc_update": true
+  },
+  "documentation": {
+    "self_maintaining": true,
+    "verify_after_changes": true,
+    "line_number_tolerance": 10
+  },
+  "agents": {
+    "default": "context-engineer",
+    "auto_select": true
+  },
+  "commands": {
+    "rpi_commands": ["/rpi-research", "/rpi-plan", "/rpi-implement"],
+    "validation_commands": ["/verify-docs-current", "/validate-all"]
+  }
+}
