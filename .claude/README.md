@@ -56,7 +56,13 @@ This directory contains a comprehensive context engineering system for the {{PRO
 |---------|-------------|
 | `/validate-all` | Complete validation suite |
 | `/verify-docs-current` | Documentation freshness validation |
-| {{ADDITIONAL_COMMANDS}} |
+
+### System Commands (NEW in v1.1)
+| Command | Description |
+|---------|-------------|
+| `/help` | Comprehensive help system |
+| `/collab` | Team collaboration (handoffs, sync) |
+| `/analytics` | Local usage statistics |
 
 **Command Location:** `.claude/commands/*.md`
 
@@ -138,7 +144,14 @@ This directory contains a comprehensive context engineering system for the {{PRO
 │   ├── routing/         # Task routing indexes
 │   └── search/          # Search pattern indexes
 ├── agents/              # Specialized agent definitions
-└── commands/            # Custom command definitions
+├── commands/            # Custom command definitions
+├── tools/               # CLI tooling (NEW v1.1)
+├── schemas/             # JSON validation schemas (NEW v1.1)
+├── config/              # Environment configurations (NEW v1.1)
+├── team/                # Team collaboration config (NEW v1.1)
+├── knowledge/           # Shared knowledge base (NEW v1.1)
+├── standards/           # Community standards (NEW v1.1)
+└── ci-templates/        # CI/CD workflow templates (NEW v1.1)
 ```
 
 ---
@@ -241,4 +254,4 @@ This agent will:
 ---
 
 *Configuration updated: {{DATE}}*
-*Version: 1.0.0 (Template)*
+*Version: 1.1.0 (Template)*

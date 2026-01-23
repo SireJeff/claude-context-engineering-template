@@ -1,10 +1,10 @@
 # Claude Code Context Engineering Template
 
-![GitHub Stars](https://img.shields.io/github/stars/yourusername/claude-code-context-engineering-template?style=social)
-![GitHub Forks](https://img.shields.io/github/forks/yourusername/claude-code-context-engineering-template?style=social)
-![GitHub License](https://img.shields.io/github/license/yourusername/claude-code-context-engineering-template)
-![GitHub Issues](https://img.shields.io/github/issues/yourusername/claude-code-context-engineering-template)
-![GitHub Pull Requests](https://img.shields.io/github/pulls/yourusername/claude-code-context-engineering-template)
+![GitHub Stars](https://img.shields.io/github/stars/SireJeff/claude-context-engineering-template?style=social)
+![GitHub Forks](https://img.shields.io/github/forks/SireJeff/claude-context-engineering-template?style=social)
+![GitHub License](https://img.shields.io/github/license/SireJeff/claude-context-engineering-template)
+![GitHub Issues](https://img.shields.io/github/issues/SireJeff/claude-context-engineering-template)
+![GitHub Pull Requests](https://img.shields.io/github/pulls/SireJeff/claude-context-engineering-template)
 
 **A sophisticated, portable template for implementing context engineering in any codebase with Claude Code.** 
 
@@ -19,6 +19,15 @@ This template enables **zero-search context loading**, **<40% context window uti
 - **Self-maintaining documentation** - Automated validation prevents documentation drift
 - **Proven results** - 77% time savings based on real-world case studies
 
+## 🆕 What's New in v1.1.0
+
+- **CLI Tooling** - `npx claude-context init|validate|diagnose` commands
+- **JSON Schema Validation** - 7 schemas for settings, agents, commands, workflows
+- **Team Collaboration** - `/collab` command for handoffs, shared knowledge base
+- **CI/CD Templates** - GitHub Actions for automated validation
+- **Community Standards** - Extension guidelines, quality checklist
+- **New Commands** - `/help`, `/collab`, `/analytics`
+
 ## 🔧 Quick Start
 
 ### 1. Copy Template to Your Repository
@@ -29,14 +38,21 @@ cp -r /path/to/template_claude/.claude ./.claude
 cp /path/to/template_claude/CLAUDE.md ./CLAUDE.md
 ```
 
-### 2. Initialize with Context Engineer Agent
+### 2. Initialize with CLI or Agent
 
+**Option A: CLI (Recommended)**
+```bash
+cd .claude/tools && npm install
+npx claude-context init
+```
+
+**Option B: Context Engineer Agent**
 ```bash
 # In Claude Code CLI
 @context-engineer "Initialize context engineering for this repository"
 ```
 
-The context-engineer agent will:
+The initialization will:
 1. Analyze your codebase structure
 2. Discover 8-15 major workflows
 3. Create workflow documentation with file:line references
@@ -68,45 +84,71 @@ your-project/
     ├── README.md                # Configuration overview
     ├── RPI_WORKFLOW_PLAN.md     # RPI methodology documentation
     │
-    ├── agents/                  # Specialized agents
-    │   ├── context-engineer.md  # Initialization agent (THE TRANSFORMER)
-    │   ├── core-architect.md    # System architecture, state machines
-    │   ├── database-ops.md      # Migrations, schema, queries
-    │   ├── api-developer.md     # Endpoints, contracts
+    ├── agents/                  # Specialized agents (6)
+    │   ├── context-engineer.md  # Initialization agent
+    │   ├── core-architect.md    # System architecture
+    │   ├── database-ops.md      # Database operations
+    │   ├── api-developer.md     # API development
     │   ├── integration-hub.md   # External services
     │   └── deployment-ops.md    # CI/CD, infrastructure
     │
-    ├── commands/                # Custom slash commands
+    ├── commands/                # Custom slash commands (8)
     │   ├── rpi-research.md      # Research phase
     │   ├── rpi-plan.md          # Plan phase
     │   ├── rpi-implement.md     # Implementation phase
     │   ├── verify-docs-current.md
-    │   └── validate-all.md
+    │   ├── validate-all.md
+    │   ├── help.md              # Help system (NEW)
+    │   ├── collab.md            # Team collaboration (NEW)
+    │   └── analytics.md         # Usage analytics (NEW)
+    │
+    ├── tools/                   # CLI tooling (NEW)
+    │   ├── package.json
+    │   ├── bin/claude-context.js
+    │   └── lib/                 # Core modules
+    │
+    ├── schemas/                 # JSON schemas (NEW)
+    │   ├── settings.schema.json
+    │   ├── agent.schema.json
+    │   └── ...                  # 7 total schemas
+    │
+    ├── config/                  # Configuration (NEW)
+    │   ├── base.json
+    │   └── environments/        # Dev, staging, prod
+    │
+    ├── team/                    # Team collaboration (NEW)
+    │   ├── config.json
+    │   └── roles.json
+    │
+    ├── knowledge/               # Shared knowledge (NEW)
+    │   ├── shared/decisions/    # ADRs
+    │   ├── shared/patterns/     # Reusable patterns
+    │   └── sessions/            # Session handoffs
+    │
+    ├── standards/               # Community standards (NEW)
+    │   ├── EXTENSION_GUIDELINES.md
+    │   └── QUALITY_CHECKLIST.md
+    │
+    ├── ci-templates/            # CI/CD templates (NEW)
+    │   └── github-actions/
     │
     ├── context/                 # Pre-computed knowledge
-    │   ├── WORKFLOW_INDEX.md    # Master workflow catalog
-    │   ├── CODE_TO_WORKFLOW_MAP.md  # Reverse index
-    │   ├── ARCHITECTURE_SNAPSHOT.md
-    │   ├── KNOWN_GOTCHAS.md
-    │   └── workflows/           # Detailed workflow files
-    │       └── [workflow].md    # One per major workflow
+    │   ├── WORKFLOW_INDEX.md
+    │   ├── CODE_TO_WORKFLOW_MAP.md
+    │   └── workflows/
     │
     ├── indexes/                 # 3-level navigation
-    │   ├── workflows/CATEGORY_INDEX.md
-    │   ├── agents/CATEGORY_INDEX.md
-    │   ├── code/CATEGORY_INDEX.md
-    │   ├── routing/CATEGORY_INDEX.md
-    │   └── search/CATEGORY_INDEX.md
+    │   ├── workflows/
+    │   ├── agents/
+    │   ├── code/
+    │   ├── routing/
+    │   └── search/
     │
     ├── research/                # RPI research artifacts
-    │   ├── RESEARCH_TEMPLATE.md
-    │   ├── active/
-    │   └── completed/
+    │   └── active/, completed/
     │
     └── plans/                   # RPI plan artifacts
-        ├── PLAN_TEMPLATE.md
-        ├── active/
-        └── completed/
+        └── active/, completed/
 ```
 
 ## ⚖️ Hard Limits
@@ -334,9 +376,9 @@ Based on context engineering principles from:
 
 ---
 
-**Version:** 1.0.0  
-**Created:** 2025-12-06  
-**Validated:** DeadlineKiller (Python, FastAPI, PostgreSQL)  
+**Version:** 1.1.0
+**Updated:** 2025-01-24
+**Validated:** DeadlineKiller (Python, FastAPI, PostgreSQL)
 **Applicable To:** Any codebase (web, mobile, data, infrastructure)
 
 ### SEO Keywords

@@ -8,6 +8,7 @@ We love contributions! Whether you're fixing a bug, improving documentation, or 
 - Basic knowledge of Markdown
 - Familiarity with the context engineering concepts described in the README
 - Git knowledge (for submitting changes)
+- Node.js 18+ (for CLI tooling contributions)
 
 ### Setting Up
 1. Fork the repository
@@ -27,6 +28,17 @@ We love contributions! Whether you're fixing a bug, improving documentation, or 
 - **Clarity**: Write clear, concise documentation
 - **Consistency**: Maintain consistent terminology and formatting
 - **Completeness**: Ensure all features and usage patterns are documented
+
+### CLI Tooling Contributions
+For changes to `.claude/tools/`:
+- Follow existing code patterns in `lib/`
+- Add appropriate error handling using `lib/errors.js` classes
+- Update schemas in `.claude/schemas/` if adding new structures
+- Run `npx claude-context validate --all` before submitting
+
+### Quality Standards
+- Review the [Quality Checklist](.claude/standards/QUALITY_CHECKLIST.md)
+- For extensions, follow the [Extension Guidelines](.claude/standards/EXTENSION_GUIDELINES.md)
 
 ## Issue Reporting
 

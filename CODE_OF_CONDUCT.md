@@ -33,7 +33,7 @@ This Code of Conduct applies within all project spaces (including issue trackers
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at [CONTACT_EMAIL or OTHER CONTACT METHOD]. All complaints will be reviewed and investigated promptly and fairly.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at https://github.com/SireJeff/claude-context-engineering-template/issues. All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the reporter of any incident.
 
@@ -71,4 +71,4 @@ This Code of Conduct is adapted from the [Contributor Covenant][homepage], versi
 
 [homepage]: https://www.contributor-covenant.org
 
-For answers to common questions regarding this code of conduct, see the FAQs at https://www.contributor-covenant.org/faq. Contact [CONTACT_EMAIL or OTHER CONTACT METHOD] with questions or concerns.
+For answers to common questions regarding this code of conduct, see the FAQs at https://www.contributor-covenant.org/faq. Contact https://github.com/SireJeff/claude-context-engineering-template/issues with questions or concerns.
