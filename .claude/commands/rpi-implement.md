@@ -1,15 +1,34 @@
 ---
+name: rpi-implement
+version: "1.0.0"
 description: "RPI Implement Phase: Execute plan with atomic changes and continuous testing"
 category: "rpi-orchestration"
 rpi_phase: "implement"
 context_budget_estimate: "60K tokens"
 typical_context_usage: "30%"
-prerequisites: ["/rpi-plan approved"]
+prerequisites:
+  - "Plan document exists in .claude/plans/active/"
+  - "Plan has been approved by human"
+  - "Git branch is clean"
+  - "All tests currently passing"
+outputs:
+  - "Implemented feature/fix"
+  - "Updated documentation with new line numbers"
+  - "Commits with descriptive messages"
+  - "Archived plan in .claude/plans/completed/"
+next_commands: ["/verify-docs-current", "/validate-all"]
+related_agents: ["core-architect", "database-ops", "api-developer", "deployment-ops"]
+examples:
+  - command: "/rpi-implement user-authentication"
+    description: "Execute the approved authentication plan"
+  - command: "/rpi-implement payment-bug-fix"
+    description: "Implement the approved bug fix"
 exit_criteria:
   - "All plan steps completed"
   - "All tests passing"
   - "Documentation updated"
   - "Changes committed"
+  - "Plan archived to completed/"
 ---
 
 # RPI Implement Phase

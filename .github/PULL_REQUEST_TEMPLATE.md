@@ -1,43 +1,69 @@
----
-name: Pull Request
-about: Submit a pull request to improve this project
-title: ''
-labels: ''
-assignees: ''
-
----
 ## Description
 
-Please include a summary of the change and which issue it addresses. Include any relevant motivation and context.
+<!-- Describe your changes in detail -->
+
+## Related Issue
+
+<!-- Link to the issue this PR addresses -->
+Fixes #
+
+## Type of Change
+
+<!-- Check one or more -->
+
+- [ ] Bug fix (non-breaking change that fixes an issue)
+- [ ] New feature (non-breaking change that adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to change)
+- [ ] Documentation update
+- [ ] Schema change
+- [ ] CLI change
+- [ ] Other:
 
 ## Changes Made
 
-List the changes made in this PR:
+<!-- List the specific changes -->
 
-## Motivation and Context
+-
+-
+-
 
-Why is this change required? What problem does it solve?
+## Testing
 
-## How Has This Been Tested?
+<!-- Describe how you tested your changes -->
 
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce.
+- [ ] Ran `npx claude-context validate --all`
+- [ ] Tested with sample project
+- [ ] Added/updated tests (if applicable)
+- [ ] Tested on multiple platforms (if applicable)
 
-## Types of Changes
+**Test commands run:**
+```bash
+# Commands used for testing
+```
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to change)
-- [ ] Documentation content changes
+## Documentation
 
-## Checklist:
+<!-- Check all that apply -->
 
-- [ ] I have read the [CONTRIBUTING.md](CONTRIBUTING.md) document.
-- [ ] I have added tests to cover my changes.
-- [ ] All new and existing tests passed.
-- [ ] My code follows the code style of this project.
-- [ ] I have updated the documentation as needed.
-- [ ] I have added an entry to the CHANGELOG.md if this is a notable change.
+- [ ] README updated (if applicable)
+- [ ] CHANGELOG updated
+- [ ] Code comments added (if applicable)
+- [ ] Documentation files updated (if applicable)
 
-## Screenshots (if appropriate):
+## Checklist
+
+- [ ] My code follows the project's style guidelines
+- [ ] I have performed a self-review of my code
+- [ ] I have made corresponding changes to documentation
+- [ ] My changes generate no new warnings
+- [ ] I have added tests that prove my fix/feature works
+- [ ] New and existing tests pass locally
+- [ ] Any dependent changes have been merged
+
+## Breaking Changes
+
+<!-- If this is a breaking change, describe what breaks and how to migrate -->
 
 ## Additional Notes
+
+<!-- Any additional information for reviewers -->

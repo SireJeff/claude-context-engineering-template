@@ -1,16 +1,30 @@
 ---
+name: rpi-research
+version: "1.0.0"
 description: "RPI Research Phase: Systematic codebase exploration for feature/fix analysis"
 category: "rpi-orchestration"
 rpi_phase: "research"
 context_budget_estimate: "50K tokens"
 typical_context_usage: "25%"
+prerequisites: []
+outputs:
+  - "Research document in .claude/research/active/[name]_research.md"
+  - "File inventory with line references"
+  - "Call chain diagrams"
+  - "Dependency map"
+next_commands: ["/rpi-plan"]
+related_agents: ["context-engineer", "core-architect"]
+examples:
+  - command: "/rpi-research user-authentication"
+    description: "Research authentication flow for new feature"
+  - command: "/rpi-research payment-bug-fix"
+    description: "Investigate payment processing issue"
 exit_criteria:
   - "Research document created in .claude/research/active/"
   - "All relevant files identified (3-20 files)"
   - "Call chains traced with line numbers"
   - "Dependencies mapped"
   - "150-word summary generated"
-enables_commands: ["/rpi-plan"]
 ---
 
 # RPI Research Phase

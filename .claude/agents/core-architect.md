@@ -1,3 +1,37 @@
+---
+name: core-architect
+version: "1.0.0"
+displayName: "Core Architect"
+description: "System architecture, state machines, and high-level design specialist"
+category: "architecture"
+complexity: "high"
+context_budget: "~50K tokens"
+capabilities:
+  - "system-architecture-design"
+  - "state-machine-analysis"
+  - "dependency-mapping"
+  - "scalability-planning"
+  - "design-pattern-recommendation"
+workflows:
+  - "authentication"
+  - "system-core"
+  - "data-flow"
+commands: ["/rpi-research", "/rpi-plan"]
+dependencies:
+  agents: []
+  commands: ["/rpi-research"]
+hooks:
+  pre_invoke: null
+  post_invoke: "verify-docs-current"
+examples:
+  - invocation: '@core-architect "Document system architecture"'
+    description: "Create comprehensive architecture documentation"
+  - invocation: '@core-architect "Analyze state transitions in [component]"'
+    description: "Map state machine and transitions"
+  - invocation: '@core-architect "Identify scalability bottlenecks"'
+    description: "Performance and scaling analysis"
+---
+
 # Core Architect Agent
 
 **Purpose:** System architecture, state machines, and high-level design

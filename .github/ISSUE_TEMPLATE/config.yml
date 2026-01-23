@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/{{REPO_OWNER}}/{{REPO_NAME}}/blob/main/.claude/README.md
+    about: Read the documentation before opening an issue
+  - name: Discussions
+    url: https://github.com/{{REPO_OWNER}}/{{REPO_NAME}}/discussions
+    about: Ask questions and discuss ideas
+  - name: Extension Guidelines
+    url: https://github.com/{{REPO_OWNER}}/{{REPO_NAME}}/blob/main/.claude/standards/EXTENSION_GUIDELINES.md
+    about: Guidelines for creating and publishing extensions

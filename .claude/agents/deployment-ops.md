@@ -1,3 +1,37 @@
+---
+name: deployment-ops
+version: "1.0.0"
+displayName: "Deployment Operations"
+description: "CI/CD pipeline management, infrastructure as code, and deployment automation specialist"
+category: "deployment"
+complexity: "high"
+context_budget: "~45K tokens"
+capabilities:
+  - "ci-cd-pipeline-design"
+  - "infrastructure-as-code"
+  - "deployment-strategies"
+  - "environment-management"
+  - "monitoring-and-rollback"
+workflows:
+  - "deployment"
+  - "infrastructure"
+  - "ci-cd"
+commands: ["/rpi-research", "/rpi-plan", "/rpi-implement", "/validate-all"]
+dependencies:
+  agents: []
+  commands: []
+hooks:
+  pre_invoke: null
+  post_invoke: "verify-docs-current"
+examples:
+  - invocation: '@deployment-ops "Document deployment pipeline"'
+    description: "Create CI/CD documentation"
+  - invocation: '@deployment-ops "Review infrastructure configuration"'
+    description: "Audit IaC files and configurations"
+  - invocation: '@deployment-ops "Plan rollback strategy"'
+    description: "Design safe rollback procedures"
+---
+
 # Deployment Ops Agent
 
 **Purpose:** CI/CD pipeline management, infrastructure as code, and deployment automation

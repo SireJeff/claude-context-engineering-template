@@ -1,0 +1,56 @@
+# Claude Context Engineering - Ignored Files
+
+# Articles (kept separate)
+linkedin-article-english.md
+virgool-article.md
+
+# Local configuration (user-specific overrides)
+.claude/config/local.json
+
+# Logs
+.claude/logs/
+*.log
+
+# State persistence (for interrupted operations)
+.claude/state/
+
+# Extension registry cache
+.claude/registry/cache/
+
+# Analytics data (local only)
+.claude/analytics/*.json
+.claude/analytics/exports/
+
+# Session handoffs (may contain sensitive context)
+# Uncomment if you want to keep handoffs private
+# .claude/knowledge/sessions/*.md
+
+# Node modules (for CLI tools)
+.claude/tools/node_modules/
+
+# Generated files
+.claude/docs/generated/
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/snippets/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Environment files with secrets
+.env.local
+.env.*.local

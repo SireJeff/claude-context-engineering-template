@@ -1,0 +1,21 @@
+{
+  "$comment": "Local overrides - copy to local.json (gitignored)",
+  "$instructions": "This file is an example. Copy to local.json and customize.",
+
+  "logging": {
+    "level": "debug",
+    "file": ".claude/logs/claude-local.log"
+  },
+
+  "validation": {
+    "on_commit": false
+  },
+
+  "rpi_workflow": {
+    "require_human_approval": false
+  },
+
+  "telemetry": {
+    "enabled": false
+  }
+}

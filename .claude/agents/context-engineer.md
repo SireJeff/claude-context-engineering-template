@@ -1,3 +1,39 @@
+---
+name: context-engineer
+version: "1.0.0"
+displayName: "Context Engineer"
+description: "Initialization agent that transforms the template context engineering system for any codebase"
+category: "initialization"
+complexity: "very-high"
+context_budget: "~80K tokens (40%)"
+capabilities:
+  - "tech-stack-detection"
+  - "workflow-discovery"
+  - "template-population"
+  - "documentation-generation"
+  - "system-validation"
+  - "agent-creation"
+workflows:
+  - "initialization"
+  - "all-workflows"
+commands: ["/rpi-research", "/rpi-plan", "/rpi-implement", "/verify-docs-current", "/validate-all"]
+dependencies:
+  agents: []
+  commands: []
+hooks:
+  pre_invoke: null
+  post_invoke: null
+examples:
+  - invocation: '@context-engineer "Initialize context engineering for this repository"'
+    description: "Full initialization from template"
+  - invocation: '@context-engineer "Document workflow: [name]"'
+    description: "Create documentation for a specific workflow"
+  - invocation: '@context-engineer "Refresh workflow: [name]"'
+    description: "Update existing workflow documentation"
+  - invocation: '@context-engineer "Audit and refresh all workflows"'
+    description: "Full documentation refresh"
+---
+
 # Context Engineer Agent
 
 ## Overview

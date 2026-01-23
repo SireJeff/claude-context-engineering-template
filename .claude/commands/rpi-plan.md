@@ -1,17 +1,33 @@
 ---
+name: rpi-plan
+version: "1.0.0"
 description: "RPI Plan Phase: Create implementation blueprint with file:line precision"
 category: "rpi-orchestration"
 rpi_phase: "plan"
 context_budget_estimate: "35K tokens"
 typical_context_usage: "17%"
-prerequisites: ["/rpi-research completed"]
+prerequisites:
+  - "Research document exists in .claude/research/active/"
+  - "/rpi-research phase completed"
+outputs:
+  - "Plan document in .claude/plans/active/[name]_plan.md"
+  - "Modification table with file:line references"
+  - "Step-by-step implementation guide"
+  - "Test strategy"
+  - "Rollback plan"
+next_commands: ["/rpi-implement"]
+related_agents: ["core-architect", "database-ops", "api-developer"]
+examples:
+  - command: "/rpi-plan user-authentication"
+    description: "Create implementation plan for auth feature"
+  - command: "/rpi-plan payment-bug-fix"
+    description: "Plan the fix for payment issue"
 exit_criteria:
   - "Plan document created in .claude/plans/active/"
   - "All file modifications listed with line numbers"
   - "Step-by-step implementation defined"
   - "Test strategy documented"
   - "Human approval obtained"
-enables_commands: ["/rpi-implement"]
 ---
 
 # RPI Plan Phase

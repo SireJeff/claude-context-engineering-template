@@ -1,8 +1,27 @@
 ---
+name: verify-docs-current
+version: "1.0.0"
 description: "Verify documentation accuracy against current code"
 category: "validation"
 context_budget_estimate: "20K tokens"
 typical_context_usage: "10%"
+prerequisites: []
+outputs:
+  - "Verification report with accuracy status"
+  - "List of outdated line references"
+  - "Link validation results"
+next_commands: []
+related_agents: ["context-engineer"]
+examples:
+  - command: "/verify-docs-current src/services/payment.py"
+    description: "Check documentation for payment service"
+  - command: "/verify-docs-current src/api/routes.py"
+    description: "Verify API routes documentation"
+exit_criteria:
+  - "All affected workflows checked"
+  - "Line number accuracy calculated"
+  - "Links validated"
+  - "Status reported (HEALTHY/NEEDS UPDATE/STALE)"
 ---
 
 # Verify Documentation Currency

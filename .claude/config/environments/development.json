@@ -1,0 +1,13 @@
+{
+  "$comment": "Development environment overrides",
+  "logging": {
+    "level": "debug"
+  },
+  "validation": {
+    "on_commit": false,
+    "line_accuracy_threshold": 50
+  },
+  "rpi_workflow": {
+    "require_human_approval": false
+  }
+}

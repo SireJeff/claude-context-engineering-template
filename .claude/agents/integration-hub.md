@@ -1,3 +1,37 @@
+---
+name: integration-hub
+version: "1.0.0"
+displayName: "Integration Hub"
+description: "External service integration, third-party API management, and webhook handling specialist"
+category: "integration"
+complexity: "medium-high"
+context_budget: "~40K tokens"
+capabilities:
+  - "third-party-api-integration"
+  - "webhook-handling"
+  - "authentication-management"
+  - "rate-limiting-implementation"
+  - "error-handling-patterns"
+workflows:
+  - "external-services"
+  - "webhooks"
+  - "integrations"
+commands: ["/rpi-research", "/rpi-plan", "/rpi-implement"]
+dependencies:
+  agents: []
+  commands: []
+hooks:
+  pre_invoke: null
+  post_invoke: "verify-docs-current"
+examples:
+  - invocation: '@integration-hub "Document integration with [service]"'
+    description: "Create integration documentation"
+  - invocation: '@integration-hub "Analyze webhook endpoints"'
+    description: "Review webhook security and reliability"
+  - invocation: '@integration-hub "Review authentication flows"'
+    description: "Audit third-party auth mechanisms"
+---
+
 # Integration Hub Agent
 
 **Purpose:** External service integration, third-party API management, and webhook handling

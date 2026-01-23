@@ -1,8 +1,27 @@
 ---
+name: validate-all
+version: "1.0.0"
 description: "Complete validation suite for the codebase"
 category: "validation"
 context_budget_estimate: "40K tokens"
 typical_context_usage: "20%"
+prerequisites: []
+outputs:
+  - "Validation report with PASS/FAIL per category"
+  - "Documentation accuracy metrics"
+  - "Test results summary"
+  - "Overall READY/NOT READY status"
+next_commands: []
+related_agents: ["context-engineer", "deployment-ops"]
+examples:
+  - command: "/validate-all"
+    description: "Run complete validation before deployment"
+exit_criteria:
+  - "Documentation validation complete"
+  - "Test validation complete"
+  - "Code quality checks complete"
+  - "Configuration validation complete"
+  - "Overall status determined"
 ---
 
 # Complete Validation Suite

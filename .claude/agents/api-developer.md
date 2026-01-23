@@ -1,3 +1,37 @@
+---
+name: api-developer
+version: "1.0.0"
+displayName: "API Developer"
+description: "API design, contract definition, and endpoint implementation specialist"
+category: "api"
+complexity: "medium"
+context_budget: "~35K tokens"
+capabilities:
+  - "rest-api-design"
+  - "graphql-design"
+  - "contract-definition"
+  - "endpoint-documentation"
+  - "api-testing-strategy"
+workflows:
+  - "api-endpoints"
+  - "contracts"
+  - "versioning"
+commands: ["/rpi-research", "/rpi-plan", "/rpi-implement"]
+dependencies:
+  agents: []
+  commands: []
+hooks:
+  pre_invoke: null
+  post_invoke: "verify-docs-current"
+examples:
+  - invocation: '@api-developer "Document API endpoints for [resource]"'
+    description: "Create comprehensive API documentation"
+  - invocation: '@api-developer "Validate API contracts"'
+    description: "Check contract consistency and completeness"
+  - invocation: '@api-developer "Generate OpenAPI spec"'
+    description: "Create OpenAPI/Swagger specification"
+---
+
 # API Developer Agent
 
 **Purpose:** API design, contract definition, and endpoint implementation
