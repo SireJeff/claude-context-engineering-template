@@ -6,334 +6,329 @@
 ![GitHub Issues](https://img.shields.io/github/issues/SireJeff/claude-context-engineering-template)
 ![GitHub Pull Requests](https://img.shields.io/github/pulls/SireJeff/claude-context-engineering-template)
 
-**A sophisticated, portable template for implementing context engineering in any codebase with Claude Code.** 
+A complete template for organizing your codebase documentation so Claude Code can navigate it efficiently.
 
-This template enables **zero-search context loading**, **<40% context window utilization**, and **10× faster issue resolution** by leveraging pre-computed system knowledge and optimized documentation structures.
+---
 
-## ⭐ Key Features
+## What This Template Does
 
-- **Zero-search context loading** - Pre-computed system knowledge eliminates the need for searching through files
-- **<40% context window utilization** - Maximum efficiency with Claude's 200k token limit
-- **30k token output limit optimization** - Perfectly aligned with Claude's output constraints
-- **10× faster issue resolution** - Exact file:line references accelerate debugging
-- **Self-maintaining documentation** - Automated validation prevents documentation drift
-- **Proven results** - 77% time savings based on real-world case studies
+This template solves a common problem: **Claude Code wastes tokens searching through your codebase** because it doesn't know where things are.
 
-## 🆕 What's New in v1.1.0
+**Without this template:**
+- Claude reads entire files looking for relevant code
+- Context window fills up with irrelevant content
+- You spend time guiding Claude to the right files
+- Knowledge is lost between sessions
 
-- **CLI Tooling** - `npx claude-context init|validate|diagnose` commands
-- **JSON Schema Validation** - 7 schemas for settings, agents, commands, workflows
-- **Team Collaboration** - `/collab` command for handoffs, shared knowledge base
-- **CI/CD Templates** - GitHub Actions for automated validation
-- **Community Standards** - Extension guidelines, quality checklist
-- **New Commands** - `/help`, `/collab`, `/analytics`
+**With this template:**
+- Pre-built indexes point Claude directly to relevant code
+- Documentation includes exact file:line references
+- Workflows are mapped so Claude understands your system
+- Session handoffs preserve context for team members
 
-## 🔧 Quick Start
+---
 
-### 1. Copy Template to Your Repository
+## Prerequisites
+
+Before installing, ensure you have:
+
+| Requirement | Details |
+|-------------|---------|
+| **Node.js 18+** | Required for CLI tools |
+| **A codebase** | This template works with any language/framework |
+| **Claude Code CLI** | The Anthropic CLI tool |
+| **~30 minutes** | For initial setup and configuration |
+
+---
+
+## Quick Start
+
+### Step 1: Copy the Template
+
+Copy the `.claude` directory and `CLAUDE.md` to your project root:
 
 ```bash
-# From your project root
-cp -r /path/to/template_claude/.claude ./.claude
-cp /path/to/template_claude/CLAUDE.md ./CLAUDE.md
+# Clone this repo
+git clone https://github.com/SireJeff/claude-context-engineering-template.git
+
+# Copy to your project
+cp -r claude-context-engineering-template/.claude your-project/.claude
+cp claude-context-engineering-template/CLAUDE.md your-project/CLAUDE.md
 ```
 
-### 2. Initialize with CLI or Agent
+### Step 2: Install CLI Tools
 
-**Option A: CLI (Recommended)**
 ```bash
-cd .claude/tools && npm install
+cd your-project/.claude/tools
+npm install
+```
+
+### Step 3: Initialize for Your Codebase
+
+Run the initialization command:
+
+```bash
 npx claude-context init
 ```
 
-**Option B: Context Engineer Agent**
-```bash
-# In Claude Code CLI
-@context-engineer "Initialize context engineering for this repository"
+**What happens during initialization:**
+1. CLI detects your tech stack (Python, Node, Go, etc.)
+2. Scans for major workflows in your code
+3. Replaces `{{PLACEHOLDER}}` values with your project info
+4. Creates initial workflow documentation
+5. Validates the setup
+
+**Expected output:**
+```
+✓ Detected: Node.js with Express
+✓ Found 12 potential workflows
+✓ Replaced 45 placeholders
+✓ Created workflow documentation
+✓ Validation passed
 ```
 
-The initialization will:
-1. Analyze your codebase structure
-2. Discover 8-15 major workflows
-3. Create workflow documentation with file:line references
-4. Populate all index files
-5. Set up specialized agents
-6. Validate the system
+### Step 4: Customize Your Documentation
 
-### 3. Start Using the System
+The init command creates a starting point. You should:
 
-```bash
-# For new features
-/rpi-research feature-name
-/rpi-plan feature-name
-/rpi-implement feature-name
+1. **Review `.claude/context/workflows/`** - Edit the generated workflow files
+2. **Update `CLAUDE.md`** - Add project-specific commands and patterns
+3. **Fill in gotchas** - Document things Claude should know about your codebase
 
-# For debugging
-# Load WORKFLOW_INDEX.md → Find relevant workflow → Jump to file:line
+---
 
-# After code changes
-/verify-docs-current path/to/modified/file
-```
+## What You Get
 
-## 📂 Directory Structure
+After setup, your project will have:
+
+### Commands (8 total)
+
+| Command | What It Does | When to Use |
+|---------|--------------|-------------|
+| `/rpi-research` | Explores codebase, creates research doc | Starting a new feature |
+| `/rpi-plan` | Creates implementation plan with file:line refs | After research, before coding |
+| `/rpi-implement` | Executes plan with atomic commits | When you have an approved plan |
+| `/verify-docs-current` | Checks if docs match code | After making changes |
+| `/validate-all` | Runs full validation suite | Before committing |
+| `/help` | Shows available commands and agents | When unsure what to use |
+| `/collab` | Team handoffs and sync | End of session, team work |
+| `/analytics` | Shows usage statistics | Monitoring context usage |
+
+### Agents (6 total)
+
+| Agent | Specialty | Example Use |
+|-------|-----------|-------------|
+| `@context-engineer` | Initial setup, re-indexing | "Re-scan the authentication module" |
+| `@core-architect` | System design, architecture | "Explain the state machine" |
+| `@database-ops` | Schema, migrations, queries | "Add a new migration" |
+| `@api-developer` | Endpoints, contracts | "Add a new REST endpoint" |
+| `@integration-hub` | External services | "Connect to Stripe API" |
+| `@deployment-ops` | CI/CD, infrastructure | "Update the deploy pipeline" |
+
+### Directory Structure
 
 ```
 your-project/
-├── CLAUDE.md                    # Main entry point (populated from template)
+├── CLAUDE.md                    # Entry point Claude reads first
 └── .claude/
-    ├── README.md                # Configuration overview
-    ├── RPI_WORKFLOW_PLAN.md     # RPI methodology documentation
-    │
-    ├── agents/                  # Specialized agents (6)
-    │   ├── context-engineer.md  # Initialization agent
-    │   ├── core-architect.md    # System architecture
-    │   ├── database-ops.md      # Database operations
-    │   ├── api-developer.md     # API development
-    │   ├── integration-hub.md   # External services
-    │   └── deployment-ops.md    # CI/CD, infrastructure
-    │
-    ├── commands/                # Custom slash commands (8)
-    │   ├── rpi-research.md      # Research phase
-    │   ├── rpi-plan.md          # Plan phase
-    │   ├── rpi-implement.md     # Implementation phase
-    │   ├── verify-docs-current.md
-    │   ├── validate-all.md
-    │   ├── help.md              # Help system (NEW)
-    │   ├── collab.md            # Team collaboration (NEW)
-    │   └── analytics.md         # Usage analytics (NEW)
-    │
-    ├── tools/                   # CLI tooling (NEW)
-    │   ├── package.json
-    │   ├── bin/claude-context.js
-    │   └── lib/                 # Core modules
-    │
-    ├── schemas/                 # JSON schemas (NEW)
-    │   ├── settings.schema.json
-    │   ├── agent.schema.json
-    │   └── ...                  # 7 total schemas
-    │
-    ├── config/                  # Configuration (NEW)
-    │   ├── base.json
-    │   └── environments/        # Dev, staging, prod
-    │
-    ├── team/                    # Team collaboration (NEW)
-    │   ├── config.json
-    │   └── roles.json
-    │
-    ├── knowledge/               # Shared knowledge (NEW)
-    │   ├── shared/decisions/    # ADRs
-    │   ├── shared/patterns/     # Reusable patterns
-    │   └── sessions/            # Session handoffs
-    │
-    ├── standards/               # Community standards (NEW)
-    │   ├── EXTENSION_GUIDELINES.md
-    │   └── QUALITY_CHECKLIST.md
-    │
-    ├── ci-templates/            # CI/CD templates (NEW)
-    │   └── github-actions/
-    │
+    ├── agents/                  # 6 specialized agents
+    ├── commands/                # 8 slash commands
     ├── context/                 # Pre-computed knowledge
-    │   ├── WORKFLOW_INDEX.md
-    │   ├── CODE_TO_WORKFLOW_MAP.md
-    │   └── workflows/
-    │
-    ├── indexes/                 # 3-level navigation
-    │   ├── workflows/
-    │   ├── agents/
-    │   ├── code/
-    │   ├── routing/
-    │   └── search/
-    │
-    ├── research/                # RPI research artifacts
-    │   └── active/, completed/
-    │
-    └── plans/                   # RPI plan artifacts
-        └── active/, completed/
+    │   ├── workflows/           # Workflow documentation
+    │   ├── WORKFLOW_INDEX.md    # Master index
+    │   └── KNOWN_GOTCHAS.md     # Documented issues
+    ├── indexes/                 # Navigation hierarchy
+    ├── tools/                   # CLI tooling
+    ├── schemas/                 # JSON validation
+    ├── config/                  # Environment configs
+    ├── team/                    # Team collaboration
+    ├── knowledge/               # Shared knowledge base
+    └── standards/               # Quality guidelines
 ```
 
-## ⚖️ Hard Limits
+---
 
-These limits are **non-negotiable** and enforced throughout the system:
+## How to Use
 
-| Limit | Value | Why |
-|-------|-------|-----|
-| **Max Context** | 200,000 tokens | Claude's context window limit |
-| **Max Output** | 30,000 tokens | Claude's output limit per response |
-| **Target Usage** | <40% (80k tokens) | Prevent context rot |
-| **Compact Trigger** | 35% (70k tokens) | Safety margin |
-| **Workflow Count** | 8-15 | Optimal for navigation |
-| **Line Tolerance** | ±10 lines | Acceptable drift |
+### Daily Development Workflow
 
-## 🔍 The 3-Level Chain-of-Index Architecture
+**When fixing a bug:**
+1. Tell Claude the symptom
+2. Claude loads relevant workflow from index
+3. Goes directly to file:line references
+4. Fixes with full context
+
+**When adding a feature:**
+1. Run `/rpi-research feature-name`
+2. Review the research document
+3. Run `/rpi-plan feature-name`
+4. Get your approval on the plan
+5. Run `/rpi-implement feature-name`
+6. Documentation updates automatically
+
+### The RPI Workflow Explained
+
+**R - Research:**
+```bash
+/rpi-research user-authentication
+```
+Claude explores your codebase using parallel agents, traces call chains, and produces a research document with all relevant files and line numbers.
+
+**P - Plan:**
+```bash
+/rpi-plan user-authentication
+```
+Based on research, Claude creates a step-by-step implementation plan with exact file:line modifications. You review and approve before any code changes.
+
+**I - Implement:**
+```bash
+/rpi-implement user-authentication
+```
+Claude executes the approved plan using atomic changes: ONE CHANGE → ONE TEST → ONE COMMIT. Documentation is updated automatically.
+
+### Keeping Documentation Current
+
+After making code changes:
+```bash
+/verify-docs-current path/to/changed/file
+```
+
+This checks if line numbers in docs still match the code. Run it before committing.
+
+### Team Handoffs
+
+At the end of your session:
+```bash
+/collab handoff
+```
+
+This creates a handoff document in `.claude/knowledge/sessions/` with:
+- What you worked on
+- What's in progress
+- Any blockers
+- Suggested next steps
+
+The next developer can pick up exactly where you left off.
+
+---
+
+## What to Expect
+
+### Context Efficiency
+
+| Metric | Target | How It's Achieved |
+|--------|--------|-------------------|
+| Context usage | <40% | Progressive loading: index → workflow → code |
+| Benefit | More room for actual work | Less wasted on exploration |
+
+### Documentation Accuracy
+
+| Metric | Target | How It's Maintained |
+|--------|--------|---------------------|
+| Line number accuracy | ≥60% | `/verify-docs-current` command |
+| Benefit | Claude goes to correct locations | Not nearby guesses |
+
+### Workflow Coverage
+
+| Metric | Target | How It's Created |
+|--------|--------|------------------|
+| Documented workflows | 8-15 | `@context-engineer` during init |
+| Benefit | Major features are pre-mapped | Faster navigation |
+
+### Team Continuity
+
+- Session handoffs preserve context between developers
+- Shared knowledge base grows over time
+- Architecture Decision Records (ADRs) document key choices
+- New team members onboard faster with existing documentation
+
+---
+
+## Architecture Overview
+
+The template uses a **3-level documentation hierarchy** to minimize context usage:
 
 ### Level 1: Category Indexes (~5k tokens each)
 
-Entry points for navigation. Load one of these first:
+Entry points. Load one of these first based on your task type:
 
-- `indexes/workflows/CATEGORY_INDEX.md` - Workflow categories
-- `indexes/code/CATEGORY_INDEX.md` - Code organization
-- `indexes/agents/CATEGORY_INDEX.md` - Agent selection
-- `indexes/routing/CATEGORY_INDEX.md` - Task routing
-- `indexes/search/CATEGORY_INDEX.md` - Search patterns
+| Index | Use When |
+|-------|----------|
+| `indexes/workflows/CATEGORY_INDEX.md` | Working on a feature |
+| `indexes/code/CATEGORY_INDEX.md` | Finding specific code |
+| `indexes/agents/CATEGORY_INDEX.md` | Choosing which agent to use |
 
-### Level 2: Domain Indexes (~10-20k tokens each)
+### Level 2: Domain Indexes (~15k tokens each)
 
-Detailed navigation within a category. Examples:
-- `indexes/workflows/jobs.md` - All job-related workflows
-- `indexes/workflows/payment.md` - All payment workflows
+Detailed navigation within a category. Example: `indexes/workflows/authentication.md` lists all auth-related workflows.
 
-### Level 3: Detail Files (~20-50k tokens each)
+### Level 3: Detail Files (~40k tokens each)
 
-Full documentation with file:line references:
-- `context/workflows/[name].md` - Complete workflow documentation
-- `agents/[domain]-agent.md` - Agent capabilities and usage
+Full documentation with file:line references. Example: `context/workflows/user-login.md` contains complete call chains for the login feature.
 
-## 🔄 RPI Workflow
+**Why this matters:** Claude loads only what it needs. For a simple bug fix, it might load 20k tokens total. For a complex feature, maybe 60k. Either way, you stay under the 40% target.
 
-**Research-Plan-Implement** methodology prevents cascading errors:
+---
 
-### Phase 1: Research (`/rpi-research`)
-- Launch 3 parallel Explore agents
-- Trace call chains with line numbers
-- Map dependencies
-- Output: Research document (~20k tokens)
+## Configuration
 
-### Phase 2: Plan (`/rpi-plan`)
-- Load research document
-- Create step-by-step blueprint
-- Define test strategy
-- Get human approval
-- Output: Plan document (~15k tokens)
+### Environment-Specific Settings
 
-### Phase 3: Implement (`/rpi-implement`)
-- Execute atomically
-- **ONE CHANGE → ONE TEST → ONE COMMIT**
-- Update documentation (mandatory)
-- Output: Completed feature + updated docs
-
-## 💰 Context Budget Management
-
-### Loading Strategy
+The template supports different configurations for dev/staging/prod:
 
 ```
-Step 1: Load category index (~5k tokens) - 2.5%
-Step 2: Load domain index (~15k tokens) - 7.5%
-Step 3: Load specific workflow (~40k tokens) - 20%
-Step 4: Read targeted code sections (~20k tokens) - 10%
-─────────────────────────────────────────────────
-Total: ~80k tokens (40%)
-Buffer remaining: 120k tokens (60%)
+.claude/config/
+├── base.json              # Shared settings
+├── environments/
+│   ├── development.json   # Relaxed validation
+│   ├── staging.json       # Balanced
+│   └── production.json    # Strict validation
+└── local.json             # Your overrides (gitignored)
 ```
 
-### Compaction Triggers
+### Key Settings
 
-| Trigger | Action |
-|---------|--------|
-| Context > 35% | Archive tool results, keep summaries |
-| After RPI phase | Save progress, clear exploration |
-| Error loop (3+) | Save state, start fresh session |
-| Session > 1 hour | Create handoff document |
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `validation.line_accuracy_threshold` | 60 | Minimum % of line numbers that must be accurate |
+| `validation.on_commit` | true | Run validation before commits |
+| `logging.level` | info | Log verbosity (debug, info, warn, error) |
 
-## 📑 Workflow Documentation Standard
+---
 
-Every workflow file follows this 10-section structure:
+## CLI Commands
 
-```markdown
-# [Workflow Name] Workflow
-
-1. ## Quick Navigation (TOC)
-2. ## Overview (user journey, key features)
-3. ## Entry Points (file:line references)
-4. ## Sub-Workflow 1-N (call chains)
-5. ## Database Schema (tables, operations)
-6. ## External APIs (integrations)
-7. ## Test Coverage (test files, gaps)
-8. ## Known Gotchas (lessons learned)
-9. ## Complete Call Chain (ASCII diagram)
-10. ## File Reference Table (size, purpose)
-```
-
-## 🔄 Self-Maintaining Documentation
-
-### After Code Changes
-
-1. Check `CODE_TO_WORKFLOW_MAP.md` for affected workflows
-2. Update workflow files with new line numbers
-3. Verify function signatures match
-4. Run `/verify-docs-current [modified-file]`
-5. Commit documentation updates with code
-
-### Maintenance Schedule
-
-| Task | Frequency | Time |
-|------|-----------|------|
-| Spot-check 5 line numbers | Monthly | 15 min |
-| Re-run discovery agents | Quarterly | 2 hours |
-| Full documentation audit | Annually | 4-6 hours |
-
-## 🤖 Specialized Agents
-
-### Built-in Agent
-
-- **`context-engineer`** - Initialization and transformation
-
-### Generated Agents (examples)
-
-After initialization, agents are created based on discovered domains:
-
-- `core-architect` - System architecture, state machines
-- `database-ops` - Migrations, schema, queries
-- `api-developer` - Endpoints, contracts
-- `integration-hub` - External services
-- `deployment-ops` - CI/CD, infrastructure
-
-## 🛠️ Template Placeholders
-
-The template uses `{{PLACEHOLDER}}` syntax. The context-engineer agent replaces these during initialization:
-
-| Placeholder | Replaced With |
-|-------------|---------------|
-| `{{PROJECT_NAME}}` | Detected project name |
-| `{{TECH_STACK}}` | Detected technologies |
-| `{{PRODUCTION_URL}}` | From config/env |
-| `{{WORKFLOWS_COUNT}}` | Discovered workflow count |
-| `{{DATE}}` | Initialization date |
-
-## ✅ Validation
-
-### Quality Standards
-
-| Metric | Target |
-|--------|--------|
-| Line number accuracy | ≥60% |
-| Markdown link validity | 100% |
-| Workflow completeness | All 10 sections |
-| Context budget | <40% for typical tasks |
-
-### Validation Commands
+The template includes CLI tools for validation and management:
 
 ```bash
-/verify-docs-current path/to/file  # Check single file
-/validate-all                       # Full validation suite
+# Initialize template for your project
+npx claude-context init
+
+# Validate all documentation
+npx claude-context validate --all
+
+# Check specific validations
+npx claude-context validate --schema    # JSON schema validation
+npx claude-context validate --links     # Internal link checking
+npx claude-context validate --lines     # Line number accuracy
+
+# System diagnostics
+npx claude-context diagnose
+npx claude-context diagnose --fix       # Auto-fix common issues
 ```
 
-## 📈 Proven Results
+---
 
-Based on DeadlineKiller case study (50k+ LOC):
+## Troubleshooting
 
-- **Context utilization:** 20-30% (was 40-60%)
-- **Issue triage:** 1-3 minutes (was 20-30 minutes)
-- **Feature planning:** 10-15 minutes (was 60-90 minutes)
-- **Session onboarding:** 15 minutes (was 30-60 minutes)
-- **Bugs found proactively:** 3 critical production blockers
-- **Agent consolidation:** 72% reduction (43 → 12)
-- **Time savings:** 77% after break-even
+### "CLI can't detect my tech stack"
 
-## 🛠️ Troubleshooting
+Provide hints during initialization:
+```bash
+npx claude-context init --stack "python-fastapi-postgresql"
+```
 
-### "Context-engineer can't detect my tech stack"
-
-Provide hints:
+Or use the context engineer agent:
 ```bash
 @context-engineer "Initialize for Python FastAPI with PostgreSQL"
 ```
@@ -347,39 +342,70 @@ Merge related workflows:
 
 ### "Line numbers are outdated"
 
-Run verification:
+Run verification and let it fix drift:
 ```bash
-/verify-docs-current [file-path]
+npx claude-context diagnose --fix
+```
+
+Or manually:
+```bash
+/verify-docs-current path/to/file
 ```
 
 ### "Context budget exceeded"
 
 Use progressive loading:
-1. Load category index first
-2. Then load only relevant workflow
+1. Load category index first (5k tokens)
+2. Then load only the relevant workflow (15-40k tokens)
 3. Read specific code sections, not entire files
 
-## 🤝 Contributing
+### "Validation always fails"
 
-We love contributions! Whether you're fixing a bug, improving documentation, or adding new features, we want your input. Please read our [Contributing Guide](CONTRIBUTING.md) to get started.
-
-## 📜 License
-
-MIT License - Use freely in any project. See [LICENSE](LICENSE) for details.
-
-## 🏛️ Credits
-
-Based on context engineering principles from:
-- DeadlineKiller project (production-validated)
-- Human Layer research on LLM context management
-- Claude Code best practices
+Check the threshold settings:
+```bash
+npx claude-context validate --lines --threshold 50  # More lenient
+```
 
 ---
 
-**Version:** 1.1.0
-**Updated:** 2025-01-24
-**Validated:** DeadlineKiller (Python, FastAPI, PostgreSQL)
-**Applicable To:** Any codebase (web, mobile, data, infrastructure)
+## CI/CD Integration
 
-### SEO Keywords
-Claude Code, Context Engineering, AI Development, Code Documentation, Productivity Tool, Development Workflow, Context Management, Code Navigation, LLM Context Optimization, Developer Productivity
+Copy the GitHub Actions workflows to automate validation:
+
+```bash
+cp -r .claude/ci-templates/github-actions/*.yml .github/workflows/
+```
+
+This adds:
+- **validate-docs.yml** - Runs on PRs that touch `.claude/` or source files
+- **context-check.yml** - Weekly health check of documentation budget
+
+---
+
+## Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+Before submitting:
+1. Run `npx claude-context validate --all`
+2. Check the [Quality Checklist](.claude/standards/QUALITY_CHECKLIST.md)
+3. For extensions, follow [Extension Guidelines](.claude/standards/EXTENSION_GUIDELINES.md)
+
+---
+
+## License
+
+MIT License - Use freely in any project. See [LICENSE](LICENSE) for details.
+
+---
+
+## Credits
+
+Built on context engineering principles:
+- LLM context window optimization research
+- Claude Code best practices
+- Community feedback and contributions
+
+---
+
+**Version:** 1.1.0 | **Updated:** 2025-01-24 | **License:** MIT
