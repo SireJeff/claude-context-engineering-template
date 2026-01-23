@@ -173,7 +173,7 @@ This file provides guidance to Claude Code when working with code in this reposi
 **Agents:** {{AGENT_ROUTING_TABLE}}
 **Full matrix:** [.claude/indexes/agents/router.md](./.claude/indexes/agents/router.md)
 
-**Commands:** {{COMMAND_LIST}}
+**Commands:** /rpi-research, /rpi-plan, /rpi-implement, /verify-docs-current, /validate-all, /help, /collab, /analytics
 **All commands:** [.claude/commands/](./.claude/commands/)
 
 ---
@@ -231,5 +231,5 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ---
 
-**Version:** 1.0 | **Last Updated:** {{DATE}} | **Context Target:** 200k
+**Version:** 1.1 | **Last Updated:** {{DATE}} | **Context Target:** 200k
 **Architecture:** 3-Level Chain-of-Index | **Index Files:** {{INDEX_FILES_COUNT}}

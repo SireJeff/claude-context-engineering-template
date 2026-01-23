@@ -316,5 +316,5 @@ def existing_function(new_param: str = "default"):
 
 ---
 
-**Version:** 1.0
+**Version:** 1.1
 **Status:** TEMPLATE

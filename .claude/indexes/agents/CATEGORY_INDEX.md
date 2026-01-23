@@ -14,10 +14,15 @@ Entry point for agent selection matrix
 | **integration-hub** | External services | Third-party service integration |
 | **deployment-ops** | CI/CD, infrastructure | Deployment and infrastructure management |
 
+## Detailed Selection Guide
+
+For detailed agent selection guidance including capabilities, workflows, and decision criteria, see:
+**[CAPABILITY_MATRIX.md](./CAPABILITY_MATRIX.md)**
+
 ## Quick Start
 
 1. Load this category index first (~5k tokens)
-2. Identify relevant agent
+2. Check CAPABILITY_MATRIX.md for detailed selection guidance
 3. Load agent definition for detailed capabilities
 4. Use agent for specific tasks
 
