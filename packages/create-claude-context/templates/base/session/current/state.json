@@ -1,0 +1,20 @@
+{
+  "$schema": "../../schemas/session.schema.json",
+  "sessionId": null,
+  "started": null,
+  "lastActivity": null,
+  "phase": "idle",
+  "task": {
+    "name": null,
+    "description": null,
+    "artifacts": [],
+    "startedAt": null
+  },
+  "context": {
+    "tokensUsed": 0,
+    "filesLoaded": [],
+    "workflowsReferenced": []
+  },
+  "pendingUpdates": [],
+  "notes": []
+}

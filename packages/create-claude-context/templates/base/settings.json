@@ -1,6 +1,6 @@
 {
   "$schema": "./schemas/settings.schema.json",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "context_engineering": {
     "enabled": true,
     "max_context_tokens": 200000,
@@ -20,7 +20,27 @@
     "self_maintaining": true,
     "verify_after_changes": true,
     "line_number_tolerance": 10,
-    "auto_commit_docs": false
+    "auto_commit_docs": false,
+    "semantic_anchors_enabled": true
+  },
+  "session": {
+    "auto_save_enabled": true,
+    "auto_save_interval_minutes": 5,
+    "require_handoff_on_end": true,
+    "max_history_days": 30,
+    "checkpoint_on_phase_change": true
+  },
+  "automation": {
+    "auto_generate_code_map": true,
+    "rebuild_on_commit": true,
+    "semantic_anchors_enabled": true,
+    "drift_detection_enabled": true,
+    "gotcha_extraction_enabled": false
+  },
+  "hooks": {
+    "pre_commit_enabled": true,
+    "block_on_drift": false,
+    "post_commit_rebuild": true
   },
   "agents": {
     "default": "context-engineer",
@@ -29,7 +49,9 @@
   },
   "commands": {
     "rpi_commands": ["/rpi-research", "/rpi-plan", "/rpi-implement"],
-    "validation_commands": ["/verify-docs-current", "/validate-all"]
+    "validation_commands": ["/verify-docs-current", "/validate-all"],
+    "session_commands": ["/session-save", "/session-resume"],
+    "sync_commands": ["/auto-sync"]
   },
   "validation": {
     "on_commit": true,

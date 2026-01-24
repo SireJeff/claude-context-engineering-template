@@ -1,0 +1,58 @@
+{
+  "$schema": "../schemas/automation.schema.json",
+  "version": "1.0.0",
+  "generators": {
+    "code_mapper": {
+      "enabled": true,
+      "output_path": "context/CODE_TO_WORKFLOW_MAP.md",
+      "scan_patterns": [
+        "context/workflows/*.md",
+        "agents/*.md",
+        "commands/*.md"
+      ],
+      "reference_patterns": [
+        "\\[Line (\\d+)\\]",
+        "\\[Lines (\\d+)-(\\d+)\\]",
+        ":(\\d+)",
+        "::(\\w+)\\(\\)"
+      ],
+      "ignore_paths": [
+        "node_modules",
+        ".git",
+        "dist",
+        "build"
+      ]
+    },
+    "index_builder": {
+      "enabled": true,
+      "rebuild_on_change": true,
+      "indexes": [
+        "indexes/workflows/CATEGORY_INDEX.md",
+        "indexes/code/CATEGORY_INDEX.md",
+        "indexes/agents/CATEGORY_INDEX.md"
+      ]
+    },
+    "gotcha_extractor": {
+      "enabled": false,
+      "scan_git_history": true,
+      "keywords": ["fix", "bug", "revert", "hotfix", "GOTCHA", "WARN"],
+      "output_path": "context/KNOWN_GOTCHAS.md"
+    }
+  },
+  "hooks": {
+    "pre_commit": {
+      "enabled": true,
+      "check_drift": true,
+      "block_on_stale": false
+    },
+    "post_commit": {
+      "enabled": true,
+      "rebuild_code_map": true,
+      "update_hashes": true
+    }
+  },
+  "schedule": {
+    "full_rebuild": "weekly",
+    "drift_check": "on_file_change"
+  }
+}
