@@ -73,11 +73,23 @@ All notable changes to this project will be documented in this file.
 - `drift-detector.js` - Documentation drift detection
 
 #### Unit Tests (`packages/create-claude-context/tests/`)
-- 119 unit tests for all CLI modules
+- 207 unit tests for all CLI modules
 - Tests for environment detector, static analyzer, AI orchestrator
 - Tests for template populator and call tracer
+- Integration tests with Express app fixture
 - Jest test framework with coverage reporting
-- Test fixtures for Python, Node.js, and Go projects
+- Test fixtures for Python, Node.js, Go, and Express projects
+
+#### Enhanced Detector (`lib/detector.js`)
+- `ENTRY_POINT_PATTERNS` - Regex patterns for 6 frameworks
+- `detectEntryPoints()` - Detects API routes from source files
+- Supports Express, FastAPI, Next.js, Django, Rails, NestJS
+
+#### Enhanced Placeholder (`lib/placeholder.js`)
+- Analysis-aware `getDefaultValues()` function
+- `CORE_FILES_LIST` populated from detected entry points
+- `WORKFLOWS_COUNT` from actual workflow analysis
+- 30+ new placeholder values for templates
 
 #### New Tech Stack Presets (12 total)
 - `python-django` - Python + Django + PostgreSQL
