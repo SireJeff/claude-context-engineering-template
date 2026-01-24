@@ -1,5 +1,7 @@
 # Claude Code Context Engineering Template
 
+![npm](https://img.shields.io/npm/v/create-claude-context)
+![npm downloads](https://img.shields.io/npm/dm/create-claude-context)
 ![GitHub Stars](https://img.shields.io/github/stars/SireJeff/claude-context-engineering-template?style=social)
 ![GitHub Forks](https://img.shields.io/github/forks/SireJeff/claude-context-engineering-template?style=social)
 ![GitHub License](https://img.shields.io/github/license/SireJeff/claude-context-engineering-template)
@@ -7,6 +9,35 @@
 ![GitHub Pull Requests](https://img.shields.io/github/pulls/SireJeff/claude-context-engineering-template)
 
 A complete template for organizing your codebase documentation so Claude Code can navigate it efficiently.
+
+---
+
+## Demo
+
+<!-- Placeholder for demo GIF - see docs/RECORDING_DEMO.md for instructions -->
+```
+$ npx create-claude-context
+
+  Let's set up context engineering for your project.
+
+? Project name: my-awesome-app
+? Technology stack: Confirm: Node.js, Express, MongoDB
+? Features to include: RPI Workflow, Specialized Agents, Validation Commands
+? Install Claude Code plugin? Yes
+
+Creating .claude/ directory structure... done
+Generating CLAUDE.md... done
+Installing claude-context-plugin... done
+
+  Context engineering setup complete.
+
+  Next steps:
+    1. Review CLAUDE.md
+    2. Customize .claude/context/workflows/
+    3. Run /help in Claude Code
+```
+
+> See [docs/RECORDING_DEMO.md](docs/RECORDING_DEMO.md) for creating an animated demo GIF.
 
 ---
 
@@ -422,4 +453,4 @@ Built on context engineering principles:
 
 ---
 
-**Version:** 1.1.0 | **Updated:** 2025-01-24 | **License:** MIT
+**Version:** 1.2.0 | **Updated:** 2025-01-24 | **License:** MIT

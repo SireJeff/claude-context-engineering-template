@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2025-01-24
+
+### Added
+
+#### npm Packages (`packages/`)
+- `create-claude-context` - CLI for one-command setup (`npx create-claude-context`)
+- `claude-context-plugin` - Optional plugin with ongoing commands
+
+#### Unit Tests (`packages/create-claude-context/tests/`)
+- 50+ unit tests for CLI modules
+- Jest test framework with coverage reporting
+- Test fixtures for Python, Node.js, and Go projects
+- Tests for: detector, placeholder, installer, validate, prompts modules
+
+#### New Tech Stack Presets
+- `python-django` - Python + Django + PostgreSQL
+- `node-nestjs` - Node.js + NestJS + TypeORM
+- `typescript-remix` - TypeScript + Remix + Prisma
+- `java-spring` - Java + Spring Boot + PostgreSQL
+- `csharp-dotnet` - C# + .NET Core + Entity Framework
+- `php-laravel` - PHP + Laravel + MySQL
+
+#### CI/CD Workflows (`.github/workflows/`)
+- `ci.yml` - PR validation (lint, test, package integrity)
+- `npm-publish.yml` - Automated npm publishing on release
+
+#### Documentation
+- `docs/RECORDING_DEMO.md` - Instructions for creating demo GIF
+- npm badges in README
+- Demo section with ASCII preview
+
+### Changed
+- Updated README with npm badges and demo section
+- Package READMEs now include development and contributing sections
+- Total tech stack presets increased from 6 to 12
+
+---
+
 ## [1.1.0] - 2025-01-24
 
 ### Added

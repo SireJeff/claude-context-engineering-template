@@ -14,8 +14,11 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "node bin/create-claude-context.js --help",
-    "lint": "eslint lib/"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint lib/",
+    "cli:help": "node bin/create-claude-context.js --help"
   },
   "keywords": [
     "claude",
@@ -49,5 +52,8 @@
     "yaml": "^2.3.4",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

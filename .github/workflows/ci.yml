@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: packages/create-claude-context/package-lock.json
+
+      - name: Install dependencies
+        working-directory: packages/create-claude-context
+        run: npm ci
+
+      - name: Run tests
+        working-directory: packages/create-claude-context
+        run: npm test
+
+      - name: Run tests with coverage
+        working-directory: packages/create-claude-context
+        run: npm run test:coverage
+        if: matrix.node-version == '20.x'
+
+      - name: Check package integrity
+        working-directory: packages/create-claude-context
+        run: npm pack --dry-run
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: packages/create-claude-context/package-lock.json
+
+      - name: Install dependencies
+        working-directory: packages/create-claude-context
+        run: npm ci
+
+      - name: Run linter
+        working-directory: packages/create-claude-context
+        run: npm run lint --if-present
+
+  validate-plugin:
+    name: Validate Plugin
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate plugin structure
+        working-directory: packages/claude-context-plugin
+        run: |
+          # Check required files exist
+          test -f package.json
+          test -f index.js
+          test -d skills
+          echo "Plugin structure validated"
+
+      - name: Check package integrity
+        working-directory: packages/claude-context-plugin
+        run: |
+          npm pack --dry-run

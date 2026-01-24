@@ -1,0 +1,36 @@
+# Development files
+.eslintrc*
+.prettierrc*
+.editorconfig
+
+# Documentation (keep README)
+docs/
+*.md
+!README.md
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp files
+*.tmp
+*.temp
+
+# Test files (if any added later)
+tests/
+*.test.js
+coverage/

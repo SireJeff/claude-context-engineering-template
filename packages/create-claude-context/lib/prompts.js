@@ -70,6 +70,66 @@ const PRESETS = {
       test: 'rails test',
       migrate: 'rails db:migrate'
     }
+  },
+  'python-django': {
+    name: 'Python + Django + PostgreSQL',
+    stack: 'Python, Django, PostgreSQL',
+    commands: {
+      install: 'pip install -r requirements.txt',
+      dev: 'python manage.py runserver',
+      test: 'python manage.py test',
+      migrate: 'python manage.py migrate'
+    }
+  },
+  'node-nestjs': {
+    name: 'Node.js + NestJS + TypeORM',
+    stack: 'Node.js, NestJS, TypeORM, PostgreSQL',
+    commands: {
+      install: 'npm install',
+      dev: 'npm run start:dev',
+      test: 'npm run test',
+      migrate: 'npm run migration:run'
+    }
+  },
+  'typescript-remix': {
+    name: 'TypeScript + Remix + Prisma',
+    stack: 'TypeScript, Remix, Prisma, PostgreSQL',
+    commands: {
+      install: 'npm install',
+      dev: 'npm run dev',
+      test: 'npm test',
+      migrate: 'npx prisma migrate dev'
+    }
+  },
+  'java-spring': {
+    name: 'Java + Spring Boot + PostgreSQL',
+    stack: 'Java, Spring Boot, PostgreSQL',
+    commands: {
+      install: 'mvn install',
+      dev: 'mvn spring-boot:run',
+      test: 'mvn test',
+      migrate: 'mvn flyway:migrate'
+    }
+  },
+  'csharp-dotnet': {
+    name: 'C# + .NET Core + Entity Framework',
+    stack: 'C#, .NET Core, Entity Framework, PostgreSQL',
+    commands: {
+      install: 'dotnet restore',
+      dev: 'dotnet run',
+      test: 'dotnet test',
+      migrate: 'dotnet ef database update'
+    }
+  },
+  'php-laravel': {
+    name: 'PHP + Laravel + MySQL',
+    stack: 'PHP, Laravel, MySQL',
+    commands: {
+      install: 'composer install',
+      dev: 'php artisan serve',
+      test: 'php artisan test',
+      migrate: 'php artisan migrate'
+    }
   }
 };
 

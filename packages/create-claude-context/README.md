@@ -42,12 +42,23 @@ Options:
 ## Tech Stack Presets
 
 ```bash
+# Python
 npx create-claude-context -t python-fastapi
+npx create-claude-context -t python-django
+
+# JavaScript/TypeScript
 npx create-claude-context -t node-express
+npx create-claude-context -t node-nestjs
 npx create-claude-context -t typescript-nextjs
+npx create-claude-context -t typescript-remix
+
+# Other Languages
 npx create-claude-context -t go-gin
 npx create-claude-context -t rust-actix
 npx create-claude-context -t ruby-rails
+npx create-claude-context -t java-spring
+npx create-claude-context -t csharp-dotnet
+npx create-claude-context -t php-laravel
 ```
 
 ## Features
@@ -94,6 +105,35 @@ your-project/
 
 - Node.js 18+
 - Claude Code CLI
+
+## Development
+
+```bash
+# Clone the repo
+git clone https://github.com/SireJeff/claude-context-engineering-template.git
+cd claude-context-engineering-template/packages/create-claude-context
+
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Run tests (`npm test`)
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
 ## License
 
