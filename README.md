@@ -5,7 +5,7 @@
 ![GitHub Stars](https://img.shields.io/github/stars/SireJeff/claude-context-engineering-template?style=social)
 ![GitHub License](https://img.shields.io/github/license/SireJeff/claude-context-engineering-template)
 
-A self-sustaining template for organizing your codebase documentation so Claude Code can navigate it efficiently. Includes session persistence, drift detection, and automatic documentation synchronization.
+A self-sustaining template for organizing your codebase documentation so Claude Code can navigate it efficiently. Includes **automatic codebase analysis**, session persistence, drift detection, and automatic documentation synchronization.
 
 ---
 
@@ -18,7 +18,53 @@ npx create-claude-context
 # Or with options
 npx create-claude-context --yes          # Accept defaults
 npx create-claude-context --stack python # Force tech stack
+npx create-claude-context --ai           # Force AI mode (in Claude Code)
+npx create-claude-context --static       # Force static-only analysis
+npx create-claude-context --analyze-only # Run analysis without installation
 ```
+
+### What Happens
+
+1. **Environment Detection** - Detects if running in Claude Code or standalone
+2. **Deep Codebase Analysis** - Scans for entry points, workflows, architecture
+3. **Template Generation** - Creates `.claude/` structure with real data
+4. **AI Handoff** (if in Claude Code) - Creates `INIT_REQUEST.md` for `@context-engineer`
+
+---
+
+## Automatic Initialization
+
+When you run `npx create-claude-context`, the CLI performs **real codebase analysis**:
+
+### What Gets Analyzed
+
+| Analysis | Description |
+|----------|-------------|
+| **Entry Points** | API routes, CLI handlers, event listeners |
+| **Workflows** | Business logic patterns (auth, payments, etc.) |
+| **Architecture** | Directory structure, layers, dependencies |
+| **Tech Stack** | Languages, frameworks, package managers |
+
+### Supported Frameworks
+
+| Framework | Entry Point Detection |
+|-----------|----------------------|
+| Express | `app.get()`, `router.post()` |
+| FastAPI | `@app.get()`, `@router.post()` |
+| Next.js | `export function GET()` |
+| Django | `path('url', view)` |
+| Rails | `get '/path'` |
+| NestJS | `@Get()`, `@Post()` |
+
+### Execution Modes
+
+| Mode | Condition | Capabilities |
+|------|-----------|--------------|
+| **full-ai** | Claude Code + API key | AI-enhanced analysis |
+| **hybrid** | Claude Code (no API) | Static + AI handoff |
+| **standalone** | No Claude Code | Static analysis only |
+
+In hybrid mode, the CLI creates `INIT_REQUEST.md` with instructions for `@context-engineer` to complete initialization.
 
 ---
 
@@ -192,25 +238,23 @@ The Research-Plan-Implement workflow ensures thorough, systematic changes:
 
 ### Settings (`.claude/settings.json`)
 
+Uses the official Claude Code settings schema:
+
 ```json
 {
-  "version": "1.2.0",
-  "session": {
-    "auto_save_enabled": true,
-    "auto_save_interval_minutes": 5,
-    "max_history_days": 30
-  },
-  "automation": {
-    "auto_generate_code_map": true,
-    "semantic_anchors_enabled": true,
-    "drift_detection_enabled": true
-  },
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "hooks": {
-    "pre_commit_enabled": true,
-    "block_on_drift": false
+    "PreToolUse": [
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [{ "type": "command", "command": "echo 'Committing...'" }]
+      }
+    ]
   }
 }
 ```
+
+Project-specific workflow configuration is documented in `CLAUDE.md` rather than settings.json.
 
 ### Environment Configs
 
