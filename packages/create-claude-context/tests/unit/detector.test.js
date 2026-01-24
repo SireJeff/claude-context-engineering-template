@@ -96,6 +96,63 @@ describe('detectTechStack', () => {
   });
 });
 
+describe('detectEntryPoints', () => {
+  const fs = require('fs');
+  const { glob } = require('glob');
+  const { detectEntryPoints, ENTRY_POINT_PATTERNS } = require('../../lib/detector');
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should detect Express route handlers', async () => {
+    const fixtureDir = path.join(FIXTURES_DIR, 'node-project');
+    const result = await detectTechStack(fixtureDir);
+
+    // Entry points should now be included in result
+    expect(result.entryPoints).toBeDefined();
+    expect(Array.isArray(result.entryPoints)).toBe(true);
+  });
+
+  test('ENTRY_POINT_PATTERNS has patterns for common frameworks', () => {
+    expect(ENTRY_POINT_PATTERNS).toBeDefined();
+    expect(ENTRY_POINT_PATTERNS.express).toBeDefined();
+    expect(ENTRY_POINT_PATTERNS.fastapi).toBeDefined();
+    expect(ENTRY_POINT_PATTERNS.nextjs).toBeDefined();
+    expect(ENTRY_POINT_PATTERNS.django).toBeDefined();
+    expect(ENTRY_POINT_PATTERNS.rails).toBeDefined();
+    expect(ENTRY_POINT_PATTERNS.nestjs).toBeDefined();
+  });
+
+  test('Express pattern matches route declarations', () => {
+    const pattern = ENTRY_POINT_PATTERNS.express;
+    const code = `app.get('/users', (req, res) => res.json([]));`;
+
+    const match = pattern.regex.exec(code);
+    expect(match).not.toBeNull();
+
+    const entry = pattern.extractor(match);
+    expect(entry.method).toBe('GET');
+    expect(entry.route).toBe('/users');
+
+    pattern.regex.lastIndex = 0; // Reset
+  });
+
+  test('FastAPI pattern matches decorators', () => {
+    const pattern = ENTRY_POINT_PATTERNS.fastapi;
+    const code = `@app.get("/items")`;
+
+    const match = pattern.regex.exec(code);
+    expect(match).not.toBeNull();
+
+    const entry = pattern.extractor(match);
+    expect(entry.method).toBe('GET');
+    expect(entry.route).toBe('/items');
+
+    pattern.regex.lastIndex = 0; // Reset
+  });
+});
+
 describe('TECH_SIGNATURES', () => {
   test('has language signatures', () => {
     expect(TECH_SIGNATURES.languages).toBeDefined();

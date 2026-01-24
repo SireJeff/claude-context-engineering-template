@@ -157,6 +157,84 @@ const TECH_SIGNATURES = {
 };
 
 /**
+ * Entry point patterns for different frameworks
+ */
+const ENTRY_POINT_PATTERNS = {
+  express: {
+    regex: /app\.(get|post|put|delete|patch)\s*\(\s*['"`]([^'"`]+)['"`]/g,
+    extractor: (match) => ({ method: match[1].toUpperCase(), route: match[2] })
+  },
+  fastapi: {
+    regex: /@app\.(get|post|put|delete|patch)\s*\(\s*['"`]([^'"`]+)['"`]/g,
+    extractor: (match) => ({ method: match[1].toUpperCase(), route: match[2] })
+  },
+  nextjs: {
+    regex: /export\s+(async\s+)?function\s+(GET|POST|PUT|DELETE|PATCH)/g,
+    extractor: (match) => ({ method: match[2], route: 'app-router' })
+  },
+  django: {
+    regex: /path\s*\(\s*['"`]([^'"`]+)['"`]/g,
+    extractor: (match) => ({ method: 'ANY', route: match[1] })
+  },
+  rails: {
+    regex: /(get|post|put|delete|patch)\s+['"`]([^'"`]+)['"`]/g,
+    extractor: (match) => ({ method: match[1].toUpperCase(), route: match[2] })
+  },
+  nestjs: {
+    regex: /@(Get|Post|Put|Delete|Patch)\s*\(\s*['"`]?([^'"`)\s]*)['"`]?\s*\)/g,
+    extractor: (match) => ({ method: match[1].toUpperCase(), route: match[2] || '/' })
+  }
+};
+
+/**
+ * Detect entry points in source files
+ */
+async function detectEntryPoints(projectRoot, frameworks) {
+  const entryPoints = [];
+
+  for (const framework of frameworks) {
+    const pattern = ENTRY_POINT_PATTERNS[framework];
+    if (!pattern) continue;
+
+    // Get appropriate file extension
+    const lang = TECH_SIGNATURES.frameworks[framework]?.language || 'javascript';
+    const ext = TECH_SIGNATURES.languages[lang]?.extensions?.[0] || '.js';
+
+    try {
+      const files = await glob(`**/*${ext}`, {
+        cwd: projectRoot,
+        ignore: ['node_modules/**', 'vendor/**', '.git/**', 'dist/**', 'build/**', '__pycache__/**'],
+        nodir: true,
+      });
+
+      for (const file of files.slice(0, 20)) { // Limit to 20 files
+        try {
+          const content = fs.readFileSync(path.join(projectRoot, file), 'utf8');
+          let match;
+
+          while ((match = pattern.regex.exec(content)) !== null) {
+            const entry = pattern.extractor(match);
+            entryPoints.push({
+              ...entry,
+              file,
+              line: content.substring(0, match.index).split('\n').length,
+              framework
+            });
+          }
+          pattern.regex.lastIndex = 0; // Reset regex
+        } catch {
+          // Skip unreadable files
+        }
+      }
+    } catch {
+      // Skip glob errors
+    }
+  }
+
+  return entryPoints;
+}
+
+/**
  * Detect technology stack
  */
 async function detectTechStack(projectRoot, options = {}) {
@@ -342,6 +420,9 @@ async function detectTechStack(projectRoot, options = {}) {
     }
   }
 
+  // Detect entry points for discovered frameworks
+  result.entryPoints = await detectEntryPoints(projectRoot, result.frameworks);
+
   // Build stack string
   const stackParts = [];
   if (result.languages.length > 0) {
@@ -369,5 +450,7 @@ function capitalize(str) {
 
 module.exports = {
   detectTechStack,
+  detectEntryPoints,
   TECH_SIGNATURES,
+  ENTRY_POINT_PATTERNS,
 };
