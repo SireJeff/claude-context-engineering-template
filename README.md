@@ -369,4 +369,4 @@ MIT License - Use freely in any project.
 
 ---
 
-**Version:** 1.2.0 | **Updated:** 2026-01-24 | **License:** MIT
+**Version:** 1.2.1 | **Updated:** 2026-01-24 | **License:** MIT
