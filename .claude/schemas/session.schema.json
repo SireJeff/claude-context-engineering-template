@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-context.dev/schemas/session.schema.json",
+  "title": "Claude Context Session State",
+  "description": "Schema for session/current/state.json",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "sessionId": {
+      "type": ["string", "null"],
+      "description": "Unique session identifier"
+    },
+    "started": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Session start timestamp"
+    },
+    "lastActivity": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Last activity timestamp"
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["idle", "research", "plan", "implement"],
+      "default": "idle",
+      "description": "Current RPI phase"
+    },
+    "task": {
+      "type": "object",
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "description": { "type": ["string", "null"] },
+        "artifacts": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "startedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "tokensUsed": { "type": "integer", "default": 0 },
+        "filesLoaded": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "workflowsReferenced": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "pendingUpdates": {
+      "type": "array",
+      "items": {
+        "type": ["string", "object"]
+      },
+      "description": "Pending documentation updates"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": ["string", "object"]
+      },
+      "description": "Session notes"
+    }
+  },
+  "additionalProperties": true
+}

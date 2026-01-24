@@ -1,0 +1,10 @@
+{
+  "$schema": "../schemas/staleness.schema.json",
+  "version": "1.0.0",
+  "lastFullCheck": null,
+  "workflows": {},
+  "thresholds": {
+    "warningDays": 30,
+    "staleDays": 90
+  }
+}

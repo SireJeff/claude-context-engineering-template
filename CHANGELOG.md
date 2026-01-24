@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.2.0] - 2025-01-24
+## [1.2.0] - 2026-01-24
 
 ### Added
 
@@ -10,13 +10,47 @@ All notable changes to this project will be documented in this file.
 - `create-claude-context` - CLI for one-command setup (`npx create-claude-context`)
 - `claude-context-plugin` - Optional plugin with ongoing commands
 
+#### Self-Sustaining Automation (`.claude/automation/`)
+- `generators/code-mapper.js` - Auto-generates CODE_TO_WORKFLOW_MAP.md
+- `generators/index-builder.js` - Rebuilds category indexes from content
+- `hooks/pre-commit.sh` - Validates documentation before commits
+- `hooks/post-commit.sh` - Rebuilds indexes after commits
+- `config.json` - Automation configuration
+
+#### Session Management (`.claude/session/`)
+- `/session-save` command - Save session state with optional checkpoints
+- `/session-resume` command - Resume previous sessions
+- `current/state.json` - Active session tracking
+- `history/` - Archived sessions by date
+- `checkpoints/` - Named resume points
+
+#### Drift Detection & Synchronization (`.claude/sync/`)
+- `/auto-sync` command - Synchronize documentation with code
+- `anchors.json` - Semantic anchors mapping (file::function() format)
+- `hashes.json` - Content hashes for change detection
+- `staleness.json` - Documentation freshness tracking
+- Drift levels: NONE, LOW, MEDIUM, HIGH, CRITICAL
+
+#### New JSON Schemas (`.claude/schemas/`)
+- `automation.schema.json` - Automation config validation
+- `session.schema.json` - Session state validation
+- `anchors.schema.json` - Semantic anchors validation
+- `hashes.schema.json` - File hashes validation
+- `staleness.schema.json` - Staleness tracking validation
+- `team-config.schema.json` - Team config validation
+- `roles.schema.json` - Team roles validation
+
+#### New Tools/Lib Modules
+- `session-manager.js` - Session persistence and restoration
+- `anchor-resolver.js` - Semantic anchor resolution (supports Python, JS, TS, Go, Rust, Ruby)
+- `drift-detector.js` - Documentation drift detection
+
 #### Unit Tests (`packages/create-claude-context/tests/`)
 - 50+ unit tests for CLI modules
 - Jest test framework with coverage reporting
 - Test fixtures for Python, Node.js, and Go projects
-- Tests for: detector, placeholder, installer, validate, prompts modules
 
-#### New Tech Stack Presets
+#### New Tech Stack Presets (12 total)
 - `python-django` - Python + Django + PostgreSQL
 - `node-nestjs` - Node.js + NestJS + TypeORM
 - `typescript-remix` - TypeScript + Remix + Prisma
@@ -28,15 +62,23 @@ All notable changes to this project will be documented in this file.
 - `ci.yml` - PR validation (lint, test, package integrity)
 - `npm-publish.yml` - Automated npm publishing on release
 
-#### Documentation
-- `docs/RECORDING_DEMO.md` - Instructions for creating demo GIF
-- npm badges in README
-- Demo section with ASCII preview
+#### Documentation Placeholders
+- `FILE_OWNERSHIP.md` - Template for tracking file ownership
+- `INTEGRATION_POINTS.md` - Template for documenting integrations
+- `TESTING_MAP.md` - Template for test coverage mapping
 
 ### Changed
-- Updated README with npm badges and demo section
-- Package READMEs now include development and contributing sections
-- Total tech stack presets increased from 6 to 12
+- `settings.json` now includes session, automation, hooks sections (v1.2.0)
+- `tools/lib/index.js` exports new modules (sessionManager, anchorResolver, driftDetector)
+- README completely rewritten with all 11 commands, 12 tech stacks, self-sustaining features
+- Total commands increased from 8 to 11
+- Total schemas increased from 7 to 14
+- All templates synced with source files
+
+### Fixed
+- Schema references across all JSON config files
+- Cross-references between documentation files
+- Version consistency across all package.json files
 
 ---
 

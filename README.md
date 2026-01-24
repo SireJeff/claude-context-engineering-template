@@ -3,188 +3,164 @@
 ![npm](https://img.shields.io/npm/v/create-claude-context)
 ![npm downloads](https://img.shields.io/npm/dm/create-claude-context)
 ![GitHub Stars](https://img.shields.io/github/stars/SireJeff/claude-context-engineering-template?style=social)
-![GitHub Forks](https://img.shields.io/github/forks/SireJeff/claude-context-engineering-template?style=social)
 ![GitHub License](https://img.shields.io/github/license/SireJeff/claude-context-engineering-template)
-![GitHub Issues](https://img.shields.io/github/issues/SireJeff/claude-context-engineering-template)
-![GitHub Pull Requests](https://img.shields.io/github/pulls/SireJeff/claude-context-engineering-template)
 
-A complete template for organizing your codebase documentation so Claude Code can navigate it efficiently.
-
----
-
-## Demo
-
-<!-- Placeholder for demo GIF - see docs/RECORDING_DEMO.md for instructions -->
-```
-$ npx create-claude-context
-
-  Let's set up context engineering for your project.
-
-? Project name: my-awesome-app
-? Technology stack: Confirm: Node.js, Express, MongoDB
-? Features to include: RPI Workflow, Specialized Agents, Validation Commands
-? Install Claude Code plugin? Yes
-
-Creating .claude/ directory structure... done
-Generating CLAUDE.md... done
-Installing claude-context-plugin... done
-
-  Context engineering setup complete.
-
-  Next steps:
-    1. Review CLAUDE.md
-    2. Customize .claude/context/workflows/
-    3. Run /help in Claude Code
-```
-
-> See [docs/RECORDING_DEMO.md](docs/RECORDING_DEMO.md) for creating an animated demo GIF.
-
----
-
-## What This Template Does
-
-This template solves a common problem: **Claude Code wastes tokens searching through your codebase** because it doesn't know where things are.
-
-**Without this template:**
-- Claude reads entire files looking for relevant code
-- Context window fills up with irrelevant content
-- You spend time guiding Claude to the right files
-- Knowledge is lost between sessions
-
-**With this template:**
-- Pre-built indexes point Claude directly to relevant code
-- Documentation includes exact file:line references
-- Workflows are mapped so Claude understands your system
-- Session handoffs preserve context for team members
-
----
-
-## Prerequisites
-
-Before installing, ensure you have:
-
-| Requirement | Details |
-|-------------|---------|
-| **Node.js 18+** | Required for CLI tools |
-| **A codebase** | This template works with any language/framework |
-| **Claude Code CLI** | The Anthropic CLI tool |
-| **~30 minutes** | For initial setup and configuration |
+A self-sustaining template for organizing your codebase documentation so Claude Code can navigate it efficiently. Includes session persistence, drift detection, and automatic documentation synchronization.
 
 ---
 
 ## Quick Start
 
-### Option A: One-Command Install (Recommended)
-
 ```bash
+# One command to set up everything
 npx create-claude-context
+
+# Or with options
+npx create-claude-context --yes          # Accept defaults
+npx create-claude-context --stack python # Force tech stack
 ```
-
-This single command:
-- Creates the `.claude/` directory structure
-- Detects your tech stack automatically
-- Generates `CLAUDE.md` at your project root
-- Installs the Claude Code plugin (optional)
-
-### Option B: Manual Installation
-
-#### Step 1: Copy the Template
-
-Copy the `.claude` directory and `CLAUDE.md` to your project root:
-
-```bash
-# Clone this repo
-git clone https://github.com/SireJeff/claude-context-engineering-template.git
-
-# Copy to your project
-cp -r claude-context-engineering-template/.claude your-project/.claude
-cp claude-context-engineering-template/CLAUDE.md your-project/CLAUDE.md
-```
-
-### Step 2: Install CLI Tools
-
-```bash
-cd your-project/.claude/tools
-npm install
-```
-
-### Step 3: Initialize for Your Codebase
-
-Run the initialization command:
-
-```bash
-npx claude-context init
-```
-
-**What happens during initialization:**
-1. CLI detects your tech stack (Python, Node, Go, etc.)
-2. Scans for major workflows in your code
-3. Replaces `{{PLACEHOLDER}}` values with your project info
-4. Creates initial workflow documentation
-5. Validates the setup
-
-**Expected output:**
-```
-✓ Detected: Node.js with Express
-✓ Found 12 potential workflows
-✓ Replaced 45 placeholders
-✓ Created workflow documentation
-✓ Validation passed
-```
-
-### Step 4: Customize Your Documentation
-
-The init command creates a starting point. You should:
-
-1. **Review `.claude/context/workflows/`** - Edit the generated workflow files
-2. **Update `CLAUDE.md`** - Add project-specific commands and patterns
-3. **Fill in gotchas** - Document things Claude should know about your codebase
 
 ---
 
-## What You Get
+## What This Solves
 
-After setup, your project will have:
+**Without this template:**
+- Claude reads entire files looking for relevant code
+- Context window fills up with irrelevant content
+- Knowledge is lost between sessions
+- Documentation drifts out of sync with code
 
-### Commands (8 total)
+**With this template:**
+- Pre-built indexes point Claude directly to relevant code
+- Session state persists across Claude Code sessions
+- Automatic drift detection keeps docs synchronized
+- Semantic anchors (`file::function()`) survive code refactoring
 
-| Command | What It Does | When to Use |
-|---------|--------------|-------------|
-| `/rpi-research` | Explores codebase, creates research doc | Starting a new feature |
-| `/rpi-plan` | Creates implementation plan with file:line refs | After research, before coding |
-| `/rpi-implement` | Executes plan with atomic commits | When you have an approved plan |
-| `/verify-docs-current` | Checks if docs match code | After making changes |
-| `/validate-all` | Runs full validation suite | Before committing |
-| `/help` | Shows available commands and agents | When unsure what to use |
-| `/collab` | Team handoffs and sync | End of session, team work |
-| `/analytics` | Shows usage statistics | Monitoring context usage |
+---
+
+## Features
+
+### Commands (11 total)
+
+| Command | Category | Description |
+|---------|----------|-------------|
+| `/rpi-research` | RPI Workflow | Explore codebase, create research document |
+| `/rpi-plan` | RPI Workflow | Create implementation plan with file:line refs |
+| `/rpi-implement` | RPI Workflow | Execute plan with atomic commits |
+| `/verify-docs-current` | Validation | Check if docs match code |
+| `/validate-all` | Validation | Run full validation suite |
+| `/session-save` | Session | Save current session state for later |
+| `/session-resume` | Session | Resume a previous session |
+| `/auto-sync` | Sync | Synchronize documentation with code |
+| `/help` | General | Show available commands |
+| `/collab` | Team | Team handoffs and knowledge sync |
+| `/analytics` | Metrics | View usage statistics |
 
 ### Agents (6 total)
 
 | Agent | Specialty | Example Use |
 |-------|-----------|-------------|
-| `@context-engineer` | Initial setup, re-indexing | "Re-scan the authentication module" |
-| `@core-architect` | System design, architecture | "Explain the state machine" |
-| `@database-ops` | Schema, migrations, queries | "Add a new migration" |
-| `@api-developer` | Endpoints, contracts | "Add a new REST endpoint" |
+| `@context-engineer` | Setup, re-indexing | "Re-scan the auth module" |
+| `@core-architect` | System design | "Explain the state machine" |
+| `@database-ops` | Schema, migrations | "Add a new migration" |
+| `@api-developer` | Endpoints, contracts | "Add a REST endpoint" |
 | `@integration-hub` | External services | "Connect to Stripe API" |
-| `@deployment-ops` | CI/CD, infrastructure | "Update the deploy pipeline" |
+| `@deployment-ops` | CI/CD, infrastructure | "Update deploy pipeline" |
 
-### Directory Structure
+### Tech Stack Presets (12 total)
+
+| Preset | Stack |
+|--------|-------|
+| `python` | Python, pip, pytest |
+| `python-django` | Python, Django, PostgreSQL |
+| `node` | Node.js, npm, Jest |
+| `node-nestjs` | Node.js, NestJS, TypeORM |
+| `typescript-remix` | TypeScript, Remix, Prisma |
+| `go` | Go, go modules |
+| `rust` | Rust, Cargo |
+| `ruby` | Ruby, Bundler, RSpec |
+| `java-spring` | Java, Spring Boot, Maven |
+| `csharp-dotnet` | C#, .NET, NuGet |
+| `php-laravel` | PHP, Laravel, Composer |
+| `default` | Generic project |
+
+---
+
+## Self-Sustaining Features
+
+### Session Persistence
+
+Sessions persist across Claude Code restarts:
+
+```bash
+/session-save                    # Save current state
+/session-save --checkpoint "v1"  # Create named checkpoint
+/session-resume                  # Resume last session
+/session-resume --list           # List available sessions
+```
+
+### Drift Detection
+
+Automatic detection when documentation is out of sync:
+
+```bash
+/auto-sync --check        # Check for drift
+/auto-sync --fix          # Auto-fix shifted line numbers
+/auto-sync --rebuild-map  # Regenerate CODE_TO_WORKFLOW_MAP
+```
+
+### Semantic Anchors
+
+Use stable function references instead of brittle line numbers:
+
+```markdown
+<!-- Before (breaks when code changes) -->
+See auth.py:145
+
+<!-- After (survives refactoring) -->
+See auth.py::authenticate_user()
+```
+
+### Git Hooks
+
+Optional hooks for automated verification:
+
+```bash
+# Install hooks
+npx claude-context hooks install
+
+# Pre-commit: Warns if docs need updating
+# Post-commit: Rebuilds indexes automatically
+```
+
+---
+
+## Directory Structure
 
 ```
 your-project/
 ├── CLAUDE.md                    # Entry point Claude reads first
 └── .claude/
     ├── agents/                  # 6 specialized agents
-    ├── commands/                # 8 slash commands
+    ├── automation/              # Self-sustaining engines
+    │   ├── generators/          # Auto-generation scripts
+    │   └── hooks/               # Git hooks
+    ├── commands/                # 11 slash commands
     ├── context/                 # Pre-computed knowledge
     │   ├── workflows/           # Workflow documentation
-    │   ├── WORKFLOW_INDEX.md    # Master index
-    │   └── KNOWN_GOTCHAS.md     # Documented issues
+    │   ├── .meta/               # Generation metadata
+    │   └── CODE_TO_WORKFLOW_MAP.md
     ├── indexes/                 # Navigation hierarchy
+    ├── session/                 # Session persistence
+    │   ├── current/             # Active session
+    │   ├── history/             # Archived sessions
+    │   └── checkpoints/         # Named resume points
+    ├── sync/                    # Synchronization tracking
+    │   ├── anchors.json         # Semantic anchors
+    │   ├── hashes.json          # Content hashes
+    │   └── staleness.json       # Freshness tracking
+    ├── schemas/                 # JSON validation (14 schemas)
     ├── tools/                   # CLI tooling
-    ├── schemas/                 # JSON validation
     ├── config/                  # Environment configs
     ├── team/                    # Team collaboration
     ├── knowledge/               # Shared knowledge base
@@ -193,133 +169,50 @@ your-project/
 
 ---
 
-## How to Use
+## RPI Workflow
 
-### Daily Development Workflow
+The Research-Plan-Implement workflow ensures thorough, systematic changes:
 
-**When fixing a bug:**
-1. Tell Claude the symptom
-2. Claude loads relevant workflow from index
-3. Goes directly to file:line references
-4. Fixes with full context
-
-**When adding a feature:**
-1. Run `/rpi-research feature-name`
-2. Review the research document
-3. Run `/rpi-plan feature-name`
-4. Get your approval on the plan
-5. Run `/rpi-implement feature-name`
-6. Documentation updates automatically
-
-### The RPI Workflow Explained
-
-**R - Research:**
 ```bash
+# 1. Research: Explore and understand
 /rpi-research user-authentication
-```
-Claude explores your codebase using parallel agents, traces call chains, and produces a research document with all relevant files and line numbers.
 
-**P - Plan:**
-```bash
+# 2. Plan: Create detailed implementation plan
 /rpi-plan user-authentication
-```
-Based on research, Claude creates a step-by-step implementation plan with exact file:line modifications. You review and approve before any code changes.
 
-**I - Implement:**
-```bash
+# 3. Implement: Execute with atomic commits
 /rpi-implement user-authentication
 ```
-Claude executes the approved plan using atomic changes: ONE CHANGE → ONE TEST → ONE COMMIT. Documentation is updated automatically.
 
-### Keeping Documentation Current
-
-After making code changes:
-```bash
-/verify-docs-current path/to/changed/file
-```
-
-This checks if line numbers in docs still match the code. Run it before committing.
-
-### Team Handoffs
-
-At the end of your session:
-```bash
-/collab handoff
-```
-
-This creates a handoff document in `.claude/knowledge/sessions/` with:
-- What you worked on
-- What's in progress
-- Any blockers
-- Suggested next steps
-
-The next developer can pick up exactly where you left off.
-
----
-
-## What to Expect
-
-### Context Efficiency
-
-| Metric | Target | How It's Achieved |
-|--------|--------|-------------------|
-| Context usage | <40% | Progressive loading: index → workflow → code |
-| Benefit | More room for actual work | Less wasted on exploration |
-
-### Documentation Accuracy
-
-| Metric | Target | How It's Maintained |
-|--------|--------|---------------------|
-| Line number accuracy | ≥60% | `/verify-docs-current` command |
-| Benefit | Claude goes to correct locations | Not nearby guesses |
-
-### Workflow Coverage
-
-| Metric | Target | How It's Created |
-|--------|--------|------------------|
-| Documented workflows | 8-15 | `@context-engineer` during init |
-| Benefit | Major features are pre-mapped | Faster navigation |
-
-### Team Continuity
-
-- Session handoffs preserve context between developers
-- Shared knowledge base grows over time
-- Architecture Decision Records (ADRs) document key choices
-- New team members onboard faster with existing documentation
-
----
-
-## Architecture Overview
-
-The template uses a **3-level documentation hierarchy** to minimize context usage:
-
-### Level 1: Category Indexes (~5k tokens each)
-
-Entry points. Load one of these first based on your task type:
-
-| Index | Use When |
-|-------|----------|
-| `indexes/workflows/CATEGORY_INDEX.md` | Working on a feature |
-| `indexes/code/CATEGORY_INDEX.md` | Finding specific code |
-| `indexes/agents/CATEGORY_INDEX.md` | Choosing which agent to use |
-
-### Level 2: Domain Indexes (~15k tokens each)
-
-Detailed navigation within a category. Example: `indexes/workflows/authentication.md` lists all auth-related workflows.
-
-### Level 3: Detail Files (~40k tokens each)
-
-Full documentation with file:line references. Example: `context/workflows/user-login.md` contains complete call chains for the login feature.
-
-**Why this matters:** Claude loads only what it needs. For a simple bug fix, it might load 20k tokens total. For a complex feature, maybe 60k. Either way, you stay under the 40% target.
+**Key principle:** ONE CHANGE → ONE TEST → ONE COMMIT
 
 ---
 
 ## Configuration
 
-### Environment-Specific Settings
+### Settings (`.claude/settings.json`)
 
-The template supports different configurations for dev/staging/prod:
+```json
+{
+  "version": "1.2.0",
+  "session": {
+    "auto_save_enabled": true,
+    "auto_save_interval_minutes": 5,
+    "max_history_days": 30
+  },
+  "automation": {
+    "auto_generate_code_map": true,
+    "semantic_anchors_enabled": true,
+    "drift_detection_enabled": true
+  },
+  "hooks": {
+    "pre_commit_enabled": true,
+    "block_on_drift": false
+  }
+}
+```
+
+### Environment Configs
 
 ```
 .claude/config/
@@ -331,36 +224,60 @@ The template supports different configurations for dev/staging/prod:
 └── local.json             # Your overrides (gitignored)
 ```
 
-### Key Settings
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `validation.line_accuracy_threshold` | 60 | Minimum % of line numbers that must be accurate |
-| `validation.on_commit` | true | Run validation before commits |
-| `logging.level` | info | Log verbosity (debug, info, warn, error) |
-
 ---
 
 ## CLI Commands
 
-The template includes CLI tools for validation and management:
+```bash
+# Initialize (recommended: use create-claude-context)
+npx create-claude-context
+
+# Validation
+npx claude-context validate --all
+npx claude-context validate --schema
+npx claude-context validate --links
+npx claude-context validate --lines
+
+# Synchronization
+npx claude-context sync --check
+npx claude-context sync --fix
+
+# Generation
+npx claude-context generate --code-map
+npx claude-context generate --indexes
+
+# Diagnostics
+npx claude-context diagnose
+npx claude-context diagnose --fix
+
+# Hooks
+npx claude-context hooks install
+npx claude-context hooks uninstall
+```
+
+---
+
+## Context Efficiency
+
+| Metric | Target | How It's Achieved |
+|--------|--------|-------------------|
+| Context usage | <40% | Progressive loading: index → workflow → code |
+| Line accuracy | ≥60% | `/verify-docs-current` + semantic anchors |
+| Session continuity | 100% | Persistent session state |
+
+---
+
+## CI/CD Integration
+
+Copy GitHub Actions workflows:
 
 ```bash
-# Initialize template for your project
-npx claude-context init
-
-# Validate all documentation
-npx claude-context validate --all
-
-# Check specific validations
-npx claude-context validate --schema    # JSON schema validation
-npx claude-context validate --links     # Internal link checking
-npx claude-context validate --lines     # Line number accuracy
-
-# System diagnostics
-npx claude-context diagnose
-npx claude-context diagnose --fix       # Auto-fix common issues
+cp -r .claude/ci-templates/github-actions/*.yml .github/workflows/
 ```
+
+Includes:
+- **validate-docs.yml** - Runs on PRs affecting docs
+- **context-check.yml** - Weekly documentation health check
 
 ---
 
@@ -368,89 +285,44 @@ npx claude-context diagnose --fix       # Auto-fix common issues
 
 ### "CLI can't detect my tech stack"
 
-Provide hints during initialization:
 ```bash
-npx claude-context init --stack "python-fastapi-postgresql"
-```
-
-Or use the context engineer agent:
-```bash
-@context-engineer "Initialize for Python FastAPI with PostgreSQL"
-```
-
-### "Too many workflows discovered"
-
-Merge related workflows:
-```bash
-@context-engineer "Merge workflows: auth-login and auth-register into authentication"
+npx create-claude-context --stack python-django
 ```
 
 ### "Line numbers are outdated"
 
-Run verification and let it fix drift:
 ```bash
-npx claude-context diagnose --fix
+/auto-sync --fix
 ```
 
-Or manually:
+### "Session won't resume"
+
 ```bash
-/verify-docs-current path/to/file
+/session-resume --list  # Check available sessions
 ```
 
 ### "Context budget exceeded"
 
-Use progressive loading:
-1. Load category index first (5k tokens)
-2. Then load only the relevant workflow (15-40k tokens)
-3. Read specific code sections, not entire files
-
-### "Validation always fails"
-
-Check the threshold settings:
-```bash
-npx claude-context validate --lines --threshold 50  # More lenient
-```
+Load progressively:
+1. Category index (5k tokens)
+2. Relevant workflow (15-40k tokens)
+3. Specific code sections only
 
 ---
 
-## CI/CD Integration
+## npm Packages
 
-Copy the GitHub Actions workflows to automate validation:
-
-```bash
-cp -r .claude/ci-templates/github-actions/*.yml .github/workflows/
-```
-
-This adds:
-- **validate-docs.yml** - Runs on PRs that touch `.claude/` or source files
-- **context-check.yml** - Weekly health check of documentation budget
-
----
-
-## Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-Before submitting:
-1. Run `npx claude-context validate --all`
-2. Check the [Quality Checklist](.claude/standards/QUALITY_CHECKLIST.md)
-3. For extensions, follow [Extension Guidelines](.claude/standards/EXTENSION_GUIDELINES.md)
+| Package | Purpose | Install |
+|---------|---------|---------|
+| `create-claude-context` | CLI installer | `npx create-claude-context` |
+| `claude-context-plugin` | Claude Code plugin | Optional during setup |
 
 ---
 
 ## License
 
-MIT License - Use freely in any project. See [LICENSE](LICENSE) for details.
+MIT License - Use freely in any project.
 
 ---
 
-## Credits
-
-Built on context engineering principles:
-- LLM context window optimization research
-- Claude Code best practices
-- Community feedback and contributions
-
----
-
-**Version:** 1.2.0 | **Updated:** 2025-01-24 | **License:** MIT
+**Version:** 1.2.0 | **Updated:** 2026-01-24 | **License:** MIT
