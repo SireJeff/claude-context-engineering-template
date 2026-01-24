@@ -27,6 +27,7 @@ virgool-article.md
 
 # Node modules (for CLI tools)
 .claude/tools/node_modules/
+packages/*/node_modules/
 
 # Generated files
 .claude/docs/generated/

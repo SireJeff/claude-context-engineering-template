@@ -1,0 +1,23 @@
+{
+  "name": "claude-context-engineering",
+  "version": "1.0.0",
+  "displayName": "Context Engineering",
+  "description": "RPI workflow and context optimization for Claude Code - Research, Plan, Implement with file:line precision",
+  "author": {
+    "name": "SireJeff"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SireJeff/claude-context-engineering-template"
+  },
+  "keywords": [
+    "context-engineering",
+    "rpi-workflow",
+    "documentation",
+    "productivity"
+  ],
+  "claudeCode": {
+    "minVersion": "1.0.33"
+  }
+}

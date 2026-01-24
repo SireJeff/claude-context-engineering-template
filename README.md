@@ -43,7 +43,21 @@ Before installing, ensure you have:
 
 ## Quick Start
 
-### Step 1: Copy the Template
+### Option A: One-Command Install (Recommended)
+
+```bash
+npx create-claude-context
+```
+
+This single command:
+- Creates the `.claude/` directory structure
+- Detects your tech stack automatically
+- Generates `CLAUDE.md` at your project root
+- Installs the Claude Code plugin (optional)
+
+### Option B: Manual Installation
+
+#### Step 1: Copy the Template
 
 Copy the `.claude` directory and `CLAUDE.md` to your project root:
 

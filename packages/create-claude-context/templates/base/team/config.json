@@ -1,0 +1,79 @@
+{
+  "$schema": "../schemas/team-config.schema.json",
+  "$comment": "Team configuration for collaborative Claude Code sessions",
+
+  "team": {
+    "name": "{{TEAM_NAME}}",
+    "organization": "{{ORGANIZATION_NAME}}",
+    "created": "{{DATE}}",
+    "version": "1.0.0"
+  },
+
+  "members": [
+    {
+      "id": "lead-1",
+      "name": "{{TEAM_LEAD_NAME}}",
+      "role": "team-lead",
+      "email": "{{TEAM_LEAD_EMAIL}}",
+      "permissions": ["all"],
+      "active": true
+    },
+    {
+      "id": "dev-1",
+      "name": "{{DEVELOPER_1_NAME}}",
+      "role": "developer",
+      "email": "{{DEVELOPER_1_EMAIL}}",
+      "permissions": ["read", "write", "execute"],
+      "active": true
+    }
+  ],
+
+  "settings": {
+    "require_handoff_on_session_end": true,
+    "auto_sync_knowledge": true,
+    "shared_context_enabled": true,
+    "session_timeout_minutes": 480,
+    "max_concurrent_sessions": 5
+  },
+
+  "notifications": {
+    "enabled": false,
+    "channels": {
+      "slack": {
+        "webhook_url": "{{SLACK_WEBHOOK_URL}}",
+        "channel": "#claude-notifications"
+      },
+      "email": {
+        "smtp_configured": false
+      }
+    },
+    "events": {
+      "session_handoff": true,
+      "knowledge_update": true,
+      "error_critical": true
+    }
+  },
+
+  "integrations": {
+    "git": {
+      "auto_attribute_commits": true,
+      "co_author_format": "Co-Authored-By: {{MEMBER_NAME}} <{{MEMBER_EMAIL}}>"
+    },
+    "jira": {
+      "enabled": false,
+      "project_key": "{{JIRA_PROJECT_KEY}}",
+      "api_url": "{{JIRA_API_URL}}"
+    },
+    "confluence": {
+      "enabled": false,
+      "space_key": "{{CONFLUENCE_SPACE_KEY}}"
+    }
+  },
+
+  "policies": {
+    "code_review_required": true,
+    "documentation_update_required": true,
+    "test_coverage_minimum": 80,
+    "max_file_changes_per_session": 50
+  }
+}
