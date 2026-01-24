@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-01-24
+
+### Added
+- Entry point detection in `detector.js` for 6 frameworks (Express, FastAPI, Next.js, Django, Rails, NestJS)
+- Analysis-aware placeholder replacement in `placeholder.js`
+- CLI integration tests with Express app fixture
+- 207 total tests (unit + integration)
+
+### Changed
+- `getDefaultValues()` now accepts analysis parameter for smarter defaults
+- `CORE_FILES_LIST` populated from detected entry points
+- `WORKFLOWS_COUNT` derived from actual workflow analysis
+
+---
+
 ## [1.2.0] - 2026-01-24
 
 ### Added
