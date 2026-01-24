@@ -1,0 +1,104 @@
+# claude-context-plugin
+
+Claude Code plugin for context engineering - RPI workflow and documentation optimization.
+
+## Installation
+
+### Via Plugin Manager
+
+```bash
+/plugin install claude-context-engineering
+```
+
+### Via CLI
+
+```bash
+npx claude-plugins install claude-context-engineering
+```
+
+## Skills
+
+### /context-eng:research
+
+Systematic codebase exploration for feature/fix analysis.
+
+```
+/context-eng:research user-authentication
+```
+
+Creates a research document with:
+- Relevant files and line numbers
+- Call chain analysis
+- Dependency mapping
+- Test coverage gaps
+
+### /context-eng:plan
+
+Create implementation blueprint with file:line precision.
+
+```
+/context-eng:plan user-authentication
+```
+
+Creates a plan document with:
+- Exact file:line modifications
+- Risk assessment
+- Test strategy
+- Rollback plan
+
+### /context-eng:implement
+
+Execute plan with atomic changes and continuous testing.
+
+```
+/context-eng:implement user-authentication
+```
+
+Follows the golden rule: ONE CHANGE → ONE TEST → ONE COMMIT
+
+### /context-eng:validate
+
+Run complete validation suite.
+
+```
+/context-eng:validate
+```
+
+Checks:
+- Directory structure
+- JSON schemas
+- Markdown links
+- Placeholder completion
+- Line number accuracy
+
+### /context-eng:verify-docs
+
+Verify documentation line numbers match code.
+
+```
+/context-eng:verify-docs path/to/file.py
+```
+
+## Agents
+
+### @context-eng:context-engineer
+
+Initialize and maintain context engineering documentation.
+
+```
+@context-eng:context-engineer "Discover workflows for this codebase"
+```
+
+## Requirements
+
+- Claude Code v1.0.33+
+- Context engineering setup (use `npx create-claude-context` first)
+
+## License
+
+MIT
+
+## Links
+
+- [GitHub](https://github.com/SireJeff/claude-context-engineering-template)
+- [create-claude-context](https://www.npmjs.com/package/create-claude-context)

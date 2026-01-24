@@ -1,0 +1,53 @@
+{
+  "name": "create-claude-context",
+  "version": "1.0.0",
+  "description": "Set up Claude Context Engineering for any project with a single command",
+  "main": "lib/index.js",
+  "bin": {
+    "create-claude-context": "./bin/create-claude-context.js"
+  },
+  "type": "commonjs",
+  "files": [
+    "bin/",
+    "lib/",
+    "templates/",
+    "schemas/"
+  ],
+  "scripts": {
+    "test": "node bin/create-claude-context.js --help",
+    "lint": "eslint lib/"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "context-engineering",
+    "ai",
+    "llm",
+    "documentation",
+    "cli",
+    "scaffolding"
+  ],
+  "author": "SireJeff",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SireJeff/claude-context-engineering-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SireJeff/claude-context-engineering-template/issues"
+  },
+  "homepage": "https://github.com/SireJeff/claude-context-engineering-template#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "enquirer": "^2.4.1",
+    "ora": "^5.4.1",
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "glob": "^10.3.10",
+    "yaml": "^2.3.4",
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  }
+}

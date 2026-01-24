@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-context.dev/schemas/plan.schema.json",
+  "title": "Claude Context Implementation Plan",
+  "description": "Schema for RPI plan phase documents (YAML frontmatter)",
+  "type": "object",
+  "required": ["name", "status", "research_ref"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Plan name matching research document"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "pending-approval", "approved", "in-progress", "completed", "rejected", "archived"],
+      "description": "Current plan status"
+    },
+    "research_ref": {
+      "type": "string",
+      "description": "Path to research document this plan is based on"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Plan creation time"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Plan approval time"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Who approved the plan"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Plan completion time"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "in_scope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Explicitly included items"
+        },
+        "out_of_scope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Explicitly excluded items"
+        }
+      },
+      "description": "Scope definition"
+    },
+    "modifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": { "type": "string" },
+          "lines": { "type": "string", "description": "Line range (e.g., '10-50')" },
+          "change": { "type": "string" },
+          "risk": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          }
+        },
+        "required": ["file", "change"]
+      },
+      "description": "Planned file modifications"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "order": { "type": "integer" },
+          "description": { "type": "string" },
+          "file": { "type": "string" },
+          "lines": { "type": "string" },
+          "current_code": { "type": "string" },
+          "proposed_code": { "type": "string" },
+          "test_command": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in-progress", "completed", "failed"]
+          }
+        },
+        "required": ["order", "description"]
+      },
+      "description": "Step-by-step implementation"
+    },
+    "test_strategy": {
+      "type": "object",
+      "properties": {
+        "unit_tests": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "integration_tests": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "e2e_tests": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "description": "Testing strategy"
+    },
+    "rollback_plan": {
+      "type": "string",
+      "description": "How to rollback if implementation fails"
+    },
+    "doc_updates_required": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Documentation files to update"
+    },
+    "estimated_context_tokens": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Estimated tokens for implementation"
+    },
+    "actual_context_tokens": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Actual tokens used"
+    }
+  },
+  "additionalProperties": false
+}
