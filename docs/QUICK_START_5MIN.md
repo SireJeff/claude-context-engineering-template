@@ -5,30 +5,35 @@ Get Claude Context Engineering running in your project in under 5 minutes.
 ## Prerequisites
 
 - [ ] Claude Code CLI installed (`claude` command available)
-- [ ] Node.js 16+ (for CLI tools)
+- [ ] Node.js 18+ (for CLI tools)
 - [ ] A codebase to enhance
 
-## Step 1: Copy Template (30 seconds)
+## Step 1: Run the CLI (30 seconds)
 
 ```bash
 # From your project root
-git clone https://github.com/yourusername/claude-code-context-engineering-template.git /tmp/template
+npx create-claude-context
+```
+
+This single command:
+- Creates the `.claude/` directory structure
+- Detects your tech stack automatically
+- Generates `CLAUDE.md` at your project root
+- Installs the Claude Code plugin (optional)
+
+### Alternative: Manual Installation
+
+```bash
+git clone https://github.com/SireJeff/claude-context-engineering-template.git /tmp/template
 cp -r /tmp/template/.claude ./.claude
 cp /tmp/template/CLAUDE.md ./CLAUDE.md
 rm -rf /tmp/template
+
+# Install CLI tools
+cd .claude/tools && npm install && cd ../..
 ```
 
-Or manually download and copy the `.claude/` folder and `CLAUDE.md` to your project root.
-
-## Step 2: Install CLI Tools (30 seconds)
-
-```bash
-cd .claude/tools
-npm install
-cd ../..
-```
-
-## Step 3: Run Validation (1 minute)
+## Step 2: Run Validation (1 minute)
 
 ```bash
 npx .claude/tools/bin/claude-context.js validate

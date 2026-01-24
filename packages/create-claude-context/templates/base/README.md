@@ -254,4 +254,4 @@ This agent will:
 ---
 
 *Configuration updated: {{DATE}}*
-*Version: 1.1.0 (Template)*
+*Version: 1.2.0 (Template)*
