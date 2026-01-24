@@ -36,6 +36,17 @@ For changes to `.claude/tools/`:
 - Update schemas in `.claude/schemas/` if adding new structures
 - Run `npx claude-context validate --all` before submitting
 
+### npm Package Contributions
+For changes to `packages/create-claude-context/`:
+- Run tests: `cd packages/create-claude-context && npm test`
+- Ensure coverage: `npm run test:coverage`
+- Update package README if adding features
+- Follow existing code patterns in `lib/`
+
+For changes to `packages/claude-context-plugin/`:
+- Test plugin installation locally
+- Update skill definitions in `skills/` as needed
+
 ### Quality Standards
 - Review the [Quality Checklist](.claude/standards/QUALITY_CHECKLIST.md)
 - For extensions, follow the [Extension Guidelines](.claude/standards/EXTENSION_GUIDELINES.md)
