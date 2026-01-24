@@ -126,6 +126,49 @@ Unknown: {{UNKNOWN_PLACEHOLDER}}
   });
 });
 
+describe('getDefaultValues with analysis', () => {
+  test('should use analysis.entryPoints for CORE_FILES_LIST', () => {
+    const config = { projectName: 'test' };
+    const techStack = { languages: ['javascript'], frameworks: ['express'] };
+    const analysis = {
+      entryPoints: [
+        { file: 'src/routes/users.js', route: '/users' },
+        { file: 'src/routes/auth.js', route: '/auth' }
+      ],
+      workflows: [
+        { name: 'User Auth', category: 'security' },
+        { name: 'Data Sync', category: 'data' }
+      ],
+      sourceFiles: 42,
+      linesOfCode: { total: 5000 }
+    };
+
+    const values = getDefaultValues(config, techStack, analysis);
+
+    expect(values.CORE_FILES_LIST).toContain('src/routes/users.js');
+    expect(values.CORE_FILES_LIST).toContain('src/routes/auth.js');
+    expect(values.WORKFLOWS_COUNT).toBe('2');
+  });
+
+  test('should set accurate counts from analysis', () => {
+    const analysis = {
+      entryPoints: [{ file: 'a.js' }, { file: 'b.js' }, { file: 'c.js' }],
+      workflows: [{ name: 'W1' }, { name: 'W2' }],
+      sourceFiles: 100
+    };
+
+    const values = getDefaultValues({}, {}, analysis);
+
+    expect(values.WORKFLOWS_COUNT).toBe('2');
+  });
+
+  test('should use default CORE_FILES_LIST when no analysis', () => {
+    const values = getDefaultValues({}, {}, {});
+
+    expect(values.CORE_FILES_LIST).toContain('src/');
+  });
+});
+
 describe('KNOWN_PLACEHOLDERS', () => {
   test('has expected number of placeholders', () => {
     const count = Object.keys(KNOWN_PLACEHOLDERS).length;

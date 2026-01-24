@@ -50,9 +50,9 @@ const KNOWN_PLACEHOLDERS = {
 };
 
 /**
- * Get default placeholder values based on config and tech stack
+ * Get default placeholder values based on config, tech stack, and analysis
  */
-function getDefaultValues(config = {}, techStack = {}) {
+function getDefaultValues(config = {}, techStack = {}, analysis = {}) {
   const today = new Date().toISOString().split('T')[0];
   const projectName = config.projectName || 'my-project';
 
@@ -61,33 +61,59 @@ function getDefaultValues(config = {}, techStack = {}) {
     install: 'npm install',
     dev: 'npm run dev',
     test: 'npm test',
-    migrate: 'npm run migrate'
+    testE2e: 'npm run test:e2e',
+    testCoverage: 'npm run test:coverage',
+    migrateCreate: 'npm run migration:create',
+    migrateRun: 'npm run migration:run',
+    deploy: 'npm run deploy'
   };
 
   if (techStack.commands) {
-    commands = techStack.commands;
+    commands = { ...commands, ...techStack.commands };
   } else if (techStack.languages?.includes('python')) {
     commands = {
       install: 'pip install -r requirements.txt',
       dev: 'python main.py',
       test: 'pytest',
-      migrate: 'alembic upgrade head'
+      testE2e: 'pytest tests/e2e/',
+      testCoverage: 'pytest --cov',
+      migrateCreate: 'alembic revision --autogenerate',
+      migrateRun: 'alembic upgrade head',
+      deploy: 'docker-compose up -d'
     };
   } else if (techStack.languages?.includes('go')) {
     commands = {
       install: 'go mod download',
       dev: 'go run .',
       test: 'go test ./...',
-      migrate: 'migrate -path migrations up'
+      testE2e: 'go test ./e2e/...',
+      testCoverage: 'go test -cover ./...',
+      migrateCreate: 'migrate create -ext sql',
+      migrateRun: 'migrate -path migrations up',
+      deploy: 'docker-compose up -d'
     };
   } else if (techStack.languages?.includes('rust')) {
     commands = {
       install: 'cargo build',
       dev: 'cargo run',
       test: 'cargo test',
-      migrate: 'sqlx migrate run'
+      testE2e: 'cargo test --test e2e',
+      testCoverage: 'cargo tarpaulin',
+      migrateCreate: 'sqlx migrate add',
+      migrateRun: 'sqlx migrate run',
+      deploy: 'cargo build --release'
     };
   }
+
+  // Build core files list from analysis
+  let coreFilesList = '- src/\n- config/';
+  if (analysis.entryPoints && analysis.entryPoints.length > 0) {
+    const uniqueFiles = [...new Set(analysis.entryPoints.map(e => e.file))];
+    coreFilesList = uniqueFiles.slice(0, 10).map(f => `- \`${f}\``).join('\n');
+  }
+
+  // Get workflow count from analysis
+  const workflowCount = analysis.workflows?.length || 0;
 
   return {
     PROJECT_NAME: projectName,
@@ -97,23 +123,58 @@ function getDefaultValues(config = {}, techStack = {}) {
     PROJECT_STATUS: 'Development',
     API_URL: `https://api.${projectName}.example.com`,
     REPO_URL: `https://github.com/user/${projectName}`,
-    DEPLOYMENT_PLATFORM: 'Docker',
+    DEPLOYMENT_PLATFORM: 'TBD',
     INSTALL_COMMAND: commands.install,
     DEV_START_COMMAND: commands.dev,
     TEST_COMMAND: commands.test,
-    TEST_E2E_COMMAND: `${commands.test} --e2e`,
-    TEST_COVERAGE_COMMAND: `${commands.test} --coverage`,
-    MIGRATION_CREATE_COMMAND: `${commands.migrate}:create`,
-    MIGRATION_RUN_COMMAND: commands.migrate,
-    DEPLOY_COMMAND: 'docker-compose up -d',
-    MODELS_PATH: 'src/models/',
-    MIGRATIONS_PATH: 'src/migrations/',
-    CORE_FILES_LIST: '- src/\n- config/',
-    WORKFLOWS_COUNT: '8',
+    TEST_E2E_COMMAND: commands.testE2e,
+    TEST_COVERAGE_COMMAND: commands.testCoverage,
+    MIGRATION_CREATE_COMMAND: commands.migrateCreate,
+    MIGRATION_RUN_COMMAND: commands.migrateRun,
+    DEPLOY_COMMAND: commands.deploy,
+    MODELS_PATH: 'models/',
+    MIGRATIONS_PATH: 'migrations/',
+    CORE_FILES_LIST: coreFilesList,
+    WORKFLOWS_COUNT: String(workflowCount),
+    WORKFLOW_DOMAINS_COUNT: String(workflowCount > 0 ? Math.min(workflowCount, 5) : 0),
+    CODE_DOMAINS_COUNT: '0',
     AGENTS_COUNT: '6',
-    COMMANDS_COUNT: '8',
+    COMMANDS_COUNT: '11',
+    INDEX_FILES_COUNT: '15',
     DATE: today,
     AGENT_TABLE_ROWS: '',
+    AGENT_ROUTING_TABLE: '@context-engineer for setup, @core-architect for design',
+    DEBUGGING_QUICK_REFS: 'KNOWN_GOTCHAS.md, logs/',
+    EXAMPLE_REFACTOR_TASK: 'Refactor the authentication flow',
+    EXAMPLE_LOWLEVEL_TASK: 'Fix hardcoded API URL in config',
+    EXAMPLE_FEATURE_TASK: 'Add user notifications feature',
+    CONFIG_SEARCH_PATTERN: 'grep -r "process.env" --include="*.js" --include="*.ts"',
+    URL_SEARCH_PATTERN: 'grep -rE "https?://" --include="*.js" --include="*.ts" --include="*.json"',
+    EXTERNAL_INTEGRATIONS_LIST: '*No external integrations detected. Document manually if present.*',
+    ARCHITECTURE_DIAGRAM: `┌─────────────────────────────────────┐
+│           [Application]             │
+│                                     │
+│   ┌───────────┐   ┌───────────┐    │
+│   │   API     │   │  Services │    │
+│   └───────────┘   └───────────┘    │
+│                                     │
+│   ┌───────────┐   ┌───────────┐    │
+│   │  Models   │   │ Database  │    │
+│   └───────────┘   └───────────┘    │
+└─────────────────────────────────────┘`,
+    CRITICAL_URLS: `- Production: https://${projectName}.example.com`,
+    BUSINESS_CONSTANTS: '- TBD (document key business constants)',
+    GOTCHA_CATEGORY_1: 'Database',
+    GOTCHA_1_ITEMS: '- TBD (document database gotchas)',
+    GOTCHA_CATEGORY_2: 'API',
+    GOTCHA_2_ITEMS: '- TBD (document API gotchas)',
+    PRODUCTION_PLATFORM: 'TBD',
+    PRODUCTION_SERVICES: 'Web, API, Database',
+    MONITORING_COMMANDS: 'Check logs, health endpoints',
+    MIGRATION_CONSTRAINTS: 'Always backup before migrations',
+    TESTING_CONSTRAINTS: 'Run tests before merging',
+    SECURITY_CONSTRAINTS: 'Never commit secrets',
+    CONTACT_INFO: 'TBD (add contact info)',
   };
 }
 
@@ -122,7 +183,7 @@ function getDefaultValues(config = {}, techStack = {}) {
  */
 async function replacePlaceholders(targetDir, config = {}) {
   const claudeDir = path.join(targetDir, '.claude');
-  const values = getDefaultValues(config, config.techStack || {});
+  const values = getDefaultValues(config, config.techStack || {}, config.analysis || {});
 
   // Find all markdown and JSON files
   const files = await glob('**/*.{md,json}', {
