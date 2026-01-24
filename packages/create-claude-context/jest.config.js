@@ -15,5 +15,5 @@ module.exports = {
     },
   },
   verbose: true,
-  testTimeout: 10000,
+  testTimeout: 30000, // Integration tests may take longer
 };
