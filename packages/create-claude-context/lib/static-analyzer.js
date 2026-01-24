@@ -206,7 +206,7 @@ const WORKFLOW_HEURISTICS = {
 const SOURCE_EXTENSIONS = {
   javascript: ['.js', '.jsx', '.mjs', '.cjs'],
   typescript: ['.ts', '.tsx', '.mts', '.cts'],
-  python: ['.py'],
+  python: ['.py', '.ipynb', '.pyw'],
   go: ['.go'],
   rust: ['.rs'],
   ruby: ['.rb'],

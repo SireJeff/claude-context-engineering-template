@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2026-01-24
+
+### Fixed
+- Static analyzer now detects Jupyter notebook files (`.ipynb`) and Python Window scripts (`.pyw`) in Python projects
+- Previously, Python projects containing only `.ipynb` files would show "0 files detected"
+
+---
+
 ## [1.2.1] - 2026-01-24
 
 ### Added
