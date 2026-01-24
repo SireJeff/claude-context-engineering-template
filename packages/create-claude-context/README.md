@@ -1,6 +1,6 @@
 # create-claude-context
 
-Set up Claude Context Engineering for any project with a single command.
+Set up Claude Context Engineering for any project with a single command. **Automatically analyzes your codebase** and generates real documentation.
 
 ## Quick Start
 
@@ -16,12 +16,22 @@ npm init claude-context
 
 ## What It Does
 
-This CLI tool sets up a complete context engineering system for your codebase:
+This CLI tool performs **real codebase analysis** and creates a complete context engineering system:
 
-1. **Creates `.claude/` directory** - Context engineering documentation
-2. **Creates `CLAUDE.md`** - Entry point for Claude Code
-3. **Detects tech stack** - Auto-configures for your project
-4. **Installs plugin** - Adds ongoing commands (optional)
+1. **Analyzes codebase** - Discovers entry points, workflows, architecture
+2. **Creates `.claude/` directory** - Populated with real project data
+3. **Creates `CLAUDE.md`** - Entry point with actual file references
+4. **Detects tech stack** - Auto-configures for your project
+5. **AI handoff** - Creates instructions for `@context-engineer` (when in Claude Code)
+
+### Automatic Analysis
+
+| What's Detected | Description |
+|-----------------|-------------|
+| Entry Points | API routes, CLI handlers, event listeners |
+| Workflows | Authentication, payments, data processing patterns |
+| Architecture | Directory structure, layers, dependencies |
+| Tech Stack | Languages, frameworks, package managers |
 
 ## Options
 
@@ -34,10 +44,23 @@ Options:
   -t, --template     Use a tech stack preset
   --no-git           Skip git initialization
   --dry-run          Show what would be done
+  --ai               Force AI mode (requires Claude Code)
+  --static           Force static-only analysis
+  --analyze-only     Run analysis without installation
   -v, --verbose      Show detailed output
   -V, --version      Output version number
   -h, --help         Display help
 ```
+
+## Execution Modes
+
+| Mode | Condition | Capabilities |
+|------|-----------|--------------|
+| **full-ai** | Claude Code + API key | Complete AI-enhanced analysis |
+| **hybrid** | Claude Code (no API) | Static analysis + AI handoff |
+| **standalone** | No Claude Code | Static analysis only |
+
+In hybrid mode, `INIT_REQUEST.md` is created for `@context-engineer` to complete setup.
 
 ## Tech Stack Presets
 

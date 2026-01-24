@@ -6,6 +6,33 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+#### Automatic Context Engineering Initialization
+- **Environment Detection** - Detects Claude Code session vs standalone mode
+  - `full-ai` mode: Claude Code + API key (AI-enhanced analysis)
+  - `hybrid` mode: Claude Code without API (static + AI handoff)
+  - `standalone` mode: No Claude Code (static analysis only)
+- **Deep Codebase Analysis** - Automatic discovery of:
+  - Entry points (API routes, CLI handlers, event listeners)
+  - Workflows (authentication, payments, data processing patterns)
+  - Architecture (directory structure, layers)
+  - Dependencies (npm, pip, go modules)
+- **Framework Detection** - Entry point patterns for Express, FastAPI, Next.js, Django, Rails, NestJS
+- **Template Population** - Generates real documentation with file references
+- **AI Orchestration** - Creates `INIT_REQUEST.md` for `@context-engineer` in hybrid mode
+- **Call Chain Tracing** - Static analysis of function call hierarchies
+
+#### New Modules (`packages/create-claude-context/lib/`)
+- `environment-detector.js` - Detects execution environment and capabilities
+- `static-analyzer.js` - Deep codebase analysis without AI
+- `ai-orchestrator.js` - Coordinates with @context-engineer for AI analysis
+- `template-populator.js` - Populates templates with analysis results
+- `call-tracer.js` - Traces function call chains for workflow documentation
+
+#### New CLI Options
+- `--ai` - Force AI mode (requires Claude Code)
+- `--static` - Force static-only analysis
+- `--analyze-only` - Run analysis without installation
+
 #### npm Packages (`packages/`)
 - `create-claude-context` - CLI for one-command setup (`npx create-claude-context`)
 - `claude-context-plugin` - Optional plugin with ongoing commands
@@ -46,7 +73,9 @@ All notable changes to this project will be documented in this file.
 - `drift-detector.js` - Documentation drift detection
 
 #### Unit Tests (`packages/create-claude-context/tests/`)
-- 50+ unit tests for CLI modules
+- 119 unit tests for all CLI modules
+- Tests for environment detector, static analyzer, AI orchestrator
+- Tests for template populator and call tracer
 - Jest test framework with coverage reporting
 - Test fixtures for Python, Node.js, and Go projects
 
@@ -79,6 +108,7 @@ All notable changes to this project will be documented in this file.
 - Schema references across all JSON config files
 - Cross-references between documentation files
 - Version consistency across all package.json files
+- Template `settings.json` now uses official Claude Code schema (`https://json.schemastore.org/claude-code-settings.json`)
 
 ---
 

@@ -36,8 +36,18 @@ program
   .option('--no-git', 'Skip git initialization')
   .option('--dry-run', 'Show what would be done without making changes')
   .option('-v, --verbose', 'Show detailed output')
+  // New options for context engineering initialization
+  .option('--ai', 'Force AI mode (creates INIT_REQUEST.md for @context-engineer)')
+  .option('--static', 'Force standalone mode (static analysis only, no AI setup)')
+  .option('--analyze-only', 'Run codebase analysis without installation')
   .action(async (projectName, options) => {
     console.log(banner);
+
+    // Validate mutually exclusive options
+    if (options.ai && options.static) {
+      console.error(chalk.red('\n✖ Error: --ai and --static are mutually exclusive'));
+      process.exit(1);
+    }
 
     try {
       await run({
@@ -47,7 +57,11 @@ program
         template: options.template,
         initGit: options.git !== false,
         dryRun: options.dryRun,
-        verbose: options.verbose
+        verbose: options.verbose,
+        // New options
+        forceAi: options.ai,
+        forceStatic: options.static,
+        analyzeOnly: options.analyzeOnly
       });
     } catch (error) {
       console.error(chalk.red('\n✖ Error:'), error.message);
