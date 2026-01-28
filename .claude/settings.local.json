@@ -6,7 +6,10 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(gh release list:*)"
+      "Bash(gh release list:*)",
+      "Bash(gh release create:*)",
+      "Bash(gh run:*)",
+      "Bash(npm view:*)"
     ]
   }
 }

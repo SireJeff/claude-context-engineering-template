@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.2.3] - 2026-01-28
+## [1.2.4] - 2026-01-28
 
 ### Added
 - **New `claude-context` npm package** - CLI tools for ongoing management

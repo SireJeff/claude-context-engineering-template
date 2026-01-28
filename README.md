@@ -387,4 +387,4 @@ MIT License - Use freely in any project.
 
 ---
 
-**Version:** 1.2.3 | **Updated:** 2026-01-28 | **License:** MIT
+**Version:** 1.2.4 | **Updated:** 2026-01-28 | **License:** MIT
