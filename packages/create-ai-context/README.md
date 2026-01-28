@@ -59,6 +59,38 @@ npx create-universal-ai-context status
 
 # Migrate from v1.x
 npx create-universal-ai-context migrate
+
+# Check documentation drift
+npx create-universal-ai-context drift --all           # Check all docs
+npx create-universal-ai-context drift --file README.md  # Check specific file
+npx create-universal-ai-context drift --fix           # Auto-fix issues
+npx create-universal-ai-context drift --strict        # Exit 1 on issues (CI)
+```
+
+## Existing Documentation Detection
+
+The CLI automatically detects existing AI context files:
+
+```bash
+npx create-universal-ai-context
+
+# Found existing documentation: Claude context (v1), README.md
+# ? How would you like to proceed?
+#   > Merge: Use existing docs as base, add new structure (recommended)
+#     Fresh: Start fresh but import key values
+#     Overwrite: Replace everything with new templates
+#     Skip: Cancel initialization
+```
+
+### Merge Mode Options
+
+```bash
+npx create-universal-ai-context --mode merge          # Preserve customizations (default)
+npx create-universal-ai-context --mode fresh          # New structure, keep values
+npx create-universal-ai-context --mode overwrite      # Replace everything
+npx create-universal-ai-context --preserve-custom     # Keep user customizations
+npx create-universal-ai-context --update-refs         # Auto-fix line numbers
+npx create-universal-ai-context --backup              # Create backup first
 ```
 
 ## What Gets Analyzed

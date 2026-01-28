@@ -57,8 +57,14 @@ const KNOWN_PLACEHOLDERS = {
 
 /**
  * Get default placeholder values based on config, tech stack, and analysis
+ * @param {object} config - Configuration from CLI (includes discoveredValues from merge)
+ * @param {object} techStack - Detected tech stack
+ * @param {object} analysis - Codebase analysis results
+ * @returns {object} Placeholder values
  */
 function getDefaultValues(config = {}, techStack = {}, analysis = {}) {
+  // Get discovered values from merge phase (if available)
+  const discoveredValues = config.discoveredValues || {};
   const today = new Date().toISOString().split('T')[0];
   const projectName = config.projectName || 'my-project';
   const projectSlug = projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -147,7 +153,7 @@ function getDefaultValues(config = {}, techStack = {}, analysis = {}) {
   // Entry point count
   const entryPointCount = analysis.entryPoints?.length || techStack.entryPoints?.length || 0;
 
-  return {
+  const defaults = {
     // Project identity
     PROJECT_NAME: projectName,
     PROJECT_SLUG: projectSlug,
@@ -234,6 +240,10 @@ function getDefaultValues(config = {}, techStack = {}, analysis = {}) {
     PRIMARY_FRAMEWORK: techStack.frameworks?.[0] || '',
     DATABASE_TYPE: techStack.databases?.[0] || '',
   };
+
+  // Merge with discovered values - discovered values take precedence
+  // This preserves user customizations from existing documentation
+  return { ...defaults, ...discoveredValues };
 }
 
 /**

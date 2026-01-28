@@ -25,6 +25,12 @@ const { migrateV1ToV2, getMigrationStatus } = require('../lib/migrate');
 const { detectTechStack } = require('../lib/detector');
 const { analyzeCodebase } = require('../lib/static-analyzer');
 const { createSpinner } = require('../lib/spinner');
+const {
+  findDocumentationFiles,
+  generateDriftReport,
+  checkDocumentDrift,
+  formatDriftReportConsole
+} = require('../lib/drift-checker');
 const packageJson = require('../package.json');
 
 // ASCII Banner
@@ -70,6 +76,10 @@ program
   .option('--analyze-only', 'Run codebase analysis without installation')
   .option('--monorepo', 'Initialize in monorepo mode with federation support')
   .option('--federate', 'Run federation to generate context for subprojects')
+  .option('--mode <mode>', 'How to handle existing docs: merge, overwrite, interactive', 'merge')
+  .option('--preserve-custom', 'Keep user customizations when merging (default: true)', true)
+  .option('--update-refs', 'Auto-fix drifted line references')
+  .option('--backup', 'Create backup before modifying existing files')
   .action(async (projectName, options) => {
     console.log(banner);
 
@@ -94,7 +104,12 @@ program
         forceStatic: options.static,
         analyzeOnly: options.analyzeOnly,
         monorepo: options.monorepo,
-        federate: options.federate
+        federate: options.federate,
+        // Merge options
+        mode: options.mode,
+        preserveCustom: options.preserveCustom,
+        updateRefs: options.updateRefs,
+        backup: options.backup
       });
     } catch (error) {
       console.error(chalk.red('\n✖ Error:'), error.message);
@@ -333,5 +348,148 @@ program
       console.log(chalk.gray('\n  Run `npx create-ai-context generate` to regenerate'));
     }
   });
+
+// Drift subcommand - check documentation drift
+program
+  .command('drift')
+  .description('Check documentation drift against codebase')
+  .option('-f, --file <path>', 'Check specific documentation file')
+  .option('-a, --all', 'Check all documentation files')
+  .option('--fix', 'Show suggested fixes for issues')
+  .option('--strict', 'Exit with error if drift detected')
+  .option('-o, --output <format>', 'Output format: console, json, markdown', 'console')
+  .option('-t, --threshold <percent>', 'Health score threshold for --strict', '70')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('-v, --verbose', 'Show detailed output')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    const spinner = createSpinner();
+
+    try {
+      // Determine which files to check
+      let filesToCheck = [];
+
+      if (options.file) {
+        // Single file mode
+        filesToCheck = [options.file];
+      } else if (options.all) {
+        // All documentation files
+        spinner.start('Finding documentation files...');
+        filesToCheck = await findDocumentationFiles(projectRoot);
+        spinner.succeed(`Found ${filesToCheck.length} documentation files`);
+      } else {
+        // Default: check main context files
+        const defaultFiles = ['CLAUDE.md', 'AI_CONTEXT.md', 'README.md'];
+        filesToCheck = defaultFiles.filter(f =>
+          fs.existsSync(path.join(projectRoot, f))
+        );
+
+        if (filesToCheck.length === 0) {
+          console.log(chalk.yellow('\nNo documentation files found.'));
+          console.log(chalk.gray('Use --all to scan for all markdown files, or --file to check a specific file.'));
+          process.exit(0);
+        }
+      }
+
+      // Generate drift report
+      spinner.start('Checking documentation drift...');
+      const report = generateDriftReport(filesToCheck, projectRoot);
+      spinner.succeed(`Checked ${report.summary.totalDocuments} documents`);
+
+      // Output results
+      if (options.output === 'json') {
+        console.log(JSON.stringify(report, null, 2));
+      } else if (options.output === 'markdown') {
+        console.log(formatDriftReportMarkdown(report));
+      } else {
+        // Console output
+        console.log(formatDriftReportConsole(report));
+      }
+
+      // Show suggested fixes if requested
+      if (options.fix && report.suggestedFixes.length > 0) {
+        console.log(chalk.bold('\nSuggested Fixes:'));
+        for (const fix of report.suggestedFixes) {
+          console.log(chalk.cyan(`\n  ${fix.document}:`));
+          console.log(chalk.red(`    - ${fix.original}`));
+          console.log(chalk.green(`    + ${fix.suggestion}`));
+        }
+      }
+
+      // Strict mode - exit with error if below threshold
+      if (options.strict) {
+        const threshold = parseInt(options.threshold, 10);
+        if (report.summary.overallHealthScore < threshold) {
+          console.log(chalk.red(`\n✖ Health score ${report.summary.overallHealthScore}% is below threshold ${threshold}%`));
+          process.exit(1);
+        } else {
+          console.log(chalk.green(`\n✓ Health score ${report.summary.overallHealthScore}% meets threshold ${threshold}%`));
+        }
+      }
+
+    } catch (error) {
+      spinner.fail('Drift check failed');
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      if (options.verbose) {
+        console.error(chalk.gray(error.stack));
+      }
+      process.exit(1);
+    }
+  });
+
+/**
+ * Format drift report as markdown
+ */
+function formatDriftReportMarkdown(report) {
+  const lines = [
+    '# Documentation Drift Report',
+    '',
+    `**Generated:** ${report.generatedAt}`,
+    `**Overall Health:** ${report.summary.overallHealthScore}%`,
+    '',
+    '## Summary',
+    '',
+    '| Metric | Value |',
+    '|--------|-------|',
+    `| Documents Analyzed | ${report.summary.totalDocuments} |`,
+    `| Healthy | ${report.summary.healthyDocuments} |`,
+    `| With Issues | ${report.summary.documentsWithIssues} |`,
+    `| References Valid | ${report.summary.validReferences}/${report.summary.totalReferences} |`,
+    ''
+  ];
+
+  if (report.documents.length > 0) {
+    lines.push('## Documents', '');
+    for (const doc of report.documents) {
+      const emoji = doc.status === 'healthy' ? '✓' :
+                    doc.status === 'needs_update' ? '⚠' : '✗';
+      lines.push(`### ${doc.document} (${doc.healthScore}% ${emoji})`);
+      lines.push('');
+
+      if (doc.references.invalid.length > 0) {
+        lines.push('**Issues:**', '');
+        for (const issue of doc.references.invalid) {
+          lines.push(`- \`${issue.original}\` - ${issue.issue}`);
+          if (issue.suggestion) {
+            lines.push(`  - Suggestion: ${issue.suggestion}`);
+          }
+        }
+        lines.push('');
+      }
+    }
+  }
+
+  if (report.suggestedFixes.length > 0) {
+    lines.push('## Suggested Fixes', '');
+    for (const fix of report.suggestedFixes) {
+      lines.push(`- **${fix.document}**: \`${fix.original}\``);
+      lines.push(`  - → ${fix.suggestion}`);
+    }
+  }
+
+  return lines.join('\n');
+}
 
 program.parse();

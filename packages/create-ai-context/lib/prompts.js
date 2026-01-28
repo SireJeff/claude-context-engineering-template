@@ -280,8 +280,62 @@ async function getDefaults(targetDir, presetName = null) {
   };
 }
 
+/**
+ * Run discovery prompts for handling existing documentation
+ * @param {object} discovery - Discovery results from doc-discovery.js
+ * @returns {Promise<object>} User's choices for handling existing docs
+ */
+async function runDiscoveryPrompts(discovery) {
+  if (!discovery || !discovery.hasExistingDocs) {
+    return { existingDocsStrategy: 'fresh' };
+  }
+
+  const { generateDiscoveryPrompts } = require('./doc-discovery');
+  const prompts = generateDiscoveryPrompts(discovery);
+
+  if (prompts.length === 0) {
+    return { existingDocsStrategy: 'fresh' };
+  }
+
+  console.log(chalk.gray('\nExisting documentation detected.\n'));
+
+  const answers = await prompt(prompts);
+
+  // Handle conflict resolution if user chose 'ask'
+  if (answers.conflictResolution === 'ask' && discovery.conflicts.length > 0) {
+    const conflictResolutions = {};
+
+    for (const conflict of discovery.conflicts) {
+      const conflictAnswer = await prompt([{
+        type: 'select',
+        name: 'resolution',
+        message: `Conflict for ${chalk.cyan(conflict.key)}:\n  Existing (${conflict.existingSource}): "${truncate(conflict.existingValue, 40)}"\n  New (${conflict.newSource}): "${truncate(conflict.newValue, 40)}"`,
+        choices: [
+          { name: 'existing', message: 'Keep existing value' },
+          { name: 'new', message: 'Use new value' }
+        ]
+      }]);
+      conflictResolutions[conflict.key] = conflictAnswer.resolution;
+    }
+
+    answers.conflictResolutions = conflictResolutions;
+  }
+
+  return answers;
+}
+
+/**
+ * Truncate a string with ellipsis
+ */
+function truncate(str, maxLength) {
+  if (!str) return '';
+  if (str.length <= maxLength) return str;
+  return str.substring(0, maxLength - 3) + '...';
+}
+
 module.exports = {
   runPrompts,
   getDefaults,
+  runDiscoveryPrompts,
   PRESETS
 };

@@ -21,7 +21,7 @@
 const path = require('path');
 const fs = require('fs');
 const chalk = require('chalk');
-const { runPrompts, getDefaults } = require('./prompts');
+const { runPrompts, getDefaults, runDiscoveryPrompts } = require('./prompts');
 const { createSpinner } = require('./spinner');
 const {
   createDirectoryStructure,
@@ -45,6 +45,13 @@ const {
 const { populateAllTemplates } = require('./template-populator');
 const { generateAll: generateAllContexts, getSupportedTools } = require('./ai-context-generator');
 
+// Documentation discovery for existing docs detection
+const {
+  discoverExistingDocs,
+  formatDiscoverySummary,
+  buildMergedValues
+} = require('./doc-discovery');
+
 /**
  * Main entry point
  */
@@ -65,7 +72,12 @@ async function run(options = {}) {
     analyzeOnly = false,
     // Monorepo options
     monorepo = false,
-    federate = false
+    federate = false,
+    // Merge options (new)
+    mode = 'merge',  // 'merge' | 'overwrite' | 'interactive'
+    preserveCustom = true,
+    updateRefs = false,
+    backup = false
   } = options;
 
   // Determine target directory
@@ -76,12 +88,70 @@ async function run(options = {}) {
   const projectNameResolved = projectName || path.basename(targetDir);
   const contextDir = path.join(targetDir, AI_CONTEXT_DIR);
 
-  // Get configuration (prompts or defaults)
+  const spinner = createSpinner();
+
+  // ========================================
+  // Phase 0: Documentation Discovery
+  // ========================================
+  spinner.start('Scanning for existing documentation...');
+  let discovery = null;
+  let mergeStrategy = mode;
+  let discoveredValues = {};
+
+  try {
+    discovery = await discoverExistingDocs(targetDir);
+
+    if (discovery.hasExistingDocs) {
+      spinner.succeed('Found existing documentation');
+
+      if (verbose) {
+        console.log(chalk.gray(formatDiscoverySummary(discovery)));
+      }
+
+      // Handle discovery based on mode and prompts
+      if (!skipPrompts && mode !== 'overwrite') {
+        // Run discovery prompts
+        const discoveryAnswers = await runDiscoveryPrompts(discovery);
+
+        if (discoveryAnswers.existingDocsStrategy === 'skip') {
+          console.log(chalk.yellow('\nInitialization cancelled by user.\n'));
+          return;
+        }
+
+        mergeStrategy = discoveryAnswers.existingDocsStrategy;
+        discoveredValues = buildMergedValues(
+          discovery,
+          mergeStrategy,
+          discoveryAnswers.conflictResolutions || {}
+        );
+      } else if (mode === 'merge') {
+        // Auto-merge without prompts
+        discoveredValues = buildMergedValues(discovery, 'merge', {});
+      }
+
+      // Show what we're doing
+      if (mergeStrategy === 'merge') {
+        const valueCount = Object.keys(discoveredValues).length;
+        console.log(chalk.cyan(`  Preserving ${valueCount} values from existing docs`));
+      } else if (mergeStrategy === 'overwrite') {
+        console.log(chalk.yellow('  Overwrite mode: existing docs will be replaced'));
+      }
+    } else {
+      spinner.succeed('No existing documentation found - starting fresh');
+    }
+  } catch (error) {
+    spinner.warn(`Discovery partial: ${error.message}`);
+    discovery = { hasExistingDocs: false };
+  }
+
+  // ========================================
+  // Phase 1: Configuration (prompts or defaults)
+  // ========================================
   let config;
   if (skipPrompts) {
     config = await getDefaults(targetDir, template);
   } else {
-    config = await runPrompts(targetDir, template);
+    config = await runPrompts(targetDir, template, discovery);
   }
 
   config.projectName = projectNameResolved;
@@ -92,16 +162,28 @@ async function run(options = {}) {
   config.verbose = verbose;
   config.aiTools = aiTools;
   config.monorepo = monorepo;
+  // Add merge config
+  config.mergeStrategy = mergeStrategy;
+  config.preserveCustom = preserveCustom;
+  config.updateRefs = updateRefs;
+  config.backup = backup;
+  config.discoveredValues = discoveredValues;
+  config.discovery = discovery;
 
   if (dryRun) {
     console.log(chalk.yellow('\n--dry-run mode: No changes will be made\n'));
     console.log('Configuration:', JSON.stringify(config, null, 2));
+    if (discovery?.hasExistingDocs) {
+      console.log('\nDiscovery:', JSON.stringify({
+        tools: discovery.tools,
+        extractedValues: discovery.extractedValues,
+        conflicts: discovery.conflicts
+      }, null, 2));
+    }
     return;
   }
 
-  // Phase 1: Create target directory if needed
-  const spinner = createSpinner();
-
+  // Phase 2: Create target directory if needed
   if (projectName && !fs.existsSync(targetDir)) {
     spinner.start('Creating project directory...');
     fs.mkdirSync(targetDir, { recursive: true });

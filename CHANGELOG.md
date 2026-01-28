@@ -2,6 +2,63 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2026-01-29
+
+### Added
+
+#### Documentation Discovery
+- **`lib/doc-discovery.js`** - Scans for existing AI context files before initialization
+  - Detects Claude v1 (`.claude/`, `CLAUDE.md`) and v2 (`.ai-context/`, `AI_CONTEXT.md`)
+  - Detects GitHub Copilot (`.github/copilot-instructions.md`)
+  - Detects Cline (`.clinerules`)
+  - Detects Antigravity (`.agent/`)
+  - Finds common docs (README.md, ARCHITECTURE.md, CHANGELOG.md, docs/)
+  - Extracts values from existing documentation
+  - Generates merge recommendations and detects conflicts
+
+#### Drift Detection
+- **`lib/drift-checker.js`** - Validates documentation references against codebase
+  - File path validation (`src/auth.js`)
+  - Line number validation (`file.js:123`)
+  - Anchor/symbol validation (`file.py::function_name()`)
+  - Directory reference validation (`src/components/`)
+  - Markdown link validation (`[text](./path.md)`)
+  - Health score calculation (0-100%)
+  - Status levels: HEALTHY, NEEDS_UPDATE, STALE, CRITICAL
+
+#### Smart Merge
+- **`lib/smart-merge.js`** - Intelligently merges existing docs with new analysis
+  - Preserves user customizations
+  - Updates stale/default values
+  - Preserves custom sections not in template
+  - Updates or removes stale line references
+  - Generates diff reports and migration notes
+
+#### New CLI Features
+- **`drift` subcommand** - Standalone drift checking
+  - `npx create-universal-ai-context drift --all` - Check all docs
+  - `npx create-universal-ai-context drift --file README.md` - Check specific file
+  - `--fix` flag for auto-fixing where possible
+  - `--strict` flag for CI integration (exit 1 on issues)
+  - `--output json|markdown|console` format options
+
+- **Merge mode flags**
+  - `--mode merge|fresh|overwrite` - Control how existing docs are handled
+  - `--preserve-custom` - Keep user customizations (default: true)
+  - `--update-refs` - Auto-fix drifted line numbers
+  - `--backup` - Create backup before changes
+
+#### Interactive Discovery Prompts
+- Prompts user when existing documentation is detected
+- Strategy options: Merge (recommended), Fresh, Overwrite, Skip
+- Conflict resolution for values found in multiple sources
+
+### Test Coverage
+- 160 new unit tests for discovery, drift, and merge modules
+- Total: 363 unit tests passing
+
+---
+
 ## [2.0.0] - 2026-01-28
 
 ### Breaking Changes
