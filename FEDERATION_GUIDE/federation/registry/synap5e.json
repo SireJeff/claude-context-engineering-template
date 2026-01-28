@@ -1,0 +1,153 @@
+{
+  "$schema": "../../schemas/registry.schema.json",
+  "submodule": "synap5e",
+  "name": "AI Gateway",
+  "description": "Unified AI/LLM gateway with OpenAI-compatible API",
+  "tech_stack": ["Python 3.11", "FastAPI", "OpenRouter", "vLLM"],
+  "primary_language": "python",
+  "workflows": {
+    "owned": [
+      "ai-gateway"
+    ],
+    "participates_in": [
+      "data-processing",
+      "job-processing",
+      "configuration"
+    ],
+    "cross_repo_dependencies": {
+      "user-authentication": {
+        "repo": "DLKBKD",
+        "relationship": "consumer",
+        "endpoints_used": [
+          "/api/internal/auth/introspect"
+        ]
+      }
+    }
+  },
+  "gotchas": {
+    "directly_applicable": [
+      "AI-001",
+      "AI-002",
+      "AI-003",
+      "AI-004",
+      "AI-005",
+      "AI-006",
+      "DEPLOY-001"
+    ],
+    "awareness_only": [
+      "AUTH-002"
+    ]
+  },
+  "key_files": {
+    "entry_points": [
+      "app/main.py"
+    ],
+    "api_routes": [
+      "app/api/v1/routes.py"
+    ],
+    "core": [
+      "app/core/router.py",
+      "app/core/circuit_breaker.py",
+      "app/core/rate_limiter.py",
+      "app/core/translation.py"
+    ],
+    "providers": [
+      "app/providers/openrouter.py",
+      "app/providers/vllm.py",
+      "app/providers/vllm_pool.py"
+    ],
+    "presets": [
+      "app/presets/deadlinekiller.py",
+      "app/presets/base.py"
+    ],
+    "config": [
+      "app/config.py"
+    ]
+  },
+  "architecture": {
+    "pattern": "gateway",
+    "layers": [
+      "api/v1/ - OpenAI-compatible endpoints",
+      "core/ - Routing, circuit breaker, rate limiting",
+      "providers/ - External AI service clients",
+      "presets/ - DeadlineKiller preset definitions"
+    ],
+    "dependencies": {
+      "primary_ai": "OpenRouter API",
+      "fallback_ai": "vLLM local inference",
+      "auth": "DLKBKD introspect endpoint"
+    }
+  },
+  "presets": {
+    "count": 14,
+    "categories": [
+      {
+        "name": "chat",
+        "presets": ["chat-fast", "chat-deep"],
+        "description": "General conversation"
+      },
+      {
+        "name": "homework",
+        "presets": ["preprocessing", "solution-fast", "solution-deep"],
+        "description": "Homework processing"
+      },
+      {
+        "name": "translation",
+        "presets": ["translate-en-fa", "translate-fa-en"],
+        "description": "Language translation"
+      },
+      {
+        "name": "specialized",
+        "presets": ["math", "code", "essay", "physics", "chemistry", "biology", "economics"],
+        "description": "Subject-specific presets"
+      }
+    ]
+  },
+  "integrations": {
+    "external": [
+      {
+        "name": "OpenRouter",
+        "file": "app/providers/openrouter.py",
+        "purpose": "Cloud LLM inference",
+        "env": "OPENROUTER_API_KEY"
+      },
+      {
+        "name": "vLLM",
+        "file": "app/providers/vllm.py",
+        "purpose": "Local GPU inference",
+        "env": "VLLM_BASE_URL"
+      }
+    ],
+    "internal": [
+      {
+        "name": "DLKBKD",
+        "file": "N/A - via HTTP",
+        "purpose": "Token introspection",
+        "endpoint": "/api/internal/auth/introspect"
+      }
+    ]
+  },
+  "commands": {
+    "run": "python -m app.main",
+    "test": "pytest tests/ -v"
+  },
+  "environment": {
+    "required": [],
+    "optional": [
+      "OPENROUTER_API_KEY",
+      "VLLM_BASE_URL",
+      "VLLM_ENABLED",
+      "OFFLINE_MODE",
+      "LOW_VRAM_MODE"
+    ]
+  },
+  "critical_constraints": [
+    "This service is STATELESS - no database, no user state",
+    "Port 8001 (DLKBKD uses 8000)",
+    "Circuit breaker opens after 5 consecutive failures",
+    "Persian translation mode buffers full response before translating",
+    "Vision models only available in DEEP tier",
+    "vLLM pool must be initialized for both offline_mode AND low_vram_mode",
+    "MINI tier max_tokens capped at 1024 (half of 2048 context)"
+  ]
+}

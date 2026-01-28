@@ -1,6 +1,6 @@
 {
   "name": "create-claude-context",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Set up Claude Context Engineering for any project with a single command",
   "main": "lib/index.js",
   "bin": {

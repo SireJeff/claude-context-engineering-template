@@ -1,0 +1,50 @@
+{
+  "$schema": "../schemas/defaults.schema.json",
+  "description": "Global defaults with per-submodule overrides for federation",
+  "global": {
+    "token_budgets": {
+      "copilot": 8000,
+      "cline": 4000,
+      "context_md": 15000,
+      "context_txt": 3000,
+      "antigravity": 12000
+    },
+    "include_timestamps": true,
+    "include_metadata": true,
+    "truncation_strategy": "section",
+    "max_workflows": 15,
+    "max_gotchas": 20,
+    "max_entry_points_per_workflow": 10,
+    "cache": {
+      "enabled": true,
+      "max_file_entries": 100,
+      "max_template_entries": 20
+    },
+    "watch": {
+      "debounce_ms": 1000,
+      "recursive": true
+    }
+  },
+  "overrides": {
+    "DLKBKD": {
+      "max_workflows": 12,
+      "max_gotchas": 15,
+      "token_budgets": {
+        "copilot": 10000,
+        "context_md": 20000
+      }
+    },
+    "synap5e": {
+      "max_workflows": 8,
+      "max_gotchas": 10
+    },
+    "DLKFTD-1": {
+      "max_workflows": 10,
+      "max_gotchas": 8
+    },
+    "DLKFTD-2": {
+      "max_workflows": 6,
+      "max_gotchas": 5
+    }
+  }
+}

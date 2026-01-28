@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.2.2] - 2026-01-28
+## [1.2.3] - 2026-01-28
 
 ### Added
 - **New `claude-context` npm package** - CLI tools for ongoing management
@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file.
   - `npx claude-context hooks` - Install/uninstall git hooks
   - `npx claude-context diagnose` - Run system diagnostics
   - `npx claude-context generate` - Regenerate code-map, indexes, anchors
+
+---
+
+## [1.2.2] - 2026-01-24
 
 ### Fixed
 - Static analyzer now detects Jupyter notebook files (`.ipynb`) and Python Window scripts (`.pyw`) in Python projects

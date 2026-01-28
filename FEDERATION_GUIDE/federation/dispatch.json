@@ -1,0 +1,160 @@
+{
+  "$schema": "../schemas/dispatch.schema.json",
+  "version": "1.0.0",
+  "description": "Active task specifications for federated builders",
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Add health check endpoint with database and Redis status",
+      "description": "",
+      "target": "DLKBKD",
+      "priority": "medium",
+      "constraints": [],
+      "acceptance_criteria": [],
+      "created_at": "2026-01-27T20:43:38.164Z",
+      "created_by": "architect",
+      "status": "pending"
+    }
+  ],
+  "task_schema": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Unique task identifier (auto-generated)"
+      },
+      "title": {
+        "type": "string",
+        "description": "Brief task title (max 80 chars)"
+      },
+      "description": {
+        "type": "string",
+        "description": "Detailed task description"
+      },
+      "target": {
+        "type": "string",
+        "enum": [
+          "DLKBKD",
+          "synap5e",
+          "DLKFTD-1",
+          "DLKFTD-2"
+        ],
+        "description": "Target submodule"
+      },
+      "priority": {
+        "type": "string",
+        "enum": [
+          "critical",
+          "high",
+          "medium",
+          "low"
+        ],
+        "default": "medium"
+      },
+      "constraints": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Implementation constraints and requirements"
+      },
+      "related_workflows": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Relevant workflow files to reference"
+      },
+      "related_gotchas": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Gotcha IDs to be aware of"
+      },
+      "cross_repo_context": {
+        "type": "object",
+        "properties": {
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "External repo files/endpoints this task depends on"
+          },
+          "affects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "External repo files/endpoints affected by this task"
+          }
+        }
+      },
+      "acceptance_criteria": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Criteria for task completion"
+      },
+      "created_at": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "created_by": {
+        "type": "string",
+        "default": "architect"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "in_progress",
+          "completed",
+          "cancelled"
+        ],
+        "default": "pending"
+      }
+    },
+    "required": [
+      "id",
+      "title",
+      "target"
+    ]
+  },
+  "example_task": {
+    "id": "TASK-001",
+    "title": "Add health check endpoint",
+    "description": "Implement a /health endpoint that returns service status and dependency health",
+    "target": "DLKBKD",
+    "priority": "medium",
+    "constraints": [
+      "Must check PostgreSQL connection",
+      "Must check Redis connection",
+      "Return 503 if any dependency is unhealthy",
+      "Include version info in response"
+    ],
+    "related_workflows": [
+      "api-endpoints.md",
+      "configuration.md"
+    ],
+    "related_gotchas": [
+      "DEPLOY-001"
+    ],
+    "cross_repo_context": {
+      "depends_on": [],
+      "affects": [
+        "[EXTERNAL:synap5e] health check may call this endpoint"
+      ]
+    },
+    "acceptance_criteria": [
+      "GET /health returns 200 when healthy",
+      "GET /health returns 503 when database unreachable",
+      "Response includes version and uptime"
+    ],
+    "created_at": "2026-01-27T12:00:00Z",
+    "created_by": "architect",
+    "status": "pending"
+  }
+}

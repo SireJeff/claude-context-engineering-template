@@ -1,0 +1,160 @@
+{
+  "$schema": "../../schemas/registry.schema.json",
+  "submodule": "DLKBKD",
+  "name": "Backend API",
+  "description": "FastAPI backend handling auth, jobs, payments, and orchestration",
+  "tech_stack": ["Python 3.11", "FastAPI", "SQLAlchemy 2.0", "Celery", "PostgreSQL", "Redis"],
+  "primary_language": "python",
+  "workflows": {
+    "owned": [
+      "user-authentication",
+      "payment-processing",
+      "job-processing",
+      "data-processing",
+      "database-operations",
+      "api-endpoints",
+      "notifications",
+      "user-management"
+    ],
+    "participates_in": [
+      "ai-gateway",
+      "configuration"
+    ],
+    "cross_repo_dependencies": {
+      "ai-gateway": {
+        "repo": "synap5e",
+        "relationship": "consumer",
+        "endpoints_used": [
+          "/v1/chat/completions",
+          "/v1/presets/{id}/chat",
+          "/v1/internal/estimate-tokens"
+        ]
+      }
+    }
+  },
+  "gotchas": {
+    "directly_applicable": [
+      "AUTH-001",
+      "AUTH-002",
+      "AUTH-003",
+      "PAY-001",
+      "PAY-002",
+      "PAY-003",
+      "JOB-001",
+      "JOB-002",
+      "JOB-003",
+      "DB-001",
+      "DB-002",
+      "DEPLOY-001",
+      "DEPLOY-002"
+    ],
+    "awareness_only": [
+      "AI-001",
+      "AI-002",
+      "AI-003"
+    ]
+  },
+  "key_files": {
+    "entry_points": [
+      "app/main.py",
+      "app/tasks.py"
+    ],
+    "api_routes": [
+      "app/api/v1/auth.py",
+      "app/api/v1/jobs.py",
+      "app/api/v1/payments.py",
+      "app/api/v1/users.py",
+      "app/api/v1/tokens.py",
+      "app/api/v1/conversations.py",
+      "app/api/internal/auth.py",
+      "app/api/internal/guest.py"
+    ],
+    "models": [
+      "app/models.py",
+      "app/schemas/*.py"
+    ],
+    "services": [
+      "app/services/preprocessing/*.py",
+      "app/services/solution/*.py",
+      "app/services/pdf/*.py",
+      "app/ai_client/client.py"
+    ],
+    "config": [
+      "app/config.py",
+      "alembic.ini"
+    ]
+  },
+  "architecture": {
+    "pattern": "layered",
+    "layers": [
+      "api/v1/ - REST endpoints",
+      "api/internal/ - Service-to-service",
+      "services/ - Business logic",
+      "crud.py - Database operations",
+      "models.py - ORM models"
+    ],
+    "dependencies": {
+      "database": "PostgreSQL 15 via asyncpg",
+      "cache": "Redis 7",
+      "task_queue": "Celery with Redis broker",
+      "ai": "synap5e via ai_client"
+    }
+  },
+  "integrations": {
+    "external": [
+      {
+        "name": "ZarinPal",
+        "file": "app/zarinpal.py",
+        "purpose": "Iranian payment gateway"
+      },
+      {
+        "name": "Liara SMTP",
+        "file": "app/liara_email_service.py",
+        "purpose": "Email delivery"
+      },
+      {
+        "name": "Najva SMS",
+        "file": "app/services/otp_service.py",
+        "purpose": "OTP delivery (Iran only)"
+      },
+      {
+        "name": "Telegram",
+        "file": "bot/",
+        "purpose": "Bot integration"
+      }
+    ],
+    "internal": [
+      {
+        "name": "synap5e",
+        "file": "app/ai_client/client.py",
+        "purpose": "AI/LLM gateway"
+      }
+    ]
+  },
+  "commands": {
+    "run": "python -m app.main",
+    "test": "pytest tests/ -v",
+    "migrate": "alembic upgrade head",
+    "worker": "celery -A app.tasks:celery_app worker --loglevel=info"
+  },
+  "environment": {
+    "required": [
+      "DATABASE_URL",
+      "REDIS_URL",
+      "SECRET_KEY"
+    ],
+    "optional": [
+      "SYNAPSE_URL",
+      "ZARINPAL_MERCHANT_ID",
+      "TELEGRAM_BOT_TOKEN",
+      "SENTRY_DSN"
+    ]
+  },
+  "critical_constraints": [
+    "Cookie domain MUST be .deadlinekiller.com for subdomain sharing",
+    "Introspect endpoint response format is a contract - don't break it",
+    "Always convert Toman to Rial when calling ZarinPal (multiply by 10)",
+    "Preprocessing cost (2 tokens) is non-refundable",
+    "XeLaTeX requires XB Persian fonts installed"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "outputs": {
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\backend\\DLKBKD\\.github\\copilot-instructions.md": "63d1f0815b050567c184a293881254a0",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\backend\\DLKBKD\\.clinerules": "6eda86a7af7a72ac3bd084c5bea0d2b1",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\backend\\DLKBKD\\CONTEXT.md": "5499bd42362703cbc5e6aebfa8793016",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\backend\\DLKBKD\\context.txt": "5cef1654b9b2440925bb3fc9fdcbfa14",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\core\\synap5e\\.github\\copilot-instructions.md": "62daa9592675e89de69990ef09b2d0be",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\core\\synap5e\\.clinerules": "0b0dc5edd5d1d99af9e734166517b089",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\core\\synap5e\\CONTEXT.md": "431a3be40285471719b76ef8d5336847",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\core\\synap5e\\context.txt": "3a961bc62b0f368a802b412f7f952afb",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\frontend\\DLKFTD-1\\.github\\copilot-instructions.md": "496080f5b41ecbb8235c3605b4e3a6c3",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\frontend\\DLKFTD-1\\.clinerules": "52fe72f925f74d6acc12db81f768921b",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\frontend\\DLKFTD-1\\CONTEXT.md": "4d707ce9c2009f24bab4abcd26850d8f",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\frontend\\DLKFTD-1\\context.txt": "860f02b7bdd983b44f3aa9625137471d",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\frontend\\DLKFTD-2\\.github\\copilot-instructions.md": "1283815682e2dd96554cf1f3a9d09171",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\frontend\\DLKFTD-2\\.clinerules": "b8480d568f0a609ef46752c56c38fc23",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\frontend\\DLKFTD-2\\CONTEXT.md": "e17c99bb363775569e1de1b6fd8c1492",
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\frontend\\DLKFTD-2\\context.txt": "119e36b5e656d641b12aa84d33846e91"
+  },
+  "sources": {
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\federation\\config.json": 1769545956408.1338,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\federation\\dispatch.json": 1769546618164.5254,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\federation\\registry\\DLKBKD.json": 1769546045695.2937,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\KNOWN_GOTCHAS.md": 1769538324784.6753,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\workflows\\user-authentication.md": 1769538325117.2727,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\workflows\\payment-processing.md": 1769538325028.0266,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\workflows\\job-processing.md": 1769538324991.4268,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\workflows\\data-processing.md": 1769538324917.4473,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\workflows\\database-operations.md": 1769538324950.3274,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\workflows\\api-endpoints.md": 1769538324869.6511,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\workflows\\notifications.md": 1769538325011.794,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\workflows\\user-management.md": 1769538325145.3389,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\workflows\\ai-gateway.md": 1769538324837.5493,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\context\\workflows\\configuration.md": 1769538324885.545,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\federation\\registry\\synap5e.json": 1769546067209.7593,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\federation\\registry\\DLKFTD-1.json": 1769546087894.062,
+    "C:\\Users\\ClickStore.One\\Videos\\projects\\deadlinekiller-reorg-new\\.claude\\federation\\registry\\DLKFTD-2.json": 1769546109227.1377
+  }
+}
