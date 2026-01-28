@@ -1,40 +1,54 @@
-# Claude Code Context Engineering Template
+# Universal AI Context Engineering Template
 
-![npm](https://img.shields.io/npm/v/create-claude-context)
-![npm downloads](https://img.shields.io/npm/dm/create-claude-context)
+![npm](https://img.shields.io/npm/v/create-ai-context)
+![npm downloads](https://img.shields.io/npm/dm/create-ai-context)
 ![GitHub Stars](https://img.shields.io/github/stars/SireJeff/claude-context-engineering-template?style=social)
 ![GitHub License](https://img.shields.io/github/license/SireJeff/claude-context-engineering-template)
 
-A self-sustaining template for organizing your codebase documentation so Claude Code can navigate it efficiently. Includes **automatic codebase analysis**, session persistence, drift detection, and automatic documentation synchronization.
+A self-sustaining template for organizing your codebase documentation so AI coding assistants can navigate it efficiently. Supports **Claude Code**, **GitHub Copilot**, **Cline**, and **Antigravity**. Includes **automatic codebase analysis**, workflow generation, and multi-tool output.
 
 ---
 
 ## Quick Start
 
 ```bash
-# One command to set up everything
-npx create-claude-context
+# One command to set up everything (v2.0)
+npx create-ai-context
 
 # Or with options
-npx create-claude-context --yes          # Accept defaults
-npx create-claude-context --stack python # Force tech stack
-npx create-claude-context --ai           # Force AI mode (in Claude Code)
-npx create-claude-context --static       # Force static-only analysis
-npx create-claude-context --analyze-only # Run analysis without installation
+npx create-ai-context --yes              # Accept defaults
+npx create-ai-context --ai copilot       # Generate for GitHub Copilot only
+npx create-ai-context --ai cline         # Generate for Cline only
+npx create-ai-context --ai all           # Generate for all AI tools (default)
+npx create-ai-context --static           # Force static-only analysis
+npx create-ai-context --force-ai         # Require Claude Code session
+
+# Legacy command (still works)
+npx create-claude-context
 ```
+
+### AI Tools Supported
+
+| Tool | Output Generated |
+|------|------------------|
+| **Claude Code** | `AI_CONTEXT.md` + `.ai-context/` |
+| **GitHub Copilot** | `.github/copilot-instructions.md` |
+| **Cline** | `.clinerules` |
+| **Antigravity** | `.agent/` (10 files) |
 
 ### What Happens
 
 1. **Environment Detection** - Detects if running in Claude Code or standalone
 2. **Deep Codebase Analysis** - Scans for entry points, workflows, architecture
-3. **Template Generation** - Creates `.claude/` structure with real data
-4. **AI Handoff** (if in Claude Code) - Creates `INIT_REQUEST.md` for `@context-engineer`
+3. **Template Generation** - Creates `.ai-context/` structure with real data
+4. **Multi-Tool Output** - Generates context files for selected AI tools
+5. **AI Handoff** (if in Claude Code) - Creates `INIT_REQUEST.md` for `@context-engineer`
 
 ---
 
 ## Automatic Initialization
 
-When you run `npx create-claude-context`, the CLI performs **real codebase analysis**:
+When you run `npx create-ai-context`, the CLI performs **real codebase analysis**:
 
 ### What Gets Analyzed
 
@@ -185,18 +199,25 @@ npx claude-context hooks install
 
 ```
 your-project/
-├── CLAUDE.md                    # Entry point Claude reads first
-└── .claude/
-    ├── agents/                  # 6 specialized agents
-    ├── automation/              # Self-sustaining engines
-    │   ├── generators/          # Auto-generation scripts
-    │   └── hooks/               # Git hooks
-    ├── commands/                # 11 slash commands
-    ├── context/                 # Pre-computed knowledge
-    │   ├── workflows/           # Workflow documentation
-    │   ├── .meta/               # Generation metadata
-    │   └── CODE_TO_WORKFLOW_MAP.md
-    ├── indexes/                 # Navigation hierarchy
+├── AI_CONTEXT.md                # Entry point for AI tools (universal)
+├── .ai-context/                 # Context engineering system
+│   ├── agents/                  # 6 specialized agents
+│   ├── automation/              # Self-sustaining engines
+│   │   ├── generators/          # Auto-generation scripts
+│   │   └── hooks/               # Git hooks
+│   ├── commands/                # 11 slash commands
+│   ├── context/                 # Pre-computed knowledge
+│   │   ├── workflows/           # Auto-generated workflow docs
+│   │   ├── .meta/               # Generation metadata
+│   │   └── CODE_TO_WORKFLOW_MAP.md
+│   ├── indexes/                 # Navigation hierarchy
+├── .github/
+│   └── copilot-instructions.md  # GitHub Copilot context
+├── .clinerules                  # Cline context
+└── .agent/                      # Antigravity context (10 files)
+    ├── rules/
+    ├── workflows/
+    └── skills/
     ├── session/                 # Session persistence
     │   ├── current/             # Active session
     │   ├── history/             # Archived sessions

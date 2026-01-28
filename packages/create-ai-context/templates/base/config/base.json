@@ -1,0 +1,57 @@
+{
+  "$schema": "../schemas/settings.schema.json",
+  "version": "1.1.0",
+  "context_engineering": {
+    "enabled": true,
+    "max_context_tokens": 200000,
+    "max_output_tokens": 30000,
+    "target_utilization": 0.40,
+    "compact_trigger": 0.35
+  },
+  "rpi_workflow": {
+    "enabled": true,
+    "phases": ["research", "plan", "implement"],
+    "require_human_approval": true,
+    "auto_doc_update": true,
+    "research_timeout_minutes": 30,
+    "plan_timeout_minutes": 20
+  },
+  "documentation": {
+    "self_maintaining": true,
+    "verify_after_changes": true,
+    "line_number_tolerance": 10,
+    "auto_commit_docs": false
+  },
+  "agents": {
+    "default": "context-engineer",
+    "auto_select": true,
+    "fallback": "core-architect"
+  },
+  "commands": {
+    "rpi_commands": ["/rpi-research", "/rpi-plan", "/rpi-implement"],
+    "validation_commands": ["/verify-docs-current", "/validate-all"]
+  },
+  "validation": {
+    "on_commit": true,
+    "line_accuracy_threshold": 60,
+    "link_check_external": false
+  },
+  "logging": {
+    "level": "info",
+    "file": ".ai-context/logs/claude.log",
+    "max_size_mb": 10
+  },
+  "telemetry": {
+    "enabled": false,
+    "events": {
+      "command_usage": true,
+      "agent_usage": true,
+      "context_metrics": true,
+      "error_reports": true
+    },
+    "privacy": {
+      "anonymize_paths": true,
+      "exclude_content": true
+    }
+  }
+}

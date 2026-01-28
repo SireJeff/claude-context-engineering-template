@@ -1,0 +1,13 @@
+{
+  "$comment": "Staging environment overrides",
+  "logging": {
+    "level": "info"
+  },
+  "validation": {
+    "on_commit": true,
+    "line_accuracy_threshold": 60
+  },
+  "rpi_workflow": {
+    "require_human_approval": true
+  }
+}

@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2026-01-28
+
+### Breaking Changes
+- **Renamed `.claude/` to `.ai-context/`** - Universal AI tool support (not Claude-specific)
+- **Renamed `CLAUDE.md` to `AI_CONTEXT.md`** - Universal entry point for all AI tools
+- **New primary package `create-ai-context`** - Replaces `create-claude-context` for new installs
+
+### Added
+
+#### Multi-AI Tool Support
+- **Claude Code**: `AI_CONTEXT.md` + `.ai-context/` directory structure
+- **GitHub Copilot**: `.github/copilot-instructions.md`
+- **Cline**: `.clinerules`
+- **Antigravity**: `.agent/` (10 files: identity, architecture, workflows, skills)
+
+#### Automatic Codebase Analysis
+- Entry point detection for 6 frameworks (Express, FastAPI, Next.js, Django, Rails, NestJS)
+- Workflow discovery with heuristics (auth, payments, data processing, etc.)
+- LOC counting with code/comments/blank breakdown
+- File purpose classification (controller, model, service, middleware, etc.)
+- Dependency extraction from package.json, requirements.txt, go.mod
+
+#### Workflow Documentation Generation
+- Auto-generates 5-15 workflow documentation files per project
+- Real file:line references in generated docs
+- Architecture diagram generation
+- Code-to-workflow mapping
+
+#### New CLI Features
+- `npx create-ai-context` - New universal command
+- `--ai <tool>` flag - Select output format (claude, copilot, cline, antigravity, all)
+- `--static` flag - Force static analysis only
+- `--force-ai` flag - Require Claude Code session
+- `--dry-run` flag - Preview without changes
+- `generate` subcommand - Regenerate context files
+- `migrate` subcommand - Upgrade v1.x to v2.0
+- `status` subcommand - Check installation status
+
+#### Environment Detection
+- `full-ai` mode: Claude Code + API key
+- `hybrid` mode: Claude Code without API
+- `standalone` mode: No Claude Code (static analysis)
+
+### Test Coverage
+- 255 tests passing (unit + integration + E2E)
+- E2E tests on Express and FastAPI fixtures
+- Integration tests for all new modules
+
+---
+
 ## [1.2.4] - 2026-01-28
 
 ### Added

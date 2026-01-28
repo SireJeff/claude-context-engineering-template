@@ -1,0 +1,8 @@
+{
+  "name": "test-node-project",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.0.0"
+  }
+}

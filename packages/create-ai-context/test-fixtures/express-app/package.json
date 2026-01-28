@@ -1,0 +1,30 @@
+{
+  "name": "express-test-app",
+  "version": "1.0.0",
+  "description": "Test Express.js application for create-ai-context",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.7.0",
+    "winston": "^3.8.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.22",
+    "eslint": "^8.40.0",
+    "supertest": "^6.3.0"
+  }
+}

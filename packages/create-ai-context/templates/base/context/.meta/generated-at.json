@@ -1,0 +1,18 @@
+{
+  "CODE_TO_WORKFLOW_MAP.md": {
+    "generatedAt": null,
+    "filesScanned": 0,
+    "referencesFound": 0,
+    "status": "pending"
+  },
+  "WORKFLOW_CATEGORY_INDEX": {
+    "generatedAt": null,
+    "itemCount": 0,
+    "status": "pending"
+  },
+  "AGENT_CATEGORY_INDEX": {
+    "generatedAt": null,
+    "itemCount": 0,
+    "status": "pending"
+  }
+}
