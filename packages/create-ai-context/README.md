@@ -29,36 +29,36 @@ That's it. The CLI automatically:
 
 ```bash
 # Basic usage
-npx create-ai-context                    # Auto-detect and generate for all tools
+npx create-universal-ai-context                    # Auto-detect and generate for all tools
 
 # Select specific AI tools
-npx create-ai-context --ai claude        # Claude Code only
-npx create-ai-context --ai copilot       # GitHub Copilot only
-npx create-ai-context --ai cline         # Cline only
-npx create-ai-context --ai antigravity   # Antigravity only
-npx create-ai-context --ai all           # All tools (default)
+npx create-universal-ai-context --ai claude        # Claude Code only
+npx create-universal-ai-context --ai copilot       # GitHub Copilot only
+npx create-universal-ai-context --ai cline         # Cline only
+npx create-universal-ai-context --ai antigravity   # Antigravity only
+npx create-universal-ai-context --ai all           # All tools (default)
 
 # Analysis modes
-npx create-ai-context --static           # Force static analysis only
-npx create-ai-context --force-ai         # Require Claude Code session
+npx create-universal-ai-context --static           # Force static analysis only
+npx create-universal-ai-context --force-ai         # Require Claude Code session
 
 # Other options
-npx create-ai-context --yes              # Accept all defaults
-npx create-ai-context --dry-run          # Preview without changes
-npx create-ai-context my-project         # Create in new directory
+npx create-universal-ai-context --yes              # Accept all defaults
+npx create-universal-ai-context --dry-run          # Preview without changes
+npx create-universal-ai-context my-project         # Create in new directory
 ```
 
 ## Subcommands
 
 ```bash
 # Generate context for specific tools
-npx create-ai-context generate --ai copilot
+npx create-universal-ai-context generate --ai copilot
 
 # Check installation status
-npx create-ai-context status
+npx create-universal-ai-context status
 
 # Migrate from v1.x
-npx create-ai-context migrate
+npx create-universal-ai-context migrate
 ```
 
 ## What Gets Analyzed
@@ -104,14 +104,14 @@ your-project/
 ## Tech Stack Presets
 
 ```bash
-npx create-ai-context -t python-fastapi
-npx create-ai-context -t python-django
-npx create-ai-context -t node-express
-npx create-ai-context -t node-nestjs
-npx create-ai-context -t typescript-nextjs
-npx create-ai-context -t go-gin
-npx create-ai-context -t rust-actix
-npx create-ai-context -t ruby-rails
+npx create-universal-ai-context -t python-fastapi
+npx create-universal-ai-context -t python-django
+npx create-universal-ai-context -t node-express
+npx create-universal-ai-context -t node-nestjs
+npx create-universal-ai-context -t typescript-nextjs
+npx create-universal-ai-context -t go-gin
+npx create-universal-ai-context -t rust-actix
+npx create-universal-ai-context -t ruby-rails
 ```
 
 ## Features
@@ -134,7 +134,7 @@ npx create-ai-context -t ruby-rails
 If you have an existing `.claude/` directory:
 
 ```bash
-npx create-ai-context migrate
+npx create-universal-ai-context migrate
 ```
 
 This will:
