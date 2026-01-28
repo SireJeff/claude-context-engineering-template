@@ -1,7 +1,7 @@
 # Universal AI Context Engineering Template
 
-![npm](https://img.shields.io/npm/v/@sirejeff/create-ai-context)
-![npm downloads](https://img.shields.io/npm/dm/@sirejeff/create-ai-context)
+![npm](https://img.shields.io/npm/v/create-universal-ai-context)
+![npm downloads](https://img.shields.io/npm/dm/create-universal-ai-context)
 ![GitHub Stars](https://img.shields.io/github/stars/SireJeff/claude-context-engineering-template?style=social)
 ![GitHub License](https://img.shields.io/github/license/SireJeff/claude-context-engineering-template)
 
@@ -13,15 +13,15 @@ A self-sustaining template for organizing your codebase documentation so AI codi
 
 ```bash
 # One command to set up everything (v2.0)
-npx @sirejeff/create-ai-context
+npx create-universal-ai-context
 
 # Or with options
-npx @sirejeff/create-ai-context --yes              # Accept defaults
-npx @sirejeff/create-ai-context --ai copilot       # Generate for GitHub Copilot only
-npx @sirejeff/create-ai-context --ai cline         # Generate for Cline only
-npx @sirejeff/create-ai-context --ai all           # Generate for all AI tools (default)
-npx @sirejeff/create-ai-context --static           # Force static-only analysis
-npx @sirejeff/create-ai-context --force-ai         # Require Claude Code session
+npx create-universal-ai-context --yes              # Accept defaults
+npx create-universal-ai-context --ai copilot       # Generate for GitHub Copilot only
+npx create-universal-ai-context --ai cline         # Generate for Cline only
+npx create-universal-ai-context --ai all           # Generate for all AI tools (default)
+npx create-universal-ai-context --static           # Force static-only analysis
+npx create-universal-ai-context --force-ai         # Require Claude Code session
 
 # Legacy command (still works)
 npx create-claude-context

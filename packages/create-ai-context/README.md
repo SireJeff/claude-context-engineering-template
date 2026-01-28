@@ -1,14 +1,14 @@
-# @sirejeff/create-ai-context
+# create-universal-ai-context
 
 Universal AI context engineering for any codebase. Generates optimized context for **Claude Code**, **GitHub Copilot**, **Cline**, **Antigravity**, and more.
 
-![npm](https://img.shields.io/npm/v/@sirejeff/create-ai-context)
-![npm downloads](https://img.shields.io/npm/dm/@sirejeff/create-ai-context)
+![npm](https://img.shields.io/npm/v/create-universal-ai-context)
+![npm downloads](https://img.shields.io/npm/dm/create-universal-ai-context)
 
 ## Quick Start
 
 ```bash
-npx @sirejeff/create-ai-context
+npx create-universal-ai-context
 ```
 
 That's it. The CLI automatically:
