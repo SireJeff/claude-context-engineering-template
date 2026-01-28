@@ -10,34 +10,44 @@ const os = require('os');
 const BIN_PATH = path.join(__dirname, '../../bin/create-ai-context.js');
 const EXPRESS_FIXTURE = path.join(__dirname, '../../test-fixtures/express-app');
 
+// Helper to clean generated files from a directory
+function cleanGeneratedFiles(dir) {
+  const dirsToRemove = ['.ai-context', '.github', '.agent', '.git'];
+  const filesToRemove = ['AI_CONTEXT.md', '.clinerules'];
+
+  for (const subdir of dirsToRemove) {
+    const dirPath = path.join(dir, subdir);
+    if (fs.existsSync(dirPath)) {
+      fs.rmSync(dirPath, { recursive: true, force: true });
+    }
+  }
+
+  for (const file of filesToRemove) {
+    const filePath = path.join(dir, file);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  }
+}
+
 describe('CLI Integration', () => {
   let tempDir;
   let originalCwd;
+
+  beforeAll(() => {
+    // Clean up fixture before any tests run
+    cleanGeneratedFiles(EXPRESS_FIXTURE);
+  });
 
   beforeEach(() => {
     originalCwd = process.cwd();
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ai-context-test-'));
 
-    // Copy Express fixture to temp dir
+    // Copy Express fixture to temp dir (should be clean now)
     fs.cpSync(EXPRESS_FIXTURE, tempDir, { recursive: true });
 
-    // Clean up any existing generated files
-    const dirsToRemove = ['.ai-context', '.github', '.agent', '.git'];
-    const filesToRemove = ['AI_CONTEXT.md', '.clinerules'];
-
-    for (const dir of dirsToRemove) {
-      const dirPath = path.join(tempDir, dir);
-      if (fs.existsSync(dirPath)) {
-        fs.rmSync(dirPath, { recursive: true });
-      }
-    }
-
-    for (const file of filesToRemove) {
-      const filePath = path.join(tempDir, file);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
-    }
+    // Also clean temp dir just in case
+    cleanGeneratedFiles(tempDir);
   });
 
   afterEach(() => {
