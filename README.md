@@ -48,7 +48,7 @@ npx create-claude-context
 
 ## Automatic Initialization
 
-When you run `npx create-ai-context`, the CLI performs **real codebase analysis**:
+When you run `npx create-universal-ai-context`, the CLI performs **real codebase analysis**:
 
 ### What Gets Analyzed
 
