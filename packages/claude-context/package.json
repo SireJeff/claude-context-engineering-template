@@ -1,0 +1,48 @@
+{
+  "name": "claude-context",
+  "version": "1.2.2",
+  "description": "CLI tools for Claude Context Engineering - validate, sync, diagnose, and manage your context system",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "context-engineering",
+    "documentation",
+    "validation",
+    "cli"
+  ],
+  "author": "SireJeff",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SireJeff/claude-context-engineering-template.git",
+    "directory": "packages/claude-context"
+  },
+  "homepage": "https://github.com/SireJeff/claude-context-engineering-template#readme",
+  "bugs": {
+    "url": "https://github.com/SireJeff/claude-context-engineering-template/issues"
+  },
+  "bin": {
+    "claude-context": "./bin/claude-context.js"
+  },
+  "main": "lib/index.js",
+  "files": [
+    "bin",
+    "lib"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "commander": "^11.0.0",
+    "chalk": "^4.1.2",
+    "glob": "^10.3.0",
+    "minimatch": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  }
+}

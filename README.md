@@ -270,33 +270,51 @@ Project-specific workflow configuration is documented in `CLAUDE.md` rather than
 
 ---
 
-## CLI Commands
+## Commands
+
+### Setup (npm)
 
 ```bash
-# Initialize (recommended: use create-claude-context)
+# Initialize context engineering in your project
 npx create-claude-context
+npx create-claude-context --yes      # Skip prompts
+npx create-claude-context --static   # Static analysis only
+```
 
+### Ongoing Use (Claude Code slash commands)
+
+Once initialized, use these commands inside Claude Code:
+
+```bash
 # Validation
-npx claude-context validate --all
-npx claude-context validate --schema
-npx claude-context validate --links
-npx claude-context validate --lines
+/validate-all                    # Run full validation suite
+/verify-docs-current [file]      # Check if docs match code
 
 # Synchronization
-npx claude-context sync --check
-npx claude-context sync --fix
+/auto-sync --check               # Check for drift
+/auto-sync --fix                 # Auto-fix shifted line numbers
 
-# Generation
-npx claude-context generate --code-map
-npx claude-context generate --indexes
+# Session Management
+/session-save                    # Save current session
+/session-resume                  # Resume previous session
 
-# Diagnostics
-npx claude-context diagnose
-npx claude-context diagnose --fix
+# RPI Workflow
+/rpi-research [feature]          # Research a feature
+/rpi-plan [feature]              # Create implementation plan
+/rpi-implement [feature]         # Execute with atomic commits
 
-# Hooks
-npx claude-context hooks install
-npx claude-context hooks uninstall
+# Help
+/help                            # Show all commands
+```
+
+### Local Tools (optional)
+
+The `.claude/tools/` directory contains local scripts for advanced use:
+
+```bash
+# Run from project root
+node .claude/tools/lib/validate.js --all
+node .claude/tools/lib/code-mapper.js
 ```
 
 ---
