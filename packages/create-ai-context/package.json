@@ -1,5 +1,5 @@
 {
-  "name": "create-ai-context",
+  "name": "@sirejeff/create-ai-context",
   "version": "2.0.0",
   "description": "Universal AI Context Engineering - Set up context for Claude, Copilot, Cline, Antigravity, and more",
   "main": "lib/index.js",
