@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Breaking Changes
 - **Renamed `.claude/` to `.ai-context/`** - Universal AI tool support (not Claude-specific)
 - **Renamed `CLAUDE.md` to `AI_CONTEXT.md`** - Universal entry point for all AI tools
-- **New primary package `create-ai-context`** - Replaces `create-claude-context` for new installs
+- **New primary package `create-universal-ai-context`** - Replaces `create-claude-context` for new installs
 
 ### Added
 
@@ -31,7 +31,7 @@ All notable changes to this project will be documented in this file.
 - Code-to-workflow mapping
 
 #### New CLI Features
-- `npx create-ai-context` - New universal command
+- `npx create-universal-ai-context` - New universal command
 - `--ai <tool>` flag - Select output format (claude, copilot, cline, antigravity, all)
 - `--static` flag - Force static analysis only
 - `--force-ai` flag - Require Claude Code session
