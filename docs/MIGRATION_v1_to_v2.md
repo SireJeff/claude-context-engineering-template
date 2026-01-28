@@ -10,7 +10,7 @@ This guide helps you upgrade from Claude Context Engineering v1.x to v2.0, which
 |------|------|--------|
 | `.claude/` | `.ai-context/` | Universal AI tool support |
 | `CLAUDE.md` | `AI_CONTEXT.md` | Not Claude-specific anymore |
-| `npx create-claude-context` | `npx create-ai-context` | New primary command |
+| `npx create-claude-context` | `npx create-universal-ai-context` | New primary command |
 
 ### New Features
 
@@ -24,7 +24,7 @@ This guide helps you upgrade from Claude Context Engineering v1.x to v2.0, which
 ### Option 1: Automatic Migration (Recommended)
 
 ```bash
-npx create-ai-context migrate
+npx create-universal-ai-context migrate
 ```
 
 This command:
@@ -43,7 +43,7 @@ mv .claude .claude-backup
 mv CLAUDE.md CLAUDE.md.backup
 
 # Run fresh installation
-npx create-ai-context --yes
+npx create-universal-ai-context --yes
 
 # Manually merge any customizations from backup
 ```
@@ -63,9 +63,9 @@ mv CLAUDE.md AI_CONTEXT.md
 # Replace all ".claude/" with ".ai-context/"
 
 # Step 4: Generate additional AI tool outputs
-npx create-ai-context generate --ai copilot
-npx create-ai-context generate --ai cline
-npx create-ai-context generate --ai antigravity
+npx create-universal-ai-context generate --ai copilot
+npx create-universal-ai-context generate --ai cline
+npx create-universal-ai-context generate --ai antigravity
 ```
 
 ## Path Reference Updates
@@ -98,7 +98,7 @@ After migration, verify everything works:
 
 ```bash
 # Check installation status
-npx create-ai-context status
+npx create-universal-ai-context status
 
 # Should show:
 # ✓ v2.0 installation detected
@@ -143,7 +143,7 @@ find . -name "*.md" -exec sed -i 's/\.claude\//\.ai-context\//g' {} \;
 
 ## Backward Compatibility
 
-The `create-claude-context` command still works and is now an alias for `create-ai-context`. You can continue using it, but we recommend switching to the new command.
+The `create-claude-context` command still works and is now an alias for `create-universal-ai-context`. You can continue using it, but we recommend switching to the new command.
 
 ## Questions?
 
