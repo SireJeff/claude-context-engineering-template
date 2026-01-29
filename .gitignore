@@ -31,6 +31,7 @@ social-post.md
 packages/*/node_modules/
 
 # Generated files
+.ai-context/
 .claude/docs/generated/
 
 # IDE
