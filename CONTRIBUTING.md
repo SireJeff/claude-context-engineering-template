@@ -37,8 +37,8 @@ For changes to `.claude/tools/`:
 - Run `npx claude-context validate --all` before submitting
 
 ### npm Package Contributions
-For changes to `packages/create-claude-context/`:
-- Run tests: `cd packages/create-claude-context && npm test`
+For changes to `packages/create-ai-context/`:
+- Run tests: `cd packages/create-ai-context && npm test`
 - Ensure coverage: `npm run test:coverage`
 - Update package README if adding features
 - Follow existing code patterns in `lib/`

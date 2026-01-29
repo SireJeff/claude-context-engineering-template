@@ -1,5 +1,5 @@
 /**
- * Interactive prompts for create-claude-context
+ * Interactive prompts for create-universal-ai-context
  *
  * Uses enquirer for beautiful, user-friendly prompts
  */

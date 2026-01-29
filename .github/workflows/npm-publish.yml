@@ -37,72 +37,10 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  publish-create-claude-context:
-    name: Publish create-claude-context
-    runs-on: ubuntu-latest
-    needs: publish-create-ai-context
-
-    permissions:
-      contents: read
-      id-token: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        working-directory: packages/create-claude-context
-        run: npm ci
-
-      - name: Run tests
-        working-directory: packages/create-claude-context
-        run: npm test
-
-      - name: Publish to npm
-        working-directory: packages/create-claude-context
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  publish-claude-context:
-    name: Publish claude-context
-    runs-on: ubuntu-latest
-    needs: publish-create-claude-context
-
-    permissions:
-      contents: read
-      id-token: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        working-directory: packages/claude-context
-        run: npm ci
-
-      - name: Publish to npm
-        working-directory: packages/claude-context
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
   publish-claude-context-plugin:
     name: Publish claude-context-plugin
     runs-on: ubuntu-latest
-    needs: publish-claude-context
+    needs: publish-create-ai-context
 
     permissions:
       contents: read

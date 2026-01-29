@@ -92,7 +92,7 @@ Initialize and maintain context engineering documentation.
 ## Requirements
 
 - Claude Code v1.0.33+
-- Context engineering setup (use `npx create-claude-context` first)
+- Context engineering setup (use `npx create-universal-ai-context` first)
 
 ## License
 
@@ -101,4 +101,4 @@ MIT
 ## Links
 
 - [GitHub](https://github.com/SireJeff/claude-context-engineering-template)
-- [create-claude-context](https://www.npmjs.com/package/create-claude-context)
+- [create-universal-ai-context](https://www.npmjs.com/package/create-universal-ai-context)
