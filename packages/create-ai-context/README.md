@@ -67,6 +67,36 @@ npx create-universal-ai-context drift --fix           # Auto-fix issues
 npx create-universal-ai-context drift --strict        # Exit 1 on issues (CI)
 ```
 
+## Cross-Tool Sync
+
+Keep all AI tool contexts synchronized automatically:
+
+```bash
+# Check sync status
+npx create-universal-ai-context sync:check
+
+# Sync all tools from codebase
+npx create-universal-ai-context sync:all
+
+# Propagate from specific tool
+npx create-universal-ai-context sync:from claude --strategy source_wins
+
+# Resolve conflicts
+npx create-universal-ai-context sync:resolve --strategy regenerate_all
+
+# View sync history
+npx create-universal-ai-context sync:history
+
+# Install git hooks for automatic sync
+npx create-universal-ai-context hooks:install
+```
+
+**Conflict Strategies:**
+- `source_wins` - Changed tool's context wins
+- `regenerate_all` - Regenerate all from codebase
+- `newest` - Most recently modified wins
+- `manual` - Require manual resolution
+
 ## Existing Documentation Detection
 
 The CLI automatically detects existing AI context files:

@@ -96,6 +96,36 @@ In hybrid mode, the CLI creates `INIT_REQUEST.md` with instructions for `@contex
 
 ---
 
+## Cross-Tool Sync (New!)
+
+```bash
+# Check if contexts are synchronized
+npx create-universal-ai-context sync:check
+
+# Sync all AI tool contexts
+npx create-universal-ai-context sync:all
+
+# Propagate changes from one tool to others
+npx create-universal-ai-context sync:from claude --strategy source_wins
+
+# Install git hooks for automatic sync
+npx create-universal-ai-context hooks:install
+```
+
+**What it does:**
+- Automatically keeps AI tool contexts synchronized
+- When you edit `AI_CONTEXT.md`, other tools stay up-to-date
+- Git hooks check sync status before commits
+- Conflict resolution strategies for handling differences
+
+**Conflict Strategies:**
+- `source_wins` - Changed tool's context wins
+- `regenerate_all` - Regenerate all from codebase
+- `newest` - Most recently modified wins
+- `manual` - Require manual resolution
+
+---
+
 ## Features
 
 ### Commands (11 total)
@@ -184,11 +214,11 @@ See auth.py::authenticate_user()
 Optional hooks for automated verification:
 
 ```bash
-# Install hooks
-npx claude-context hooks install
+# Install hooks for context sync
+npx create-universal-ai-context hooks:install
 
-# Pre-commit: Warns if docs need updating
-# Post-commit: Rebuilds indexes automatically
+# Pre-commit: Checks sync status before commits
+# Post-commit: Auto-syncs after successful commits
 ```
 
 ---

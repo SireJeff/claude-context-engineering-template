@@ -31,6 +31,15 @@ const {
   checkDocumentDrift,
   formatDriftReportConsole
 } = require('../lib/drift-checker');
+const {
+  checkSyncStatus,
+  syncAllFromCodebase,
+  propagateContextChange,
+  resolveConflict,
+  formatSyncStatus,
+  getSyncHistory,
+  CONFLICT_STRATEGY
+} = require('../lib/cross-tool-sync');
 const packageJson = require('../package.json');
 
 // ASCII Banner
@@ -491,5 +500,264 @@ function formatDriftReportMarkdown(report) {
 
   return lines.join('\n');
 }
+
+// Sync subcommands
+program
+  .command('sync:check')
+  .description('Check if AI tool contexts are synchronized')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--json', 'Output as JSON')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+
+    try {
+      const status = checkSyncStatus(projectRoot);
+
+      if (options.json) {
+        console.log(JSON.stringify(status, null, 2));
+      } else {
+        console.log(formatSyncStatus(status));
+
+        if (!status.inSync) {
+          console.log(chalk.yellow('\nTo sync all contexts, run:'));
+          console.log(chalk.gray('  npx create-ai-context sync:all'));
+          process.exit(1);
+        }
+      }
+    } catch (error) {
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('sync:all')
+  .description('Synchronize all AI tool contexts from codebase')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--quiet', 'Suppress output')
+  .action(async (options) => {
+    if (!options.quiet) {
+      console.log(banner);
+    }
+
+    const projectRoot = path.resolve(options.path);
+    const spinner = createSpinner();
+
+    try {
+      if (!options.quiet) {
+        spinner.start('Analyzing codebase...');
+      }
+
+      const config = {
+        projectName: path.basename(projectRoot),
+        aiTools: ['claude', 'copilot', 'cline', 'antigravity']
+      };
+
+      const results = await syncAllFromCodebase(projectRoot, config);
+
+      if (!options.quiet) {
+        if (results.errors.length > 0) {
+          spinner.warn('Sync completed with errors');
+
+          console.log(chalk.bold('\nSynced tools:'));
+          for (const tool of results.tools) {
+            console.log(chalk.green(`  ✓ ${tool.tool} (${tool.fileCount} files)`));
+          }
+
+          console.log(chalk.red('\nErrors:'));
+          for (const error of results.errors) {
+            console.error(chalk.red(`  ✖ ${error.message || error.tool}`));
+          }
+          process.exit(1);
+        } else {
+          spinner.succeed(`Synced ${results.tools.length} AI tools`);
+
+          console.log(chalk.bold('\nSynced tools:'));
+          for (const tool of results.tools) {
+            console.log(chalk.green(`  ✓ ${tool.tool} (${tool.fileCount} files)`));
+          }
+        }
+      }
+    } catch (error) {
+      if (!options.quiet) {
+        spinner.fail('Sync failed');
+        console.error(chalk.red('\n✖ Error:'), error.message);
+      }
+      process.exit(1);
+    }
+  });
+
+program
+  .command('sync:from <tool>')
+  .description('Propagate context from a specific tool to all others')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('-s, --strategy <strategy>', 'Conflict resolution strategy', 'source_wins')
+  .action(async (sourceTool, options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    const spinner = createSpinner();
+
+    const validTools = ['claude', 'copilot', 'cline', 'antigravity'];
+    if (!validTools.includes(sourceTool)) {
+      console.error(chalk.red(`\n✖ Error: Invalid tool: ${sourceTool}`));
+      console.error(chalk.gray(`  Valid options: ${validTools.join(', ')}`));
+      process.exit(1);
+    }
+
+    try {
+      spinner.start(`Propagating from ${sourceTool}...`);
+
+      const config = {
+        projectName: path.basename(projectRoot),
+        aiTools: validTools
+      };
+
+      const results = await propagateContextChange(
+        sourceTool,
+        projectRoot,
+        config,
+        options.strategy
+      );
+
+      if (results.errors.length > 0) {
+        spinner.warn('Propagation completed with errors');
+
+        console.log(chalk.bold('\nPropagated to:'));
+        for (const tool of results.propagated) {
+          console.log(chalk.green(`  ✓ ${tool.displayName}`));
+        }
+
+        console.log(chalk.red('\nErrors:'));
+        for (const error of results.errors) {
+          console.error(chalk.red(`  ✖ ${error.tool || error.message}`));
+        }
+        process.exit(1);
+      } else {
+        spinner.succeed(`Propagated to ${results.propagated.length} tools`);
+
+        console.log(chalk.bold('\nPropagated to:'));
+        for (const tool of results.propagated) {
+          console.log(chalk.green(`  ✓ ${tool.displayName}`));
+        }
+      }
+    } catch (error) {
+      spinner.fail('Propagation failed');
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('sync:resolve')
+  .description('Resolve conflicts between AI tool contexts')
+  .option('-s, --strategy <strategy>', 'Strategy: source_wins, regenerate_all, newest, manual', 'regenerate_all')
+  .option('-t, --tool <tool>', 'Preferred tool (for source_wins strategy)')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    const spinner = createSpinner();
+
+    const validStrategies = Object.values(CONFLICT_STRATEGY);
+    if (!validStrategies.includes(options.strategy)) {
+      console.error(chalk.red(`\n✖ Error: Invalid strategy: ${options.strategy}`));
+      console.error(chalk.gray(`  Valid options: ${validStrategies.join(', ')}`));
+      process.exit(1);
+    }
+
+    try {
+      spinner.start(`Resolving conflicts (${options.strategy})...`);
+
+      const config = {
+        projectName: path.basename(projectRoot),
+        aiTools: ['claude', 'copilot', 'cline', 'antigravity']
+      };
+
+      const result = await resolveConflict(
+        projectRoot,
+        config,
+        options.strategy,
+        options.tool
+      );
+
+      if (result.resolved) {
+        spinner.succeed(result.message);
+      } else {
+        spinner.warn('Unable to resolve');
+        console.log(chalk.yellow(`\n${result.message}`));
+
+        if (result.status) {
+          console.log(formatSyncStatus(result.status));
+        }
+        process.exit(1);
+      }
+    } catch (error) {
+      spinner.fail('Resolution failed');
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('sync:history')
+  .description('Show sync history')
+  .option('-n, --limit <number>', 'Number of entries to show', '10')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+
+    try {
+      const history = getSyncHistory(projectRoot, parseInt(options.limit, 10));
+
+      console.log(chalk.bold('\nSync History:\n'));
+
+      if (history.length === 0) {
+        console.log(chalk.gray('  No sync history found\n'));
+      } else {
+        for (const entry of history.reverse()) {
+          const date = new Date(entry.timestamp).toLocaleString();
+          console.log(chalk.cyan(`  ${date}`));
+          console.log(chalk.gray(`    Source: ${entry.source || entry.sourceTool}`));
+          console.log(chalk.gray(`    Strategy: ${entry.strategy}`));
+          console.log(chalk.gray(`    Propagated: ${entry.propagatedCount} tools`));
+
+          if (entry.errorCount > 0) {
+            console.log(chalk.red(`    Errors: ${entry.errorCount}`));
+          }
+          console.log('');
+        }
+      }
+    } catch (error) {
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('hooks:install')
+  .description('Install git hooks for automatic sync')
+  .action(async () => {
+    console.log(banner);
+
+    const installScript = path.join(__dirname, '..', '.claude', 'automation', 'hooks', 'install.js');
+
+    if (!fs.existsSync(installScript)) {
+      console.error(chalk.red('\n✖ Error: Install script not found'));
+      process.exit(1);
+    }
+
+    try {
+      require(installScript);
+    } catch (error) {
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
 
 program.parse();

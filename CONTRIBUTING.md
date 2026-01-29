@@ -28,6 +28,8 @@ We love contributions! Whether you're fixing a bug, improving documentation, or 
 - **Clarity**: Write clear, concise documentation
 - **Consistency**: Maintain consistent terminology and formatting
 - **Completeness**: Ensure all features and usage patterns are documented
+- **Cross-Tool Sync**: Document new sync features in README and CHANGELOG
+- **CLI Commands**: Update help text and examples for new sync commands
 
 ### CLI Tooling Contributions
 For changes to `.claude/tools/`:
@@ -46,6 +48,14 @@ For changes to `packages/create-ai-context/`:
 For changes to `packages/claude-context-plugin/`:
 - Test plugin installation locally
 - Update skill definitions in `skills/` as needed
+
+### Cross-Tool Sync Contributions
+For changes to `lib/cross-tool-sync/`:
+- Ensure file hashing works correctly (SHA-256)
+- Test with all conflict resolution strategies
+- Verify git hooks installation
+- Test sync state persistence
+- Run: `npm test -- tests/unit/cross-tool-sync.test.js`
 
 ### Quality Standards
 - Review the [Quality Checklist](.claude/standards/QUALITY_CHECKLIST.md)

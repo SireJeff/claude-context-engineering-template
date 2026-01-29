@@ -34,7 +34,8 @@
       "Bash(find:*)",
       "Bash(git log:*)",
       "Bash(gh label:*)",
-      "Bash(gh issue:*)"
+      "Bash(gh issue:*)",
+      "Bash(npm pack --dry-run)"
     ]
   }
 }

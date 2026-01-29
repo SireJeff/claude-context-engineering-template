@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 2026-01-29
+
+### Added - Cross-Tool Context Synchronization
+
+#### New Feature: Automatic Sync Between AI Tools
+- **Cross-tool synchronization** - Automatically keep AI tool contexts in sync
+  - When one tool's context changes, automatically propagate to others
+  - File-based change detection using SHA-256 hashing
+  - Four conflict resolution strategies: source_wins, regenerate_all, newest, manual
+
+#### New Sync Module (`lib/cross-tool-sync/`)
+- **sync-manager.js** - Core synchronization logic
+  - Change detection via file hashing
+  - Sync state persistence (`.ai-context/sync-state.json`)
+  - Sync history tracking
+- **file-watcher.js** - File change monitoring
+  - Pure Node.js implementation (no external dependencies)
+  - Polling-based change detection (configurable)
+  - Directory hashing for multi-file contexts
+- **sync-service.js** - Background service for continuous monitoring
+  - Debounced sync to avoid excessive regenerations
+  - Configurable strategies and intervals
+
+#### New CLI Commands
+- `sync:check` - Check if contexts are synchronized
+- `sync:all` - Sync all tools from codebase
+- `sync:from <tool>` - Propagate from specific tool to others
+- `sync:resolve` - Resolve conflicts between tools
+- `sync:history` - View sync history
+- `hooks:install` - Install git hooks for automatic sync
+
+#### Git Hooks Integration
+- **pre-commit hook** - Checks sync status before commits
+  - Blocks commit if contexts are out of sync
+  - Shows which tools need syncing
+- **post-commit hook** - Triggers background sync after commits
+- **Installation:** `npx create-ai-context hooks:install`
+
+#### Test Coverage
+- 19 new unit tests for cross-tool sync functionality
+- Total: 420+ unit tests passing
+
+### Changed
+- Enhanced `CLAUDE.md` with cross-tool sync commands and architecture
+- Updated system architecture to include sync service layer
+
+### Documentation
+- `.claude/context/CROSS_TOOL_SYNC.md` - Complete feature documentation
+- `.claude/automation/hooks/README.md` - Git hooks usage guide
+
+---
+
 ## [2.1.0] - 2026-01-29
 
 ### Added

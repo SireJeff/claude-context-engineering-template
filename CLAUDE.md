@@ -42,6 +42,15 @@ npm run test:coverage              # With coverage
 npm publish --access public        # Publish to npm
 ```
 
+### Cross-Tool Sync
+```bash
+npx create-ai-context sync:check              # Check if contexts are synchronized
+npx create-ai-context sync:all                # Sync all tools from codebase
+npx create-ai-context sync:from <tool>        # Propagate from specific tool
+npx create-ai-context sync:resolve            # Resolve conflicts
+npx create-ai-context hooks:install           # Install git hooks
+```
+
 ---
 
 ## Navigation Rules
@@ -114,6 +123,7 @@ grep -r "https://" packages/ --include="*.js"
 - `packages/create-ai-context/lib/doc-discovery.js` - Existing docs detection
 - `packages/create-ai-context/lib/drift-checker.js` - Documentation drift
 - `packages/create-ai-context/lib/smart-merge.js` - Merge strategies
+- `packages/create-ai-context/lib/cross-tool-sync/sync-manager.js` - Cross-tool sync logic
 
 ---
 
@@ -128,6 +138,7 @@ grep -r "https://" packages/ --include="*.js"
 
 - npm registry (publishing)
 - GitHub Actions (CI/CD)
+- Git hooks (automatic sync)
 
 ---
 
@@ -141,6 +152,10 @@ packages/
 │   │   ├── static-analyzer.js  # Codebase analysis
 │   │   ├── detector.js         # Tech detection
 │   │   ├── installer.js        # File generation
+│   │   ├── cross-tool-sync/    # NEW: Cross-tool synchronization
+│   │   │   ├── sync-manager.js # Core sync logic
+│   │   │   ├── file-watcher.js # Change detection
+│   │   │   └── sync-service.js # Background service
 │   │   └── adapters/           # AI tool adapters
 │   ├── templates/              # Output templates
 │   └── tests/                  # Jest tests
@@ -174,6 +189,8 @@ packages/
 ### Business Constants
 - Supported AI tools: Claude Code, GitHub Copilot, Cline, Antigravity
 - Node.js minimum: 18.0.0
+- Sync state stored in: `.ai-context/sync-state.json`
+- Git hooks location: `.claude/automation/hooks/`
 
 ---
 
