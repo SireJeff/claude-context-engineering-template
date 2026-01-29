@@ -105,7 +105,7 @@ describe('Claude Adapter', () => {
       expect(fs.existsSync(settingsPath)).toBe(true);
 
       const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
-      expect(settings.version).toBe('2.1.0');
+      expect(settings.version).toBe('2.2.2');
       expect(settings.project.name).toBe('test-project');
       expect(settings.agents.context_engineer).toBe('enabled');
       expect(settings.commands.rpi_workflow).toBe('enabled');
