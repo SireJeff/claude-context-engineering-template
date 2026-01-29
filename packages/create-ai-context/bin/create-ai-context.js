@@ -745,15 +745,9 @@ program
   .action(async () => {
     console.log(banner);
 
-    const installScript = path.join(__dirname, '..', '.claude', 'automation', 'hooks', 'install.js');
-
-    if (!fs.existsSync(installScript)) {
-      console.error(chalk.red('\n✖ Error: Install script not found'));
-      process.exit(1);
-    }
-
     try {
-      require(installScript);
+      const { installHooks } = require('../lib/install-hooks');
+      installHooks();
     } catch (error) {
       console.error(chalk.red('\n✖ Error:'), error.message);
       process.exit(1);

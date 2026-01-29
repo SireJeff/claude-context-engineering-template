@@ -1,0 +1,46 @@
+#!/bin/bash
+# Pre-commit hook for AI context sync
+# This hook checks if AI tool contexts are out of sync
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+# Check if ai-context binary is available
+if ! command -v create-ai-context &> /dev/null; then
+    # Try npx
+    if command -v npx &> /dev/null; then
+        AI_CONTEXT_CMD="npx create-universal-ai-context"
+    else
+        echo -e "${YELLOW}Warning: create-ai-context not found. Skipping sync check.${NC}"
+        exit 0
+    fi
+else
+    AI_CONTEXT_CMD="create-ai-context"
+fi
+
+# Run sync check
+echo -e "${GREEN}Checking AI context sync status...${NC}"
+
+# Check for out-of-sync contexts
+CHECK_OUTPUT=$($AI_CONTEXT_CMD sync:check 2>&1)
+CHECK_EXIT_CODE=$?
+
+if [ $CHECK_EXIT_CODE -ne 0 ]; then
+    echo -e "${RED}AI contexts are out of sync!${NC}"
+    echo ""
+    echo "$CHECK_OUTPUT"
+    echo ""
+    echo -e "${YELLOW}To sync all contexts, run:${NC}"
+    echo "  $AI_CONTEXT_CMD sync:all"
+    echo ""
+    echo -e "${YELLOW}To skip this check, use: git commit --no-verify${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}AI contexts are in sync${NC}"
+exit 0

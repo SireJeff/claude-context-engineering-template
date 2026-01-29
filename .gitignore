@@ -3,6 +3,7 @@
 # Articles (kept separate)
 linkedin-article-english.md
 virgool-article.md
+social-post.md
 
 # Local configuration (user-specific overrides)
 .claude/config/local.json
