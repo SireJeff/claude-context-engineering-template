@@ -415,4 +415,5 @@ module.exports = {
   DIRECTORY_STRUCTURE,
   AI_CONTEXT_DIR,
   AI_CONTEXT_FILE,
+  copyDirectory, // Export for use by adapters
 };
