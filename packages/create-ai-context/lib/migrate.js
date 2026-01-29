@@ -274,6 +274,11 @@ async function migrateV1ToV2(projectRoot, options = {}) {
 function getMigrationStatus(projectRoot) {
   const detection = detectV1Installation(projectRoot);
 
+  // In v2.0, both .ai-context/ AND .claude/ can exist
+  // The presence of AI_CONTEXT.md indicates v2.0 installation
+  // .claude/ in v2.0 is created by the Claude adapter for Claude-specific features
+  const hasAiContextMd = fs.existsSync(path.join(projectRoot, MIGRATIONS.entryFile.new));
+
   if (!detection.hasV1 && !detection.hasV2) {
     return {
       status: 'none',
@@ -282,6 +287,17 @@ function getMigrationStatus(projectRoot) {
     };
   }
 
+  // If AI_CONTEXT.md exists, this is v2.0 (even if .claude/ also exists)
+  if (hasAiContextMd) {
+    return {
+      status: 'v2',
+      message: 'v2.0 installation found, no migration needed',
+      needsMigration: false,
+      details: detection
+    };
+  }
+
+  // If .claude/ exists but no AI_CONTEXT.md, this is v1.x
   if (detection.hasV1 && !detection.hasV2) {
     return {
       status: 'v1',
@@ -291,15 +307,8 @@ function getMigrationStatus(projectRoot) {
     };
   }
 
-  if (!detection.hasV1 && detection.hasV2) {
-    return {
-      status: 'v2',
-      message: 'v2.0 installation found, no migration needed',
-      needsMigration: false,
-      details: detection
-    };
-  }
-
+  // True mixed state: both v1.x indicators and v2.0 indicators exist
+  // This shouldn't happen normally, but handle it
   if (detection.hasV1 && detection.hasV2) {
     return {
       status: 'mixed',

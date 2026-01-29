@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { getAdapter, getAllAdapters, getAdapterNames } = require('../adapters');
-const { analyzeProject } = require('../static-analyzer');
+const { analyzeCodebase } = require('../static-analyzer');
 const { generateAll, initialize: initGenerator } = require('../ai-context-generator');
 
 /**
@@ -221,7 +221,7 @@ async function propagateContextChange(sourceTool, projectRoot, config, strategy 
   // 1. Re-analyze codebase to get fresh analysis
   let analysis;
   try {
-    analysis = await analyzeProject(projectRoot, config);
+    analysis = await analyzeCodebase(projectRoot, config);
   } catch (error) {
     results.errors.push({
       message: `Failed to analyze project: ${error.message}`
@@ -328,7 +328,7 @@ async function syncAllFromCodebase(projectRoot, config) {
 
   try {
     // Analyze project
-    const analysis = await analyzeProject(projectRoot, config);
+    const analysis = await analyzeCodebase(projectRoot, config);
 
     // Generate for all tools
     const generateResults = await generateAll(analysis, config, projectRoot, {
