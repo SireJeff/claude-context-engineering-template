@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.1] - 2026-01-29
+
+### Fixed
+- **hooks:install command** - Fixed missing hook templates in npm package
+  - Moved hook templates to `packages/create-ai-context/templates/hooks/`
+  - Created proper install module in `lib/install-hooks.js`
+  - Updated CLI to use new install script
+  - Hooks are now properly included in published package
+
+---
+
 ## [2.2.0] - 2026-01-29
 
 ### Added - Cross-Tool Context Synchronization
