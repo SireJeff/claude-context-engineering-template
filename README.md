@@ -174,6 +174,214 @@ npx create-universal-ai-context hooks:install
 
 ---
 
+## Automation & Hooks
+
+The template includes self-sustaining automation that keeps your documentation synchronized with code changes automatically.
+
+### Automation Generators
+
+These scripts automatically update your documentation based on code changes:
+
+#### 1. Code Mapper (`code-mapper.js`)
+
+**What it does:**
+- Scans all workflow files for file:line references
+- Builds a reverse index mapping code files to documentation
+- Generates `CODE_TO_WORKFLOW_MAP.md`
+
+**When it runs:**
+- Automatically after commits (via post-commit hook)
+- Manually: `node .claude/automation/generators/code-mapper.js`
+
+**Output:** `.claude/context/CODE_TO_WORKFLOW_MAP.md`
+
+**Why it's useful:**
+- When you modify a file, instantly see which docs reference it
+- Track what needs updating after code changes
+- Prevents stale documentation
+
+---
+
+#### 2. Index Builder (`index-builder.js`)
+
+**What it does:**
+- Scans workflows, agents, and commands for metadata
+- Regenerates category index files automatically
+- Updates navigation indexes with accurate counts
+
+**When it runs:**
+- Automatically when content changes
+- Manually: `node .claude/automation/generators/index-builder.js`
+
+**Files generated:**
+- `.claude/indexes/workflows/CATEGORY_INDEX.md`
+- `.claude/indexes/agents/CATEGORY_INDEX.md`
+
+**Why it's useful:**
+- Navigation indexes stay accurate as you add/remove workflows
+- No manual index maintenance needed
+- Always shows current state of your documentation
+
+---
+
+### Git Hooks
+
+Hooks automate validation and updates during your git workflow:
+
+#### Pre-Commit Hook (`pre-commit.sh`)
+
+**What it does:**
+- Checks if code changes might affect documentation
+- Warns about potential documentation drift
+- Optionally blocks commits if docs are stale
+
+**Install:**
+```bash
+cp .claude/automation/hooks/pre-commit.sh .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+**Configuration:** `.claude/automation/config.json`
+```json
+{
+  "hooks": {
+    "pre_commit": {
+      "enabled": true,
+      "check_drift": true,
+      "block_on_stale": false
+    }
+  }
+}
+```
+
+**Behavior:**
+- Scans staged files for code changes (*.js, *.py, *.go, etc.)
+- Checks if those files are referenced in workflows
+- Warns if documentation may need updating
+- If `block_on_stale: true`, blocks commit until docs are updated
+
+**Skip the hook:**
+```bash
+git commit --no-verify -m "my message"
+```
+
+---
+
+#### Post-Commit Hook (`post-commit.sh`)
+
+**What it does:**
+- Rebuilds CODE_TO_WORKFLOW_MAP.md in background
+- Updates file hashes for change tracking
+- Queues index rebuilds after documentation commits
+
+**Install:**
+```bash
+cp .claude/automation/hooks/post-commit.sh .git/hooks/post-commit
+chmod +x .git/hooks/post-commit
+```
+
+**Configuration:** `.claude/automation/config.json`
+```json
+{
+  "hooks": {
+    "post_commit": {
+      "enabled": true,
+      "rebuild_code_map": true,
+      "update_hashes": true
+    }
+  }
+}
+```
+
+**Behavior:**
+- Runs asynchronously after successful commit
+- Doesn't slow down your commit process
+- Keeps indexes and maps up-to-date
+
+---
+
+#### Cross-Tool Sync Hooks (NEW!)
+
+For automatically synchronizing AI tool contexts:
+
+**Pre-Commit Sync Hook (`pre-commit.hbs`)**
+- Checks if AI tool contexts are synchronized
+- Blocks commit if contexts are out of sync
+- Shows which tools need syncing
+
+**Post-Commit Sync Hook (`post-commit.hbs`)**
+- Triggers background sync after successful commits
+- Syncs all AI tool contexts from codebase
+
+**Install:**
+```bash
+npx create-universal-ai-context hooks:install
+```
+
+Or manually:
+```bash
+cp .claude/automation/hooks/pre-commit.hbs .git/hooks/pre-commit
+cp .claude/automation/hooks/post-commit.hbs .git/hooks/post-commit
+chmod +x .git/hooks/pre-commit .git/hooks/post-commit
+```
+
+**Configuration:** `.ai-context/sync-state.json` (auto-generated)
+
+---
+
+### Automation Configuration
+
+All automation is controlled via: `.claude/automation/config.json`
+
+```json
+{
+  "$schema": "../schemas/automation.schema.json",
+  "version": "1.0.0",
+  "generators": {
+    "code_mapper": {
+      "enabled": true,
+      "output_path": "context/CODE_TO_WORKFLOW_MAP.md",
+      "scan_patterns": [
+        "context/workflows/*.md",
+        "agents/*.md",
+        "commands/*.md"
+      ]
+    },
+    "index_builder": {
+      "enabled": true,
+      "rebuild_on_change": true
+    }
+  },
+  "hooks": {
+    "pre_commit": {
+      "enabled": true,
+      "check_drift": true,
+      "block_on_stale": false
+    },
+    "post_commit": {
+      "enabled": true,
+      "rebuild_code_map": true,
+      "update_hashes": true
+    }
+  }
+}
+```
+
+### Manual Trigger Commands
+
+```bash
+# Regenerate code-to-workflow map
+node .claude/automation/generators/code-mapper.js
+
+# Rebuild all indexes
+node .claude/automation/generators/index-builder.js
+
+# Dry-run to see what would be generated
+node .claude/automation/generators/code-mapper.js --dry-run
+```
+
+---
+
 ## Self-Sustaining Features
 
 ### Session Persistence

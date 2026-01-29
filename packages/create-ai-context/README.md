@@ -97,6 +97,67 @@ npx create-universal-ai-context hooks:install
 - `newest` - Most recently modified wins
 - `manual` - Require manual resolution
 
+## Automation Scripts
+
+The generated `.ai-context/` directory includes automation that keeps documentation synchronized:
+
+### Generators
+
+**Code Mapper** (`.ai-context/automation/generators/code-mapper.js`)
+- Scans workflow files for file:line references
+- Builds CODE_TO_WORKFLOW_MAP.md (reverse index of code → docs)
+- Shows which workflows reference each file
+- Helps identify what needs updating after code changes
+
+**Index Builder** (`.ai-context/automation/generators/index-builder.js`)
+- Regenerates category indexes automatically
+- Updates navigation indexes with accurate counts
+- Scans workflows, agents, and commands for metadata
+
+### Git Hooks
+
+**Pre-Commit Hook**
+- Validates before allowing commits
+- Warns if code changes might affect documentation
+- Optionally blocks commits if docs are stale
+
+**Post-Commit Hook**
+- Rebuilds CODE_TO_WORKFLOW_MAP.md in background
+- Updates file hashes for change tracking
+- Keeps indexes synchronized
+
+### Install Hooks
+
+```bash
+# Copy hooks to .git/hooks/
+cp .ai-context/automation/hooks/pre-commit.sh .git/hooks/pre-commit
+cp .ai-context/automation/hooks/post-commit.sh .git/hooks/post-commit
+chmod +x .git/hooks/pre-commit .git/hooks/post-commit
+```
+
+### Run Manually
+
+```bash
+# Regenerate code-to-workflow map
+node .ai-context/automation/generators/code-mapper.js
+
+# Rebuild all indexes
+node .ai-context/automation/generators/index-builder.js
+
+# Dry-run to preview
+node .ai-context/automation/generators/code-mapper.js --dry-run
+```
+
+### Configuration
+
+Control automation via `.ai-context/automation/config.json`:
+- Enable/disable generators
+- Configure hook behavior
+- Set drift check sensitivity
+- Toggle blocking on stale documentation
+
+---
+
 ## Existing Documentation Detection
 
 The CLI automatically detects existing AI context files:

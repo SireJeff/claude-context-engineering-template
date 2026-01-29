@@ -35,7 +35,8 @@
       "Bash(git log:*)",
       "Bash(gh label:*)",
       "Bash(gh issue:*)",
-      "Bash(npm pack --dry-run)"
+      "Bash(npm pack --dry-run)",
+      "Bash(npm publish --access public)"
     ]
   }
 }
