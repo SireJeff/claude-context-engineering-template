@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.2] - 2026-01-29
+
+### Fixed
+- **status command** - Fixed false "Mixed v1.x and v2.0 installation" detection
+  - In v2.0, both `.ai-context/` AND `.claude/` can exist (Claude adapter creates both)
+  - Now checks for `AI_CONTEXT.md` as the v2.0 indicator
+- **sync:all command** - Fixed crash when syncing from codebase
+  - Changed `analyzeProject()` to `analyzeCodebase()` (correct function name)
+
+---
+
 ## [2.2.1] - 2026-01-29
 
 ### Fixed
