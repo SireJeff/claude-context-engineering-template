@@ -12,7 +12,7 @@ const FASTAPI_FIXTURE = path.join(__dirname, '../../test-fixtures/fastapi-app');
 
 // Helper to clean up generated files
 function cleanupFixture(fixturePath) {
-  const dirsToRemove = ['.ai-context', '.github', '.agent', '.git'];
+  const dirsToRemove = ['.ai-context', '.claude', '.github', '.agent', '.git'];
   const filesToRemove = ['AI_CONTEXT.md', '.clinerules'];
 
   for (const dir of dirsToRemove) {
