@@ -55,3 +55,7 @@ coverage/
 # Environment files with secrets
 .env.local
 .env.*.local
+
+# RPI plan files (user-specific working documents)
+.claude/plans/**/*.md
+!.claude/plans/PLAN_TEMPLATE.md
