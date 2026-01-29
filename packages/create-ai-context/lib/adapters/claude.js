@@ -145,7 +145,7 @@ async function generateClaudeDirectory(projectRoot, context, result) {
     const settingsPath = path.join(claudeDir, 'settings.json');
     const settings = {
       '$schema': './schemas/settings.schema.json',
-      version: '2.1.0',
+      version: '2.2.2',
       project: {
         name: context.project?.name || 'Project',
         tech_stack: context.project?.tech_stack || 'Not detected'
