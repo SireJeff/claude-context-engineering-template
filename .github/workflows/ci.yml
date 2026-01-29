@@ -24,23 +24,23 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: packages/create-claude-context/package-lock.json
+          cache-dependency-path: packages/create-ai-context/package-lock.json
 
       - name: Install dependencies
-        working-directory: packages/create-claude-context
+        working-directory: packages/create-ai-context
         run: npm ci
 
       - name: Run tests
-        working-directory: packages/create-claude-context
+        working-directory: packages/create-ai-context
         run: npm test
 
       - name: Run tests with coverage
-        working-directory: packages/create-claude-context
+        working-directory: packages/create-ai-context
         run: npm run test:coverage
         if: matrix.node-version == '20.x'
 
       - name: Check package integrity
-        working-directory: packages/create-claude-context
+        working-directory: packages/create-ai-context
         run: npm pack --dry-run
 
   lint:
@@ -56,14 +56,14 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'npm'
-          cache-dependency-path: packages/create-claude-context/package-lock.json
+          cache-dependency-path: packages/create-ai-context/package-lock.json
 
       - name: Install dependencies
-        working-directory: packages/create-claude-context
+        working-directory: packages/create-ai-context
         run: npm ci
 
       - name: Run linter
-        working-directory: packages/create-claude-context
+        working-directory: packages/create-ai-context
         run: npm run lint --if-present
 
   validate-plugin:

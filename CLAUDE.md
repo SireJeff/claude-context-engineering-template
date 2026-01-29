@@ -1,4 +1,4 @@
-# CLAUDE.md - {{PROJECT_NAME}}
+# CLAUDE.md - Universal AI Context Engineering Template
 
 This file provides guidance to Claude Code when working with code in this repository.
 
@@ -6,15 +6,15 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Project Identity
 
-**Platform:** {{PROJECT_DESCRIPTION}}
-**Domain:** {{PRODUCTION_URL}}
-**Tech Stack:** {{TECH_STACK}}
-**Status:** {{PROJECT_STATUS}}
+**Platform:** Universal AI Context Engineering - CLI tools and templates for Claude Code, GitHub Copilot, Cline, and Antigravity
+**Domain:** https://github.com/SireJeff/claude-context-engineering-template
+**Tech Stack:** Node.js, JavaScript, Jest, npm
+**Status:** Active (v2.1.0)
 
 **Quick Reference:**
-- **API:** {{API_URL}}
-- **Repo:** {{REPO_URL}}
-- **Deploy:** {{DEPLOYMENT_PLATFORM}}
+- **API:** N/A (CLI tool)
+- **Repo:** https://github.com/SireJeff/claude-context-engineering-template
+- **Deploy:** npm registry
 
 ---
 
@@ -22,26 +22,24 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ### Development
 ```bash
-{{INSTALL_COMMAND}}
-{{DEV_START_COMMAND}}
+cd packages/create-ai-context && npm install
+npm test
 ```
 
 ### Testing
 ```bash
-{{TEST_COMMAND}}                    # All tests
-{{TEST_E2E_COMMAND}}               # E2E only
-{{TEST_COVERAGE_COMMAND}}          # With coverage
+npm test                           # All tests
+npm run test:coverage              # With coverage
 ```
 
 ### Database
 ```bash
-{{MIGRATION_CREATE_COMMAND}}
-{{MIGRATION_RUN_COMMAND}}
+# N/A - No database in this project
 ```
 
 ### Deployment
 ```bash
-{{DEPLOY_COMMAND}}
+npm publish --access public        # Publish to npm
 ```
 
 ---
@@ -49,7 +47,7 @@ This file provides guidance to Claude Code when working with code in this reposi
 ## Navigation Rules
 
 ### High-Level Task (Refactoring a Flow)
-**Example:** "{{EXAMPLE_REFACTOR_TASK}}"
+**Example:** "Refactor the static analyzer to support a new framework"
 
 **Chain:**
 1. Start: [.claude/indexes/workflows/CATEGORY_INDEX.md](./.claude/indexes/workflows/CATEGORY_INDEX.md)
@@ -64,7 +62,7 @@ This file provides guidance to Claude Code when working with code in this reposi
 ---
 
 ### Low-Level Task (Fix Hardcoded Value)
-**Example:** "{{EXAMPLE_LOWLEVEL_TASK}}"
+**Example:** "Fix a hardcoded path in the template populator"
 
 **Chain:**
 1. Start: Search Patterns section below
@@ -78,7 +76,7 @@ This file provides guidance to Claude Code when working with code in this reposi
 ---
 
 ### Feature Task (Add New Feature)
-**Example:** "{{EXAMPLE_FEATURE_TASK}}"
+**Example:** "Add support for a new AI tool adapter"
 
 **Chain:**
 1. Start: [.claude/indexes/routing/CATEGORY_INDEX.md](./.claude/indexes/routing/CATEGORY_INDEX.md)
@@ -97,12 +95,12 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 **Environment variables:**
 ```bash
-{{CONFIG_SEARCH_PATTERN}}
+grep -r "process.env" packages/create-ai-context/lib/
 ```
 
 **Hardcoded URLs/domains:**
 ```bash
-{{URL_SEARCH_PATTERN}}
+grep -r "https://" packages/ --include="*.js"
 ```
 
 ---
@@ -110,26 +108,45 @@ This file provides guidance to Claude Code when working with code in this reposi
 ### Finding Business Logic
 
 **Core Files:**
-{{CORE_FILES_LIST}}
+- `packages/create-ai-context/lib/static-analyzer.js` - Codebase analysis
+- `packages/create-ai-context/lib/template-populator.js` - Template generation
+- `packages/create-ai-context/lib/detector.js` - Tech stack detection
+- `packages/create-ai-context/lib/doc-discovery.js` - Existing docs detection
+- `packages/create-ai-context/lib/drift-checker.js` - Documentation drift
+- `packages/create-ai-context/lib/smart-merge.js` - Merge strategies
 
 ---
 
 ### Finding Database Schema
 
-**Models:** {{MODELS_PATH}}
-**Migrations:** {{MIGRATIONS_PATH}}
+**Models:** N/A
+**Migrations:** N/A
 
 ---
 
 ### Finding External Integrations
 
-{{EXTERNAL_INTEGRATIONS_LIST}}
+- npm registry (publishing)
+- GitHub Actions (CI/CD)
 
 ---
 
 ## System Architecture Mini-Map
 
-{{ARCHITECTURE_DIAGRAM}}
+```
+packages/
+├── create-ai-context/          # Main CLI package
+│   ├── bin/                    # CLI entry point
+│   ├── lib/                    # Core modules
+│   │   ├── static-analyzer.js  # Codebase analysis
+│   │   ├── detector.js         # Tech detection
+│   │   ├── installer.js        # File generation
+│   │   └── adapters/           # AI tool adapters
+│   ├── templates/              # Output templates
+│   └── tests/                  # Jest tests
+└── claude-context-plugin/      # Claude Code plugin
+    └── skills/                 # RPI workflow skills
+```
 
 ---
 
@@ -141,20 +158,22 @@ This file provides guidance to Claude Code when working with code in this reposi
 - Workflows, Code, Search, Agents, Routing
 
 **Level 2 - Domains:** [.claude/indexes/workflows/*.md](./.claude/indexes/workflows/)
-- {{WORKFLOW_DOMAINS_COUNT}} workflow domains, {{CODE_DOMAINS_COUNT}} code domains
+- 5 workflow domains, 4 code domains
 
 **Level 3 - Details:** [.claude/context/workflows/](./.claude/context/workflows/), [.claude/agents/](./.claude/agents/), [.claude/commands/](./.claude/commands/)
-- {{WORKFLOWS_COUNT}} workflows, {{AGENTS_COUNT}} agents, {{COMMANDS_COUNT}} commands
+- 8 workflows, 6 agents, 11 commands
 
 ---
 
 ## Critical Constants
 
 ### Domain & URLs
-{{CRITICAL_URLS}}
+- npm package: `create-universal-ai-context`
+- GitHub: `SireJeff/claude-context-engineering-template`
 
 ### Business Constants
-{{BUSINESS_CONSTANTS}}
+- Supported AI tools: Claude Code, GitHub Copilot, Cline, Antigravity
+- Node.js minimum: 18.0.0
 
 ---
 
@@ -164,13 +183,13 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 **Implementing:** [workflows/*.md](./.claude/context/workflows/), [CODE_TO_WORKFLOW_MAP.md](./.claude/context/CODE_TO_WORKFLOW_MAP.md)
 
-**Debugging:** {{DEBUGGING_QUICK_REFS}}
+**Debugging:** Check Jest output, review lib/ modules
 
 ---
 
 ## Agent & Command Routing
 
-**Agents:** {{AGENT_ROUTING_TABLE}}
+**Agents:** @context-engineer (setup), @core-architect (design), @api-developer (endpoints), @database-ops (schema), @integration-hub (external), @deployment-ops (CI/CD)
 **Full matrix:** [.claude/indexes/agents/router.md](./.claude/indexes/agents/router.md)
 
 **Commands:** /rpi-research, /rpi-plan, /rpi-implement, /verify-docs-current, /validate-all, /help, /collab, /analytics
@@ -180,11 +199,13 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Gotcha Quick Reference
 
-### {{GOTCHA_CATEGORY_1}}
-{{GOTCHA_1_ITEMS}}
+### Testing
+- Integration tests require test fixtures in `tests/fixtures/`
+- Run unit tests separately: `npm test -- tests/unit/`
 
-### {{GOTCHA_CATEGORY_2}}
-{{GOTCHA_2_ITEMS}}
+### Publishing
+- Version must be bumped before npm publish
+- CI/CD publishes automatically on GitHub release
 
 **Full gotchas:** [.claude/context/KNOWN_GOTCHAS.md](./.claude/context/KNOWN_GOTCHAS.md)
 
@@ -203,17 +224,17 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Production
 
-**Platform:** {{PRODUCTION_PLATFORM}}
-**Services:** {{PRODUCTION_SERVICES}}
-**Monitoring:** {{MONITORING_COMMANDS}}
+**Platform:** npm registry
+**Services:** GitHub Actions CI/CD
+**Monitoring:** npm download stats, GitHub issues
 
 ---
 
 ## Key Constraints
 
-**Migrations:** {{MIGRATION_CONSTRAINTS}}
-**Testing:** {{TESTING_CONSTRAINTS}}
-**Security:** {{SECURITY_CONSTRAINTS}}
+**Migrations:** N/A
+**Testing:** All PRs must pass Jest tests
+**Security:** No secrets in templates, validate user input paths
 
 ---
 
@@ -227,9 +248,10 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Contact
 
-{{CONTACT_INFO}}
+- GitHub Issues: https://github.com/SireJeff/claude-context-engineering-template/issues
+- Author: SireJeff
 
 ---
 
-**Version:** 1.1 | **Last Updated:** {{DATE}} | **Context Target:** 200k
-**Architecture:** 3-Level Chain-of-Index | **Index Files:** {{INDEX_FILES_COUNT}}
+**Version:** 2.1.0 | **Last Updated:** 2026-01-29 | **Context Target:** 200k
+**Architecture:** 3-Level Chain-of-Index | **Index Files:** 20

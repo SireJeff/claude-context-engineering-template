@@ -9,13 +9,13 @@ Common issues and solutions for Claude Context Engineering.
 Run diagnostics to automatically detect issues:
 
 ```bash
-npx .claude/tools/bin/claude-context.js diagnose
+npx .ai-context/tools/bin/claude-context.js diagnose
 ```
 
 To attempt auto-fix:
 
 ```bash
-npx .claude/tools/bin/claude-context.js diagnose --fix
+npx .ai-context/tools/bin/claude-context.js diagnose --fix
 ```
 
 ---
@@ -36,7 +36,7 @@ npx .claude/tools/bin/claude-context.js diagnose --fix
 ### TSG-001: CLI Tools Won't Install
 
 **Symptoms:**
-- `npm install` fails in `.claude/tools/`
+- `npm install` fails in `.ai-context/tools/`
 - Missing dependencies errors
 
 **Diagnosis:**
@@ -57,12 +57,12 @@ nvm use 18
 **B. Clear npm cache**
 ```bash
 npm cache clean --force
-cd .claude/tools && rm -rf node_modules && npm install
+cd .ai-context/tools && rm -rf node_modules && npm install
 ```
 
 **C. Use yarn instead**
 ```bash
-cd .claude/tools && yarn install
+cd .ai-context/tools && yarn install
 ```
 
 ---
@@ -70,21 +70,21 @@ cd .claude/tools && yarn install
 ### TSG-002: Template Files Not Found
 
 **Symptoms:**
-- "CLAUDE.md not found" errors
-- Missing `.claude/` directory
+- "AI_CONTEXT.md not found" errors
+- Missing `.ai-context/` directory
 
 **Solutions:**
 
 **A. Verify copy was complete**
 ```bash
-ls -la .claude/
+ls -la .ai-context/
 # Should contain: agents/, commands/, context/, indexes/, settings.json, README.md
 ```
 
 **B. Re-copy from template**
 ```bash
 cp -r /path/to/template/.claude ./.claude
-cp /path/to/template/CLAUDE.md ./CLAUDE.md
+cp /path/to/template/AI_CONTEXT.md ./AI_CONTEXT.md
 ```
 
 ---
@@ -121,7 +121,7 @@ echo '{"name":"my-project"}' > package.json
 ```
 
 **C. Manual initialization**
-Edit `CLAUDE.md` directly and replace `{{PLACEHOLDER}}` values manually.
+Edit `AI_CONTEXT.md` directly and replace `{{PLACEHOLDER}}` values manually.
 
 ---
 
@@ -176,14 +176,14 @@ The agent should merge related workflows. If not:
 
 **A. Resume initialization**
 ```bash
-npx .claude/tools/bin/claude-context.js init --resume
+npx .ai-context/tools/bin/claude-context.js init --resume
 # Or in Claude Code:
 @context-engineer "Resume initialization"
 ```
 
 **B. Start fresh**
 ```bash
-rm .claude/INIT_PROGRESS.json
+rm .ai-context/INIT_PROGRESS.json
 @context-engineer "Initialize context engineering for this repository"
 ```
 
@@ -256,18 +256,18 @@ Search for the specific function: [function name] in [file pattern]
 
 **Diagnosis:**
 ```bash
-npx .claude/tools/bin/claude-context.js validate --schema
+npx .ai-context/tools/bin/claude-context.js validate --schema
 ```
 
 **Solutions:**
 
 **A. Auto-fix with defaults**
 ```bash
-npx .claude/tools/bin/claude-context.js diagnose --fix
+npx .ai-context/tools/bin/claude-context.js diagnose --fix
 ```
 
 **B. Manual fix**
-Compare your `settings.json` with the schema in `.claude/schemas/settings.schema.json`.
+Compare your `settings.json` with the schema in `.ai-context/schemas/settings.schema.json`.
 
 ---
 
@@ -279,7 +279,7 @@ Compare your `settings.json` with the schema in `.claude/schemas/settings.schema
 
 **Diagnosis:**
 ```bash
-npx .claude/tools/bin/claude-context.js validate --links
+npx .ai-context/tools/bin/claude-context.js validate --links
 ```
 
 **Solutions:**
@@ -288,7 +288,7 @@ npx .claude/tools/bin/claude-context.js validate --links
 After refactoring, update documentation:
 ```bash
 # Find all references to old path
-grep -r "old/path" .claude/
+grep -r "old/path" .ai-context/
 # Update to new path
 ```
 
@@ -307,7 +307,7 @@ grep -r "old/path" .claude/
 
 **Diagnosis:**
 ```bash
-npx .claude/tools/bin/claude-context.js validate --lines --threshold 60
+npx .ai-context/tools/bin/claude-context.js validate --lines --threshold 60
 ```
 
 **Solutions:**
@@ -330,12 +330,12 @@ Line numbers within ±10 lines are acceptable. Focus on function names as anchor
 ### TSG-033: Remaining Placeholders
 
 **Symptoms:**
-- `{{PLACEHOLDER}}` text visible in CLAUDE.md
+- `{{PLACEHOLDER}}` text visible in AI_CONTEXT.md
 - Incomplete initialization
 
 **Diagnosis:**
 ```bash
-npx .claude/tools/bin/claude-context.js validate --placeholders
+npx .ai-context/tools/bin/claude-context.js validate --placeholders
 ```
 
 **Solutions:**
@@ -346,7 +346,7 @@ npx .claude/tools/bin/claude-context.js validate --placeholders
 ```
 
 **B. Manual replacement**
-Search and replace remaining placeholders in CLAUDE.md with actual values.
+Search and replace remaining placeholders in AI_CONTEXT.md with actual values.
 
 ---
 
@@ -362,7 +362,7 @@ Search and replace remaining placeholders in CLAUDE.md with actual values.
 
 **A. Check agent exists**
 ```bash
-ls .claude/agents/
+ls .ai-context/agents/
 ```
 
 **B. Use correct invocation**
@@ -386,7 +386,7 @@ ls .claude/agents/
 
 **A. Check command exists**
 ```bash
-ls .claude/commands/
+ls .ai-context/commands/
 ```
 
 **B. Verify command is registered**
@@ -435,10 +435,10 @@ Edit `settings.json`:
 **A. Validate specific checks only**
 ```bash
 # Just schema
-npx .claude/tools/bin/claude-context.js validate --schema
+npx .ai-context/tools/bin/claude-context.js validate --schema
 
 # Just structure
-npx .claude/tools/bin/claude-context.js validate --structure
+npx .ai-context/tools/bin/claude-context.js validate --structure
 ```
 
 **B. Skip external link checking**
@@ -457,16 +457,16 @@ If your issue isn't listed:
 
 1. **Run full diagnostics:**
    ```bash
-   npx .claude/tools/bin/claude-context.js diagnose --verbose
+   npx .ai-context/tools/bin/claude-context.js diagnose --verbose
    ```
 
 2. **Check logs:**
    ```bash
-   cat .claude/logs/claude.log
+   cat .ai-context/logs/claude.log
    ```
 
 3. **Report an issue:**
-   https://github.com/yourusername/claude-code-context-engineering-template/issues
+   https://github.com/SireJeff/claude-context-engineering-template/issues
 
 Include:
 - Error message

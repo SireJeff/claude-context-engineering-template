@@ -46,7 +46,7 @@ Once recording starts, type these commands (with appropriate pauses):
 
 ```bash
 # Show the command
-npx create-claude-context@latest
+npx create-universal-ai-context@latest
 
 # Walk through the prompts:
 # - Project name: my-awesome-app
@@ -55,10 +55,10 @@ npx create-claude-context@latest
 # - Install plugin: Yes
 
 # Show the result
-tree .claude -L 2
+tree .ai-context -L 2
 
-# Show CLAUDE.md
-head -50 CLAUDE.md
+# Show AI_CONTEXT.md
+head -50 AI_CONTEXT.md
 ```
 
 ### 4. Stop Recording
@@ -117,7 +117,7 @@ gifsicle -O3 --colors 128 demo.gif -o demo-optimized.gif
 Once created, place the GIF at:
 
 ```
-packages/create-claude-context/docs/demo.gif
+packages/create-ai-context/docs/demo.gif
 ```
 
 Then update the README to reference it:

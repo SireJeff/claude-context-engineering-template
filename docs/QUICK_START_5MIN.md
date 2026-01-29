@@ -1,6 +1,6 @@
 # Quick Start Guide (5 Minutes)
 
-Get Claude Context Engineering running in your project in under 5 minutes.
+Get Universal AI Context Engineering running in your project in under 5 minutes.
 
 ## Prerequisites
 
@@ -12,36 +12,36 @@ Get Claude Context Engineering running in your project in under 5 minutes.
 
 ```bash
 # From your project root
-npx create-claude-context
+npx create-universal-ai-context
 ```
 
 This single command:
-- Creates the `.claude/` directory structure
+- Creates the `.ai-context/` directory structure
 - Detects your tech stack automatically
-- Generates `CLAUDE.md` at your project root
-- Installs the Claude Code plugin (optional)
+- Generates `AI_CONTEXT.md` at your project root
+- Generates context for multiple AI tools (Claude, Copilot, Cline, Antigravity)
 
 ### Alternative: Manual Installation
 
 ```bash
 git clone https://github.com/SireJeff/claude-context-engineering-template.git /tmp/template
-cp -r /tmp/template/.claude ./.claude
-cp /tmp/template/CLAUDE.md ./CLAUDE.md
+cp -r /tmp/template/.ai-context ./.ai-context
+cp /tmp/template/AI_CONTEXT.md ./AI_CONTEXT.md
 rm -rf /tmp/template
 
 # Install CLI tools
-cd .claude/tools && npm install && cd ../..
+cd .ai-context/tools && npm install && cd ../..
 ```
 
 ## Step 2: Run Validation (1 minute)
 
 ```bash
-npx .claude/tools/bin/claude-context.js validate
+npx .ai-context/tools/bin/claude-context.js validate
 ```
 
 You should see:
 ```
-🔍 Running Validation Suite...
+Running Validation Suite...
 
 Schema Validation
 ──────────────────────────────────────────────────
@@ -56,7 +56,7 @@ Structure Validation
   ✓ context
   ✓ indexes
 
-📊 Validation Summary
+Validation Summary
 ──────────────────────────────────────────────────
   Total checks: 3
   Passed: 3
@@ -64,7 +64,7 @@ Structure Validation
   Overall: PASS
 ```
 
-## Step 4: Initialize for Your Project (2 minutes)
+## Step 3: Initialize for Your Project (2 minutes)
 
 In Claude Code CLI:
 
@@ -78,10 +78,10 @@ The agent will:
 3. Create documentation with file:line references
 4. Populate all template placeholders
 
-## Step 5: Verify (30 seconds)
+## Step 4: Verify (30 seconds)
 
 ```bash
-npx .claude/tools/bin/claude-context.js validate --all
+npx .ai-context/tools/bin/claude-context.js validate --all
 ```
 
 All checks should pass.
@@ -94,10 +94,10 @@ You now have:
 
 | Created | Purpose |
 |---------|---------|
-| `.claude/context/workflows/*.md` | Documentation for each workflow |
-| `.claude/context/WORKFLOW_INDEX.md` | Master catalog of all workflows |
-| `.claude/context/CODE_TO_WORKFLOW_MAP.md` | Reverse index (file → workflows) |
-| `CLAUDE.md` | Populated project guidance |
+| `.ai-context/context/workflows/*.md` | Documentation for each workflow |
+| `.ai-context/context/WORKFLOW_INDEX.md` | Master catalog of all workflows |
+| `.ai-context/context/CODE_TO_WORKFLOW_MAP.md` | Reverse index (file → workflows) |
+| `AI_CONTEXT.md` | Populated project guidance |
 
 ## Next Steps
 
@@ -127,7 +127,7 @@ You now have:
 /verify-docs-current path/to/modified/file
 
 # Or validate everything
-npx .claude/tools/bin/claude-context.js validate --all
+npx .ai-context/tools/bin/claude-context.js validate --all
 ```
 
 ---
@@ -138,7 +138,7 @@ npx .claude/tools/bin/claude-context.js validate --all
 |-------|----------|
 | "Tech stack not detected" | Provide hint: `@context-engineer "Initialize for Python FastAPI"` |
 | "Too many/few workflows" | Agent will merge or split automatically |
-| Validation fails | Run `npx .claude/tools/bin/claude-context.js diagnose --fix` |
+| Validation fails | Run `npx .ai-context/tools/bin/claude-context.js diagnose --fix` |
 
 See [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) for more.
 

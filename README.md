@@ -23,8 +23,6 @@ npx create-universal-ai-context --ai all           # Generate for all AI tools (
 npx create-universal-ai-context --static           # Force static-only analysis
 npx create-universal-ai-context --force-ai         # Require Claude Code session
 
-# Legacy command (still works)
-npx create-claude-context
 ```
 
 ### AI Tools Supported
@@ -297,9 +295,9 @@ Project-specific workflow configuration is documented in `CLAUDE.md` rather than
 
 ```bash
 # Initialize context engineering in your project
-npx create-claude-context
-npx create-claude-context --yes      # Skip prompts
-npx create-claude-context --static   # Static analysis only
+npx create-universal-ai-context
+npx create-universal-ai-context --yes      # Skip prompts
+npx create-universal-ai-context --static   # Static analysis only
 ```
 
 ### Ongoing Use (Claude Code slash commands)
@@ -369,7 +367,7 @@ Includes:
 ### "CLI can't detect my tech stack"
 
 ```bash
-npx create-claude-context --stack python-django
+npx create-universal-ai-context --stack python-django
 ```
 
 ### "Line numbers are outdated"
@@ -397,7 +395,7 @@ Load progressively:
 
 | Package | Purpose | Install |
 |---------|---------|---------|
-| `create-claude-context` | CLI installer | `npx create-claude-context` |
+| `create-universal-ai-context` | CLI installer | `npx create-universal-ai-context` |
 | `claude-context-plugin` | Claude Code plugin | Optional during setup |
 
 ---
@@ -408,4 +406,4 @@ MIT License - Use freely in any project.
 
 ---
 
-**Version:** 1.2.4 | **Updated:** 2026-01-28 | **License:** MIT
+**Version:** 2.1.0 | **Updated:** 2026-01-29 | **License:** MIT

@@ -1,6 +1,6 @@
 {
   "name": "@claude-context/tools",
-  "version": "1.2.0",
+  "version": "2.1.0",
   "description": "CLI tools for Claude Context Engineering template",
   "main": "lib/index.js",
   "bin": {

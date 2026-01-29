@@ -1,5 +1,5 @@
 /**
- * Spinner utilities for create-claude-context
+ * Spinner utilities for create-universal-ai-context
  *
  * Provides consistent progress indicators using ora
  */
