@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug in Claude Context Engineering
+about: Report a bug in Universal AI Context Engineering
 title: '[BUG] '
 labels: bug
 assignees: ''
@@ -10,8 +10,8 @@ assignees: ''
 
 ### Environment
 
-**Claude Context Engineering Version:**
-<!-- e.g., 1.0.0 -->
+**Universal AI Context Engineering Version:**
+<!-- e.g., 2.3.0 -->
 
 **Node.js Version:**
 <!-- e.g., 18.17.0 -->
@@ -19,8 +19,11 @@ assignees: ''
 **Operating System:**
 <!-- e.g., Windows 11, macOS 14, Ubuntu 22.04 -->
 
-**Claude Code Version (if known):**
-<!-- e.g., latest -->
+**AI Tool(s) Used:**
+<!-- e.g., Claude Code, GitHub Copilot, Cline, Antigravity -->
+
+**Symlink Support:**
+<!-- Does your OS support symlinks? Yes/No -->
 
 ### Description
 
@@ -70,4 +73,9 @@ assignees: ''
 - [ ] Searched existing issues for duplicates
 - [ ] Included version information
 - [ ] Provided steps to reproduce
-- [ ] Ran `npx claude-context diagnose` and included output (if applicable)
+- [ ] Checked if symlink-related issue (on Windows)
+- [ ] Ran `npx create-universal-ai-context diagnose` and included output (if applicable)
+
+---
+
+**Version:** 2.3.0 | **Universal AI Context Engineering Template**

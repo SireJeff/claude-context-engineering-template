@@ -34,7 +34,12 @@ assignees: ''
 <!-- Check one or more -->
 
 - [ ] CLI tooling
+- [ ] Symlink architecture
+- [ ] Cross-tool synchronization
+- [ ] New AI tool adapter (Cursor, Windsurf, Aider, Continue, etc.)
 - [ ] Documentation/Templates
+- [ ] Carbon efficiency
+- [ ] Token optimization
 - [ ] Agents
 - [ ] Commands
 - [ ] Configuration
@@ -53,6 +58,13 @@ assignees: ''
 
 **Frequency of use:**
 <!-- e.g., Daily, weekly, occasionally -->
+
+**Carbon Efficiency Impact:**
+<!-- Would this reduce token usage? Improve AI accuracy? -->
+- [ ] Reduces token waste (estimated: __%)
+- [ ] Improves context accuracy (estimated: __%)
+- [ ] Enables carbon-aware context optimization
+- [ ] Other efficiency gains:
 
 ### Implementation Ideas
 
@@ -74,3 +86,8 @@ assignees: ''
 - [ ] Provided clear problem statement
 - [ ] Described at least one use case
 - [ ] Considered impact on existing features
+- [ ] Considered carbon efficiency impact (if applicable)
+
+---
+
+**Version:** 2.3.0 | **Universal AI Context Engineering Template**

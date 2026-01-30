@@ -1,71 +1,91 @@
 ---
-name: Extension Submission
-about: Submit an extension to the community registry
-title: '[EXTENSION] '
-labels: extension, submission
+name: New AI Tool Adapter Proposal
+about: Propose adding support for a new AI coding tool
+title: '[ADAPTER] '
+labels: enhancement, adapter, new-tool
 assignees: ''
 ---
 
-## Extension Details
+## AI Tool Details
 
-**Extension Name:**
-<!-- e.g., my-awesome-extension -->
+**Tool Name:**
+<!-- e.g., Cursor, Windsurf, Aider, Continue -->
 
-**Display Name:**
-<!-- e.g., My Awesome Extension -->
+**Tool Website:**
+<!-- e.g., https://cursor.sh -->
 
-**Repository URL:**
-<!-- e.g., https://github.com/username/my-extension -->
+**Repository:**
+<!-- e.g., https://github.com/getcursor/cursor -->
 
-**Version:**
-<!-- e.g., 1.0.0 -->
+## Context Format
 
-## Description
+**How does the tool consume context?**
+<!-- Describe the file format, directory structure, or API used -->
 
-<!-- Describe what your extension does in 2-3 sentences -->
+**Example context files (if any):**
+<!-- e.g., .cursorrules, cursor.md, etc. -->
 
-## Contents
+**Documentation links:**
+<!-- Links to tool's documentation on context/customization -->
 
-<!-- Check all that apply -->
+## Adapter Design
 
-- [ ] Agent(s)
-- [ ] Command(s)
-- [ ] Workflow(s)
-- [ ] Adapter(s)
-- [ ] Integration(s)
-- [ ] Other:
+**Proposed adapter implementation:**
+<!-- Describe how the adapter should work -->
+
+**Output format:**
+<!-- What files/directories should be generated? -->
+
+**Configuration options (if any):**
+<!-- Any tool-specific settings -->
 
 ## Compatibility
 
-**Tested with Claude Context Engineering version(s):**
-<!-- e.g., 1.0.0, 1.1.0 -->
+**Tested with Universal AI Context Engineering version(s):**
+<!-- e.g., 2.3.0 -->
 
 **Node.js version(s) tested:**
 <!-- e.g., 18.x, 20.x -->
 
-## Checklist
+## Contribution
 
-Please confirm the following:
+**Are you planning to implement this adapter?**
+- [ ] Yes, I will submit a PR
+- [ ] No, hoping someone else can implement
+- [ ] Need guidance on implementation
 
-- [ ] `manifest.json` is present and valid
-- [ ] `README.md` includes all required sections
-- [ ] `LICENSE` file is included
-- [ ] All examples work as documented
-- [ ] No placeholder text remains
-- [ ] No sensitive data (API keys, secrets) included
-- [ ] Tested with specified template version(s)
-- [ ] Follows [Extension Guidelines](/.claude/standards/EXTENSION_GUIDELINES.md)
-- [ ] Passes [Quality Checklist](/.claude/standards/QUALITY_CHECKLIST.md)
+**Implementation status:**
+- [ ] Not started
+- [ ] In progress
+- [ ] Draft implementation available
 
 ## Additional Information
 
-<!-- Any other details reviewers should know -->
+<!-- Any other details that would help with implementation -->
 
 ---
 
-**For Reviewers:**
-- [ ] Manifest validation passed
-- [ ] Documentation reviewed
-- [ ] Installation tested
-- [ ] Security review completed
-- [ ] License compatible
+### Carbon Efficiency Impact
+
+**How would this adapter contribute to the vision?**
+- [ ] Reduces token usage for users of this tool
+- [ ] Improves AI accuracy through better context
+- [ ] Enables cross-tool synchronization
+- [ ] Expands the Universal AI Context Standard
+
+**Estimated efficiency gains:**
+<!-- e.g., "Reduces token waste by ~40% for Cursor users" -->
+
+---
+
+### Checklist
+
+- [ ] Researched tool's context format
+- [ ] Checked for existing adapter proposals
+- [ ] Provided documentation links
+- [ ] Considered implementation complexity
+- [ ] Aligned with project vision (universal standard, carbon efficiency)
+
+---
+
+**Version:** 2.3.0 | **Universal AI Context Engineering Template**

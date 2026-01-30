@@ -12,6 +12,7 @@ Examples of behavior that contributes to a positive environment for our communit
 * Being respectful of differing opinions, viewpoints, and experiences
 * Giving constructive feedback and accepting it gracefully
 * Focusing on what is best not just for us individually, but for the project and community as a whole
+* Considering the environmental impact of our technical choices (carbon efficiency, token optimization)
 
 Examples of unacceptable behavior include:
 
@@ -30,6 +31,8 @@ Community leaders have the right and responsibility to remove, edit, or reject c
 ## Scope
 
 This Code of Conduct applies within all project spaces (including issue trackers, forums, chat rooms, mailing lists, and public discussions) and also applies when an individual is representing the project or its community in public spaces. Examples of representing a project or community include using an official project email address, posting via an official social media account, or acting as an appointed representative at an online or offline event. Representation of a project may be clarified and confirmed by the project maintainers.
+
+This project is building toward the **Universal AI Context Standard** — an open specification for efficient, carbon-aware AI context management across all tools. We encourage contributions that align with this vision.
 
 ## Enforcement
 
@@ -57,13 +60,13 @@ Community leaders will follow these community impact guidelines to determine the
 
 **Community Impact**: A serious attack or repeated behavior issues including lack of cooperation with community leaders to correct concerning behavior.
 
-**Consequence**: A temporary ban from any sort of interaction in the community is required. No public discussion of the behavior is required, but the individual will be informed of the situation and the expectations for returning to the community.
+**Consequence**: A temporary ban from any sort of interaction with the community is required. No public discussion of the behavior is required, but the individual will be informed of the situation and the expectations for returning to the community.
 
 ### 4. Permanent Ban
 
 **Community Impact**: Demonstrating a pattern of violation of community standards, including sustained inappropriate behavior, aggression toward other members, harassing behavior, or aggression toward project leadership individuals.
 
-**Consequence**: A permanent ban from any sort of interaction in the project community.
+**Consequence**: A permanent ban from any sort of interaction with the project community.
 
 ## Attribution
 
@@ -72,3 +75,7 @@ This Code of Conduct is adapted from the [Contributor Covenant][homepage], versi
 [homepage]: https://www.contributor-covenant.org
 
 For answers to common questions regarding this code of conduct, see the FAQs at https://www.contributor-covenant.org/faq. Contact https://github.com/SireJeff/claude-context-engineering-template/issues with questions or concerns.
+
+---
+
+**Version:** 2.3.0 | **Universal AI Context Engineering Template**
