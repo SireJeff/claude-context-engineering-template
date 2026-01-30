@@ -12,20 +12,55 @@ const EXPRESS_FIXTURE = path.join(__dirname, '../../test-fixtures/express-app');
 
 // Helper to clean generated files from a directory
 function cleanGeneratedFiles(dir) {
-  const dirsToRemove = ['.ai-context', '.github', '.agent', '.git'];
+  // Delete symlinks (.claude) first, then their targets (.ai-context)
+  const dirsToRemove = ['.claude', '.ai-context', '.github', '.agent', '.git'];
   const filesToRemove = ['AI_CONTEXT.md', '.clinerules'];
 
   for (const subdir of dirsToRemove) {
     const dirPath = path.join(dir, subdir);
     if (fs.existsSync(dirPath)) {
-      fs.rmSync(dirPath, { recursive: true, force: true });
+      try {
+        fs.rmSync(dirPath, { recursive: true, force: true });
+      } catch (err) {
+        // Handle symlink cleanup issues on Windows
+        try {
+          const stats = fs.lstatSync(dirPath);
+          if (stats.isSymbolicLink()) {
+            fs.unlinkSync(dirPath);
+          } else if (stats.isDirectory()) {
+            const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+            for (const entry of entries) {
+              const entryPath = path.join(dirPath, entry.name);
+              try {
+                const entryStats = fs.lstatSync(entryPath);
+                if (entryStats.isSymbolicLink()) {
+                  fs.unlinkSync(entryPath);
+                } else if (entryStats.isDirectory()) {
+                  fs.rmSync(entryPath, { recursive: true, force: true });
+                } else {
+                  fs.unlinkSync(entryPath);
+                }
+              } catch {
+                // Ignore individual entry failures
+              }
+            }
+            fs.rmdirSync(dirPath);
+          }
+        } catch {
+          // Last resort: ignore
+        }
+      }
     }
   }
 
   for (const file of filesToRemove) {
     const filePath = path.join(dir, file);
     if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+      try {
+        fs.unlinkSync(filePath);
+      } catch {
+        // Ignore file deletion failures
+      }
     }
   }
 }
@@ -43,8 +78,21 @@ describe('CLI Integration', () => {
     originalCwd = process.cwd();
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ai-context-test-'));
 
+    // Ensure fixture is clean before copying
+    cleanGeneratedFiles(EXPRESS_FIXTURE);
+
     // Copy Express fixture to temp dir (should be clean now)
-    fs.cpSync(EXPRESS_FIXTURE, tempDir, { recursive: true });
+    try {
+      fs.cpSync(EXPRESS_FIXTURE, tempDir, { recursive: true, verbatimSymlinks: true });
+    } catch (err) {
+      // If copy fails, clean up both source and dest, then retry
+      cleanGeneratedFiles(EXPRESS_FIXTURE);
+      if (fs.existsSync(tempDir)) {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+        tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ai-context-test-'));
+      }
+      fs.cpSync(EXPRESS_FIXTURE, tempDir, { recursive: true });
+    }
 
     // Also clean temp dir just in case
     cleanGeneratedFiles(tempDir);
