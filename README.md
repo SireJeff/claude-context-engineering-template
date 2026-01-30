@@ -436,7 +436,7 @@ npx create-universal-ai-context hooks:install
 ```
 your-project/
 ├── AI_CONTEXT.md                # Entry point for AI tools (universal)
-├── .ai-context/                 # Context engineering system
+├── .ai-context/                 # Context engineering system (single source of truth)
 │   ├── agents/                  # 6 specialized agents
 │   ├── automation/              # Self-sustaining engines
 │   │   ├── generators/          # Auto-generation scripts
@@ -447,6 +447,30 @@ your-project/
 │   │   ├── .meta/               # Generation metadata
 │   │   └── CODE_TO_WORKFLOW_MAP.md
 │   ├── indexes/                 # Navigation hierarchy
+│   ├── session/                 # Session persistence
+│   │   ├── current/             # Active session
+│   │   ├── history/             # Archived sessions
+│   │   └── checkpoints/         # Named resume points
+│   ├── sync/                    # Synchronization tracking
+│   │   ├── anchors.json         # Semantic anchors
+│   │   ├── hashes.json          # Content hashes
+│   │   └── staleness.json       # Freshness tracking
+│   ├── schemas/                 # JSON validation (14 schemas)
+│   ├── tools/                   # CLI tooling
+│   ├── config/                  # Environment configs
+│   ├── team/                    # Team collaboration
+│   ├── knowledge/               # Shared knowledge base
+│   └── standards/               # Quality guidelines
+├── .claude/                     # Claude Code-specific config (symlinks to .ai-context/)
+│   ├── agents       → ../.ai-context/agents/
+│   ├── commands     → ../.ai-context/commands/
+│   ├── indexes      → ../.ai-context/indexes/
+│   ├── context      → ../.ai-context/context/
+│   ├── schemas      → ../.ai-context/schemas/
+│   ├── standards    → ../.ai-context/standards/
+│   ├── tools        → ../.ai-context/tools/
+│   ├── settings.json           # Claude-specific settings
+│   └── README.md                # Symlink architecture docs
 ├── .github/
 │   └── copilot-instructions.md  # GitHub Copilot context
 ├── .clinerules                  # Cline context
@@ -454,20 +478,6 @@ your-project/
     ├── rules/
     ├── workflows/
     └── skills/
-    ├── session/                 # Session persistence
-    │   ├── current/             # Active session
-    │   ├── history/             # Archived sessions
-    │   └── checkpoints/         # Named resume points
-    ├── sync/                    # Synchronization tracking
-    │   ├── anchors.json         # Semantic anchors
-    │   ├── hashes.json          # Content hashes
-    │   └── staleness.json       # Freshness tracking
-    ├── schemas/                 # JSON validation (14 schemas)
-    ├── tools/                   # CLI tooling
-    ├── config/                  # Environment configs
-    ├── team/                    # Team collaboration
-    ├── knowledge/               # Shared knowledge base
-    └── standards/               # Quality guidelines
 ```
 
 ---
@@ -644,4 +654,4 @@ MIT License - Use freely in any project.
 
 ---
 
-**Version:** 2.2.2 | **Updated:** 2026-01-29 | **License:** MIT
+**Version:** 2.3.0 | **Updated:** 2026-01-30 | **License:** MIT

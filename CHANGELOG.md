@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] - 2026-01-30
+
+### Added - Symlink Architecture for `.claude/`
+
+#### New Feature: `.claude/` as Symlinks to `.ai-context/`
+- **Single source of truth** - All content lives in `.ai-context/`
+- **Automatic synchronization** - Changes in `.ai-context/` immediately visible in `.claude/`
+- **No content duplication** - Symlinks replace copied directories
+
+#### How It Works
+```
+.claude/
+├── agents       → ../.ai-context/agents/   (symlink)
+├── commands     → ../.ai-context/commands/ (symlink)
+├── indexes      → ../.ai-context/indexes/  (symlink)
+├── context      → ../.ai-context/context/  (symlink)
+├── schemas      → ../.ai-context/schemas/  (symlink)
+├── standards    → ../.ai-context/standards/ (symlink)
+├── tools        → ../.ai-context/tools/    (symlink)
+├── settings.json (real file - Claude-specific)
+└── README.md    (real file - documents the symlinks)
+```
+
+#### Benefits
+- **Zero duplication** - Content no longer copied between directories
+- **Automatic sync** - Edit in `.ai-context/`, immediately reflected in `.claude/`
+- **Backward compatible** - Claude Code still auto-discovers from `.claude/`
+- **Fallback support** - On systems where symlinks fail (Windows permissions), falls back to copying
+- **Cleaner architecture** - Clear separation: universal content (`.ai-context/`) vs tool-specific config (`.claude/`)
+
+#### Implementation Details
+- Modified `lib/adapters/claude.js` to create symlinks instead of copying directories
+- Added Windows-specific symlink handling with junction symlinks
+- Graceful fallback to copy when symlinks aren't supported
+- Enhanced test cleanup to handle symlink deletion on Windows
+
+#### Migration Notes
+- Existing `.claude/` directories will NOT be overwritten (preserved for safety)
+- To upgrade: Delete old `.claude/` and rerun `npx create-universal-ai-context`
+- Or manually: Replace subdirectories with symlinks to `../.ai-context/`
+
+### Changed
+- Updated `lib/adapters/claude.js` - Symlink generation instead of directory copying
+- Updated `.claude/README.md` - Documents symlink architecture
+- Updated success logic to handle info messages for symlinks
+
+### Test Coverage
+- Updated unit tests for symlink behavior
+- Enhanced E2E test cleanup for Windows symlink issues
+- Updated integration test cleanup to handle `.claude/`
+- **453 tests passing** (all unit, integration, and E2E tests)
+
+---
+
 ## [2.2.2] - 2026-01-29
 
 ### Fixed

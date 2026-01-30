@@ -79,6 +79,16 @@ describe('Claude Adapter', () => {
     };
     const mockConfig = { projectName: 'test-project' };
 
+    // Helper: create .ai-context with required subdirectories
+    function createAiContextDir(dir) {
+      const aiContextDir = path.join(dir, '.ai-context');
+      fs.mkdirSync(aiContextDir, { recursive: true });
+      ['agents', 'commands', 'indexes', 'context', 'schemas', 'standards'].forEach(subdir => {
+        fs.mkdirSync(path.join(aiContextDir, subdir), { recursive: true });
+      });
+      return aiContextDir;
+    }
+
     it('should generate AI_CONTEXT.md at project root', async () => {
       const result = await claudeAdapter.generate(mockAnalysis, mockConfig, testDir);
 
@@ -87,7 +97,10 @@ describe('Claude Adapter', () => {
       expect(fs.existsSync(path.join(testDir, 'AI_CONTEXT.md'))).toBe(true);
     });
 
-    it('should generate .claude/ directory structure', async () => {
+    it('should generate .claude/ directory with symlinks to .ai-context/', async () => {
+      // First create .ai-context with subdirectories
+      createAiContextDir(testDir);
+
       const result = await claudeAdapter.generate(mockAnalysis, mockConfig, testDir);
 
       expect(result.success).toBe(true);
@@ -96,9 +109,13 @@ describe('Claude Adapter', () => {
       expect(fs.existsSync(path.join(testDir, '.claude', 'commands'))).toBe(true);
       expect(fs.existsSync(path.join(testDir, '.claude', 'indexes'))).toBe(true);
       expect(fs.existsSync(path.join(testDir, '.claude', 'settings.json'))).toBe(true);
+
+      // Check that symlinks were created (or fallback to copies)
+      expect(result.files.some(f => f.symlinks > 0 || f.details?.includes('symlinks'))).toBe(true);
     });
 
     it('should generate .claude/settings.json with correct structure', async () => {
+      createAiContextDir(testDir);
       await claudeAdapter.generate(mockAnalysis, mockConfig, testDir);
 
       const settingsPath = path.join(testDir, '.claude', 'settings.json');
@@ -111,7 +128,8 @@ describe('Claude Adapter', () => {
       expect(settings.commands.rpi_workflow).toBe('enabled');
     });
 
-    it('should generate .claude/README.md', async () => {
+    it('should generate .claude/README.md with symlink information', async () => {
+      createAiContextDir(testDir);
       await claudeAdapter.generate(mockAnalysis, mockConfig, testDir);
 
       const readmePath = path.join(testDir, '.claude', 'README.md');
@@ -120,6 +138,8 @@ describe('Claude Adapter', () => {
       const readme = fs.readFileSync(readmePath, 'utf-8');
       expect(readme).toContain('.claude Configuration');
       expect(readme).toContain('@context-engineer');
+      expect(readme).toContain('symlinks');
+      expect(readme).toContain('.ai-context/');
     });
 
     it('should not overwrite existing .claude/ directory', async () => {

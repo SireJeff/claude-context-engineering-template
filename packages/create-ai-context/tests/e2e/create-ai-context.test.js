@@ -11,21 +11,67 @@ const EXPRESS_FIXTURE = path.join(__dirname, '../../test-fixtures/express-app');
 const FASTAPI_FIXTURE = path.join(__dirname, '../../test-fixtures/fastapi-app');
 
 // Helper to clean up generated files
+// Note: Must delete symlinks (.claude) before their targets (.ai-context)
 function cleanupFixture(fixturePath) {
-  const dirsToRemove = ['.ai-context', '.claude', '.github', '.agent', '.git'];
+  // Delete in this order: symlinks first, then their targets
+  const dirsToRemove = ['.claude', '.ai-context', '.github', '.agent', '.git'];
   const filesToRemove = ['AI_CONTEXT.md', '.clinerules'];
 
   for (const dir of dirsToRemove) {
     const dirPath = path.join(fixturePath, dir);
     if (fs.existsSync(dirPath)) {
-      fs.rmSync(dirPath, { recursive: true });
+      try {
+        // Use force option to handle symlinks on Windows
+        fs.rmSync(dirPath, { recursive: true, force: true, maxRetries: 3 });
+      } catch (err) {
+        // If delete fails, try alternative approach for symlinks
+        try {
+          // Check if it's a symlink
+          const stats = fs.lstatSync(dirPath);
+          if (stats.isSymbolicLink()) {
+            // For symlinks, use unlink instead of rm
+            fs.unlinkSync(dirPath);
+          } else if (stats.isDirectory()) {
+            // For directories, manually delete contents
+            const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+            for (const entry of entries) {
+              const entryPath = path.join(dirPath, entry.name);
+              try {
+                const entryStats = fs.lstatSync(entryPath);
+                if (entryStats.isSymbolicLink()) {
+                  fs.unlinkSync(entryPath);
+                } else if (entryStats.isDirectory()) {
+                  fs.rmSync(entryPath, { recursive: true, force: true });
+                } else {
+                  fs.unlinkSync(entryPath);
+                }
+              } catch {
+                // Ignore individual entry failures
+              }
+            }
+            // Now try to remove the empty directory
+            try {
+              fs.rmdirSync(dirPath);
+            } catch {
+              // Directory might not be empty, try one more time
+              fs.rmSync(dirPath, { recursive: true, force: true });
+            }
+          }
+        } catch {
+          // Last resort: ignore (will be cleaned up on next run or by user)
+        }
+      }
     }
   }
 
   for (const file of filesToRemove) {
     const filePath = path.join(fixturePath, file);
     if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+      try {
+        fs.unlinkSync(filePath);
+      } catch {
+        // Ignore file deletion failures
+      }
     }
   }
 }
