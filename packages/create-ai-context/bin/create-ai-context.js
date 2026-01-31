@@ -51,7 +51,7 @@ ${chalk.cyan('╚═════════════════════
 `;
 
 // Supported AI tools
-const AI_TOOLS = ['claude', 'copilot', 'cline', 'antigravity', 'all'];
+const AI_TOOLS = ['claude', 'copilot', 'cline', 'antigravity', 'windsurf', 'aider', 'continue', 'all'];
 
 // Parse AI tools helper
 function parseAiTools(toolsString) {
@@ -62,7 +62,8 @@ function parseAiTools(toolsString) {
     console.error(chalk.gray(`  Valid options: ${AI_TOOLS.join(', ')}`));
     process.exit(1);
   }
-  return tools.includes('all') ? ['claude', 'copilot', 'cline', 'antigravity'] : tools;
+  const allTools = ['claude', 'copilot', 'cline', 'antigravity', 'windsurf', 'aider', 'continue'];
+  return tools.includes('all') ? allTools : tools;
 }
 
 program
@@ -79,7 +80,7 @@ program
   .option('--no-git', 'Skip git initialization')
   .option('-n, --dry-run', 'Show what would be done without making changes')
   .option('-v, --verbose', 'Show detailed output')
-  .option('--ai <tools>', 'Generate for specific AI tools (comma-separated: claude,copilot,cline,antigravity,all)', 'all')
+  .option('--ai <tools>', 'Generate for specific AI tools (comma-separated: claude,copilot,cline,antigravity,windsurf,aider,continue,all)', 'all')
   .option('--force-ai', 'Force AI-enhanced mode (creates INIT_REQUEST.md)')
   .option('--static', 'Force standalone mode (static analysis only, no AI setup)')
   .option('--analyze-only', 'Run codebase analysis without installation')
