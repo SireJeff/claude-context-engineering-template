@@ -1,0 +1,69 @@
+{{!-- Windsurf Cascade Rules Template --}}
+# {{project.name}} - Windsurf Cascade Rules
+
+**Tech Stack:** {{join project.tech_stack ", "}}
+**Status:** Active
+
+<communication>
+- Speak to me in a professional, technical manner
+- Provide clear explanations for code changes
+- Reference specific files and line numbers when discussing changes
+- Ask clarifying questions when requirements are ambiguous
+</communication>
+
+<filesystem>
+{{#if key_files.entry_points}}
+- Key project files: {{join key_files.entry_points ", "}}
+{{/if}}
+- Models directory: {{#each architecture.layers}}{{#if (ifEquals name 'models')}}{{path}}{{/if}}{{/each}}
+- Migrations directory: {{#each architecture.layers}}{{#if (ifEquals name 'migrations')}}{{path}}{{/if}}{{/each}}
+- Treat node_modules, build, dist as read-only
+</filesystem>
+
+<coding>
+- Primary language: {{project.primary_language}}
+- Framework: {{#each architecture.layers}}{{#if (ifEquals name 'framework')}}{{name}}{{/if}}{{/each}}
+- Testing framework: jest
+- Follow existing code style and patterns
+- Add type hints/annotations for all functions
+- Write tests for new functionality (target: 80% coverage)
+- Use early returns when possible
+- Avoid deep nesting (>4 levels)
+- Keep functions focused and small (<50 lines)
+</coding>
+
+<commands>
+| Command | Purpose |
+|---------|---------|
+| {{commands.install}} | Install dependencies |
+| {{commands.dev}} | Start development server |
+| {{commands.test}} | Run tests |
+| {{commands.build}} | Build for production |
+</commands>
+
+<architecture>
+{{project.description}}
+
+Key patterns:
+- {{architecture.pattern}}
+{{#each architecture.layers}}
+- {{name}}: {{purpose}}
+{{/each}}
+</architecture>
+
+<testing>
+- Write tests before implementing features
+- Use jest for mocking
+- Test edge cases and error conditions
+- Keep tests independent and fast
+</testing>
+
+<security>
+- Never commit secrets or API keys
+- Validate all user inputs
+- Use parameterized queries to prevent injection
+- Follow OWASP security guidelines
+</security>
+
+---
+{{{coordination.footer}}}
