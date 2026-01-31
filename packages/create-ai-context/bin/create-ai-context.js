@@ -40,6 +40,7 @@ const {
   getSyncHistory,
   CONFLICT_STRATEGY
 } = require('../lib/cross-tool-sync');
+const { getAdapterNames } = require('../lib/adapters');
 const packageJson = require('../package.json');
 
 // ASCII Banner
@@ -560,7 +561,7 @@ program
 
       const config = {
         projectName: path.basename(projectRoot),
-        aiTools: ['claude', 'copilot', 'cline', 'antigravity']
+        aiTools: getAdapterNames()
       };
 
       const results = await syncAllFromCodebase(projectRoot, config);
@@ -613,7 +614,7 @@ program
     const projectRoot = path.resolve(options.path);
     const spinner = createSpinner();
 
-    const validTools = ['claude', 'copilot', 'cline', 'antigravity'];
+    const validTools = getAdapterNames();
     if (!validTools.includes(sourceTool)) {
       console.error(chalk.red(`\n✖ Error: Invalid tool: ${sourceTool}`));
       console.error(chalk.gray(`  Valid options: ${validTools.join(', ')}`));
@@ -691,7 +692,7 @@ program
 
       const config = {
         projectName: path.basename(projectRoot),
-        aiTools: ['claude', 'copilot', 'cline', 'antigravity']
+        aiTools: getAdapterNames()
       };
 
       const result = await resolveConflict(
