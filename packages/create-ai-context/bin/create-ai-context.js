@@ -125,7 +125,7 @@ program
         backup: options.backup,
         force: options.force || false,
         // Placeholder validation
-        failOnUnreplaced: options.failOnUnreplaced || false
+        failOnUnreplaced: options.failOnUnreplaced === true
       });
     } catch (error) {
       console.error(chalk.red('\n✖ Error:'), error.message);
