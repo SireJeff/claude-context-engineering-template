@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="ccl_logo.jpg" alt="CCL Logo" width="200" height="200">
+</p>
+
 # Universal AI Context Engineering
 
 ![npm](https://img.shields.io/npm/v/create-universal-ai-context)

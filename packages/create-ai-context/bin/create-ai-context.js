@@ -40,6 +40,7 @@ const {
   getSyncHistory,
   CONFLICT_STRATEGY
 } = require('../lib/cross-tool-sync');
+const { getAdapterNames } = require('../lib/adapters');
 const packageJson = require('../package.json');
 
 // ASCII Banner
@@ -51,7 +52,7 @@ ${chalk.cyan('╚═════════════════════
 `;
 
 // Supported AI tools
-const AI_TOOLS = ['claude', 'copilot', 'cline', 'antigravity', 'all'];
+const AI_TOOLS = ['claude', 'copilot', 'cline', 'antigravity', 'windsurf', 'aider', 'continue', 'all'];
 
 // Parse AI tools helper
 function parseAiTools(toolsString) {
@@ -62,7 +63,8 @@ function parseAiTools(toolsString) {
     console.error(chalk.gray(`  Valid options: ${AI_TOOLS.join(', ')}`));
     process.exit(1);
   }
-  return tools.includes('all') ? ['claude', 'copilot', 'cline', 'antigravity'] : tools;
+  const allTools = ['claude', 'copilot', 'cline', 'antigravity', 'windsurf', 'aider', 'continue'];
+  return tools.includes('all') ? allTools : tools;
 }
 
 program
@@ -79,7 +81,7 @@ program
   .option('--no-git', 'Skip git initialization')
   .option('-n, --dry-run', 'Show what would be done without making changes')
   .option('-v, --verbose', 'Show detailed output')
-  .option('--ai <tools>', 'Generate for specific AI tools (comma-separated: claude,copilot,cline,antigravity,all)', 'all')
+  .option('--ai <tools>', 'Generate for specific AI tools (comma-separated: claude,copilot,cline,antigravity,windsurf,aider,continue,all)', 'all')
   .option('--force-ai', 'Force AI-enhanced mode (creates INIT_REQUEST.md)')
   .option('--static', 'Force standalone mode (static analysis only, no AI setup)')
   .option('--analyze-only', 'Run codebase analysis without installation')
@@ -123,7 +125,7 @@ program
         backup: options.backup,
         force: options.force || false,
         // Placeholder validation
-        failOnUnreplaced: options.failOnUnreplaced || false
+        failOnUnreplaced: options.failOnUnreplaced === true
       });
     } catch (error) {
       console.error(chalk.red('\n✖ Error:'), error.message);
@@ -559,7 +561,7 @@ program
 
       const config = {
         projectName: path.basename(projectRoot),
-        aiTools: ['claude', 'copilot', 'cline', 'antigravity']
+        aiTools: getAdapterNames()
       };
 
       const results = await syncAllFromCodebase(projectRoot, config);
@@ -575,7 +577,12 @@ program
 
           console.log(chalk.red('\nErrors:'));
           for (const error of results.errors) {
-            console.error(chalk.red(`  ✖ ${error.message || error.tool}`));
+            // error object has: { tool, errors: [] } or { tool, message }
+            const errorText = error.message ||
+              (error.errors && error.errors.length > 0
+                ? error.errors.map(e => e.message || e).join('; ')
+                : error.tool);
+            console.error(chalk.red(`  ✖ ${error.tool || 'Unknown'}: ${errorText}`));
           }
           process.exit(1);
         } else {
@@ -607,7 +614,7 @@ program
     const projectRoot = path.resolve(options.path);
     const spinner = createSpinner();
 
-    const validTools = ['claude', 'copilot', 'cline', 'antigravity'];
+    const validTools = getAdapterNames();
     if (!validTools.includes(sourceTool)) {
       console.error(chalk.red(`\n✖ Error: Invalid tool: ${sourceTool}`));
       console.error(chalk.gray(`  Valid options: ${validTools.join(', ')}`));
@@ -639,7 +646,11 @@ program
 
         console.log(chalk.red('\nErrors:'));
         for (const error of results.errors) {
-          console.error(chalk.red(`  ✖ ${error.tool || error.message}`));
+          const errorText = error.message ||
+            (error.errors && error.errors.length > 0
+              ? error.errors.map(e => e.message || e).join('; ')
+              : 'Unknown error');
+          console.error(chalk.red(`  ✖ ${error.tool || 'Unknown'}: ${errorText}`));
         }
         process.exit(1);
       } else {
@@ -681,7 +692,7 @@ program
 
       const config = {
         projectName: path.basename(projectRoot),
-        aiTools: ['claude', 'copilot', 'cline', 'antigravity']
+        aiTools: getAdapterNames()
       };
 
       const result = await resolveConflict(
