@@ -575,7 +575,12 @@ program
 
           console.log(chalk.red('\nErrors:'));
           for (const error of results.errors) {
-            console.error(chalk.red(`  ✖ ${error.message || error.tool}`));
+            // error object has: { tool, errors: [] } or { tool, message }
+            const errorText = error.message ||
+              (error.errors && error.errors.length > 0
+                ? error.errors.map(e => e.message || e).join('; ')
+                : error.tool);
+            console.error(chalk.red(`  ✖ ${error.tool || 'Unknown'}: ${errorText}`));
           }
           process.exit(1);
         } else {
