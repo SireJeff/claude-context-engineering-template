@@ -1,6 +1,6 @@
 {
   "name": "claude-context-engineering",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Context Engineering",
   "description": "RPI workflow and context optimization for Claude Code - Research, Plan, Implement with file:line precision",
   "author": {
