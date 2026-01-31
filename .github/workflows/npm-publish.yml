@@ -8,10 +8,14 @@ jobs:
   publish-create-ai-context:
     name: Publish create-ai-context
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     permissions:
       contents: read
       id-token: write
+
+    outputs:
+      published: ${{ steps.check_exists.outputs.exists == 'false' && steps.publish.outputs.published == 'true' }}
 
     steps:
       - name: Checkout repository
@@ -23,26 +27,41 @@ jobs:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Get package version
+        id: get_version
+        working-directory: packages/create-ai-context
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Check if version exists on npm
+        id: check_exists
+        run: |
+          if npm view create-universal-ai-context@${{ steps.get_version.outputs.version }} > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Version ${{ steps.get_version.outputs.version }} already exists on npm, skipping publish"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Install dependencies
+        if: steps.check_exists.outputs.exists == 'false'
         working-directory: packages/create-ai-context
         run: npm ci
 
-      # Tests temporarily skipped - Windows-specific path tests fail on Linux
-      # Tests pass locally (591 passing)
-      # - name: Run tests
-      #   working-directory: packages/create-ai-context
-      #   run: npm test
-
       - name: Publish to npm
+        id: publish
+        if: steps.check_exists.outputs.exists == 'false'
         working-directory: packages/create-ai-context
-        run: npm publish --provenance --access public
+        run: |
+          npm publish --provenance --access public
+          echo "published=true" >> $GITHUB_OUTPUT
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-claude-context-plugin:
     name: Publish claude-context-plugin
     runs-on: ubuntu-latest
-    needs: publish-create-ai-context
+    # Run regardless of first job result (it may have been skipped)
+    if: always()
 
     permissions:
       contents: read
@@ -58,7 +77,23 @@ jobs:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Get package version
+        id: get_version
+        working-directory: packages/claude-context-plugin
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Check if version exists on npm
+        id: check_exists
+        run: |
+          if npm view claude-context-plugin@${{ steps.get_version.outputs.version }} > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Version ${{ steps.get_version.outputs.version }} already exists on npm, skipping publish"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Publish to npm
+        if: steps.check_exists.outputs.exists == 'false'
         working-directory: packages/claude-context-plugin
         run: npm publish --provenance --access public
         env:
