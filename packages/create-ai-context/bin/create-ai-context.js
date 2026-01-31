@@ -644,7 +644,11 @@ program
 
         console.log(chalk.red('\nErrors:'));
         for (const error of results.errors) {
-          console.error(chalk.red(`  ✖ ${error.tool || error.message}`));
+          const errorText = error.message ||
+            (error.errors && error.errors.length > 0
+              ? error.errors.map(e => e.message || e).join('; ')
+              : 'Unknown error');
+          console.error(chalk.red(`  ✖ ${error.tool || 'Unknown'}: ${errorText}`));
         }
         process.exit(1);
       } else {
