@@ -34,6 +34,26 @@ packages/*/node_modules/
 .ai-context/
 .claude/docs/generated/
 
+# Generated AI context (from running package on this repo)
+.agent/
+.aider.conf.yml
+.clinerules
+.continue/
+.windsurf/
+AI_CONTEXT.md
+.github/copilot-instructions.md
+
+# Local Claude data
+.claude/sessions/
+.claude/research/
+.claude/settings.local.json
+
+# Implementation plans
+docs/plans/
+
+# Logo files (local variants)
+*.jpg
+
 # IDE
 .idea/
 .vscode/*
