@@ -90,6 +90,7 @@ program
   .option('--update-refs', 'Auto-fix drifted line references')
   .option('--backup', 'Create backup before modifying existing files')
   .option('-f, --force', 'Force overwrite of existing custom files (use with caution)')
+  .option('--fail-on-unreplaced', 'Error if any placeholders remain unreplaced')
   .action(async (projectName, options) => {
     console.log(banner);
 
@@ -120,7 +121,9 @@ program
         preserveCustom: options.preserveCustom,
         updateRefs: options.updateRefs,
         backup: options.backup,
-        force: options.force || false
+        force: options.force || false,
+        // Placeholder validation
+        failOnUnreplaced: options.failOnUnreplaced || false
       });
     } catch (error) {
       console.error(chalk.red('\n✖ Error:'), error.message);

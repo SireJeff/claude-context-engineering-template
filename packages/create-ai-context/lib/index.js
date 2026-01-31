@@ -79,7 +79,9 @@ async function run(options = {}) {
     updateRefs = false,
     backup = false,
     // Force flag
-    force = false
+    force = false,
+    // Placeholder validation
+    failOnUnreplaced = false
   } = options;
 
   // Determine target directory
@@ -269,9 +271,11 @@ async function run(options = {}) {
   const placeholdersReplaced = await replacePlaceholders(targetDir, {
     ...config,
     techStack,
-    analysis
+    analysis,
+    failOnUnreplaced: config.failOnUnreplaced,
+    verbose: config.verbose
   });
-  spinner.succeed(`Replaced ${placeholdersReplaced} placeholders`);
+  spinner.succeed(`Replaced ${placeholdersReplaced.totalReplaced} placeholders`);
 
   // Phase 10: AI Orchestration (if in Claude Code environment)
   if (env.mode === 'full-ai' || env.mode === 'hybrid') {

@@ -7,6 +7,7 @@
 const fs = require('fs');
 const path = require('path');
 const { glob } = require('glob');
+const chalk = require('chalk');
 
 /**
  * Context directory and file names
@@ -463,7 +464,16 @@ function capitalize(str) {
 /**
  * Replace placeholders in all files in a directory
  */
+/**
+ * Replace all placeholders in all files
+ * @param {string} targetDir - Target directory
+ * @param {object} config - Configuration options
+ * @param {boolean} config.failOnUnreplaced - Throw if placeholders remain
+ * @param {boolean} config.verbose - Log warnings for unreplaced placeholders
+ * @returns {object} Results { totalReplaced: number, unreplaced: Array, unreplacedCount: number }
+ */
 async function replacePlaceholders(targetDir, config = {}) {
+  const { failOnUnreplaced = false, verbose = false } = config;
   const contextDir = path.join(targetDir, AI_CONTEXT_DIR);
   const values = getDefaultValues(config, config.techStack || {}, config.analysis || {});
 
@@ -476,6 +486,7 @@ async function replacePlaceholders(targetDir, config = {}) {
   });
 
   let totalReplaced = 0;
+  const unreplacedDetails = [];
 
   for (const filePath of files) {
     try {
@@ -492,6 +503,10 @@ async function replacePlaceholders(targetDir, config = {}) {
         fs.writeFileSync(filePath, content, 'utf8');
         totalReplaced++;
       }
+
+      // Check for remaining placeholders
+      const remaining = findPlaceholdersInContent(content, filePath);
+      unreplacedDetails.push(...remaining);
     } catch (error) {
       // Skip files that can't be read
     }
@@ -513,12 +528,78 @@ async function replacePlaceholders(targetDir, config = {}) {
         fs.writeFileSync(aiContextPath, content, 'utf8');
         totalReplaced++;
       }
+
+      // Check for remaining placeholders
+      const remaining = findPlaceholdersInContent(content, aiContextPath);
+      unreplacedDetails.push(...remaining);
     } catch (error) {
       // Skip if can't read
     }
   }
 
-  return totalReplaced;
+  // Deduplicate unreplaced items
+  const uniqueUnreplaced = deduplicateUnreplaced(unreplacedDetails);
+  const unreplacedCount = uniqueUnreplaced.length;
+
+  // Handle unreplaced placeholders
+  if (unreplacedCount > 0) {
+    const placeholders = uniqueUnreplaced.map(u => u.placeholder).join(', ');
+    const message = `${unreplacedCount} placeholder${unreplacedCount > 1 ? 's' : ''} not replaced: ${placeholders}`;
+
+    if (verbose) {
+      console.warn(chalk.yellow(`⚠ ${message}`));
+      uniqueUnreplaced.forEach(u => {
+        console.warn(chalk.gray(`  - ${u.placeholder} in ${u.file}`));
+      });
+    }
+
+    if (failOnUnreplaced) {
+      throw new Error(message);
+    }
+  }
+
+  return { totalReplaced, unreplaced: uniqueUnreplaced, unreplacedCount };
+}
+
+/**
+ * Find placeholders in content (helper for replacePlaceholders)
+ * @param {string} content - File content
+ * @param {string} filePath - File path
+ * @returns {Array} List of unreplaced placeholder info
+ */
+function findPlaceholdersInContent(content, filePath) {
+  const placeholderPattern = /\{\{([A-Z_]+)\}\}/g;
+  const found = [];
+  let match;
+
+  while ((match = placeholderPattern.exec(content)) !== null) {
+    found.push({
+      placeholder: match[0],
+      name: match[1],
+      file: path.relative(process.cwd(), filePath),
+      index: match.index,
+      known: KNOWN_PLACEHOLDERS.hasOwnProperty(match[1])
+    });
+  }
+
+  return found;
+}
+
+/**
+ * Deduplicate unreplaced placeholder list
+ * @param {Array} unreplaced - List of unreplaced items
+ * @returns {Array} Deduplicated list
+ */
+function deduplicateUnreplaced(unreplaced) {
+  const seen = new Set();
+  return unreplaced.filter(item => {
+    const key = `${item.placeholder}:${item.file}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
 }
 
 /**
