@@ -12,10 +12,20 @@ Checks if AI tool contexts are out of sync before allowing a commit.
 - **Skip it**: Use `git commit --no-verify`
 
 ### post-commit
-Triggers automatic sync after successful commits.
+Updates sync state after successful commits.
 
-- **What it does**: Runs `create-ai-context sync:all` in the background
+- **What it does**: Runs `create-ai-context sync:state` in the background
 - **Non-blocking**: Runs async, doesn't interfere with commit
+- **Note**: Only updates state tracking, does NOT regenerate files to avoid creating uncommitted changes
+
+## Sync Commands
+
+| Command | Purpose | Creates Files |
+|---------|---------|---------------|
+| `sync:check` | Check if contexts are in sync | No |
+| `sync:state` | Update state tracking only | No (state file only) |
+| `sync:all` | Full regeneration from codebase | Yes |
+| `sync:from <tool>` | Propagate from specific tool | Yes |
 
 ## Installation
 

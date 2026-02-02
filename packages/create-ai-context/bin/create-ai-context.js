@@ -34,6 +34,7 @@ const {
 const {
   checkSyncStatus,
   syncAllFromCodebase,
+  updateSyncStateOnly,
   propagateContextChange,
   resolveConflict,
   formatSyncStatus,
@@ -597,6 +598,34 @@ program
     } catch (error) {
       if (!options.quiet) {
         spinner.fail('Sync failed');
+        console.error(chalk.red('\n✖ Error:'), error.message);
+      }
+      process.exit(1);
+    }
+  });
+
+program
+  .command('sync:state')
+  .description('Update sync state without regenerating files (used by post-commit hooks)')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--quiet', 'Suppress output')
+  .action(async (options) => {
+    if (!options.quiet) {
+      console.log(banner);
+    }
+
+    const projectRoot = path.resolve(options.path);
+
+    try {
+      const result = updateSyncStateOnly(projectRoot);
+
+      if (!options.quiet) {
+        console.log(chalk.green('✓ Sync state updated'));
+        console.log(chalk.gray(`  Timestamp: ${result.timestamp}`));
+        console.log(chalk.gray(`  Tools tracked: ${Object.keys(result.hashes).length}`));
+      }
+    } catch (error) {
+      if (!options.quiet) {
         console.error(chalk.red('\n✖ Error:'), error.message);
       }
       process.exit(1);

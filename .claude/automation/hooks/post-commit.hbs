@@ -1,6 +1,7 @@
 #!/bin/bash
 # Post-commit hook for AI context sync
-# This hook triggers sync after successful commits
+# This hook updates sync state after successful commits
+# Does NOT regenerate files to avoid creating uncommitted changes
 
 # Don't block commit if this fails
 set +e
@@ -17,13 +18,11 @@ else
     AI_CONTEXT_CMD="create-ai-context"
 fi
 
-# Run background sync (async)
-echo "Syncing AI contexts in background..."
-
-# Use subshell to run in background
+# Update sync state only (no file regeneration to avoid creating uncommitted changes)
+# Use sync:state instead of sync:all to prevent the revision loop bug
 (
-    sleep 2  # Wait a bit to not interfere with commit
-    $AI_CONTEXT_CMD sync:all --quiet > /dev/null 2>&1
+    sleep 1  # Wait a bit to not interfere with commit
+    $AI_CONTEXT_CMD sync:state --quiet > /dev/null 2>&1
 ) &
 
 exit 0
