@@ -4,6 +4,8 @@
 **Researcher:** Claude Code
 **Status:** IN_PROGRESS | COMPLETE | BLOCKED
 **Context Budget Used:** X% of 200k
+**Total Chunks:** N
+**Parallel Agents Used:** 3-5
 
 ---
 
@@ -13,63 +15,130 @@
 
 ---
 
-## Relevant Files Explored
+## Chunk Manifest
+
+> **INTER-PHASE CONTRACT:** This manifest is designed for RPI-Plan consumption.
+> RPI-Plan will process each chunk sequentially, creating a CHUNK-Pn todolist per CHUNK-Rn.
+
+| Chunk ID | Domain | Status | Files | Ready for Planning |
+|----------|--------|--------|-------|-------------------|
+| CHUNK-R1 | API/Routes | COMPLETE | 3 | ✅ |
+| CHUNK-R2 | Business Logic | COMPLETE | 4 | ✅ |
+| CHUNK-R3 | Database/Storage | COMPLETE | 2 | ✅ |
+| CHUNK-R4 | External Integrations | COMPLETE | 1 | ✅ |
+| CHUNK-R5 | Test Coverage | COMPLETE | 3 | ✅ |
+
+---
+
+## CHUNK-R1: API/Routes
+
+**Status:** FOUND | COMPLETE | PLANNED | IMPLEMENTED
+**Parallel Agent:** Agent 1
+**Ready for Planning:** Yes/No
+
+### Files Explored
 
 | File | Lines | Key Findings |
 |------|-------|--------------|
-| `path/to/file.ext` | XXX-YYY | [What this file does for the feature] |
-| `path/to/other.ext` | XXX-YYY | [What this file does for the feature] |
+| `path/to/route.ext` | XXX-YYY | [Entry point for feature] |
+| `path/to/handler.ext` | XXX-YYY | [Request handling logic] |
 
----
-
-## Code Flow Analysis
-
-**Entry Point → Exit Point Trace:**
+### Code Flow Analysis
 
 ```
 entry_function() [file.ext:XXX]
-├─ step_one() [file.ext:YYY]
-│  └─ helper_function() [helper.ext:ZZZ]
-├─ step_two() [file.ext:AAA]
-│  ├─ database_query() [crud.ext:BBB]
-│  └─ external_api_call() [client.ext:CCC]
-└─ return_result() [file.ext:DDD]
+├─ validate_request() [file.ext:YYY]
+└─ route_to_handler() [file.ext:ZZZ]
 ```
 
-**Decision Points:**
-- Line XXX: Condition check (if/else)
-- Line YYY: Type routing (switch/match)
-- Line ZZZ: Error handling (try/except)
+### Dependencies (This Chunk)
+- **External:** [API Name]
+- **Internal:** [service.ext]
 
 ---
 
-## Dependencies Identified
+## CHUNK-R2: Business Logic
 
-### External Dependencies
-| Dependency | Type | Purpose |
-|------------|------|---------|
-| [API Name] | HTTP API | [What it does] |
-| [Library] | Package | [What it provides] |
+**Status:** FOUND | COMPLETE | PLANNED | IMPLEMENTED
+**Parallel Agent:** Agent 2
+**Ready for Planning:** Yes/No
 
-### Internal Dependencies
-| File | Purpose |
-|------|---------|
-| `service.ext` | [What it provides to this feature] |
-| `utils.ext` | [What utilities are used] |
+### Files Explored
+
+| File | Lines | Key Findings |
+|------|-------|--------------|
+| `path/to/service.ext` | XXX-YYY | [Core business logic] |
+| `path/to/model.ext` | XXX-YYY | [Data models] |
+
+### Code Flow Analysis
+
+```
+process_request() [service.ext:XXX]
+├─ validate_data() [service.ext:YYY]
+├─ apply_rules() [rules.ext:ZZZ]
+└─ persist_result() [model.ext:AAA]
+```
+
+### Dependencies (This Chunk)
+- **External:** [None]
+- **Internal:** [crud.ext, utils.ext]
 
 ---
 
-## Database Schema Involved
+## CHUNK-R3: Database/Storage
+
+**Status:** FOUND | COMPLETE | PLANNED | IMPLEMENTED
+**Parallel Agent:** Agent 3
+**Ready for Planning:** Yes/No
+
+### Files Explored
+
+| File | Lines | Key Findings |
+|------|-------|--------------|
+| `path/to/crud.ext` | XXX-YYY | [Database operations] |
+| `path/to/schema.ext` | XXX-YYY | [Schema definitions] |
+
+### Database Schema Involved
 
 | Table | Operations | Purpose |
 |-------|------------|---------|
 | `table_name` | READ/WRITE/UPDATE | [What data] |
 
+### Dependencies (This Chunk)
+- **External:** [Database driver]
+- **Internal:** [config.ext]
+
 ---
 
-## Test Files & Coverage
+## CHUNK-R4: External Integrations
+
+**Status:** FOUND | COMPLETE | PLANNED | IMPLEMENTED
+**Parallel Agent:** Agent 4
+**Ready for Planning:** Yes/No
+
+### Files Explored
+
+| File | Lines | Key Findings |
+|------|-------|--------------|
+| `path/to/client.ext` | XXX-YYY | [External API client] |
+
+### External Dependencies
+
+| Dependency | Type | Purpose |
+|------------|------|---------|
+| [API Name] | HTTP API | [What it does] |
+| [Library] | Package | [What it provides] |
+
+---
+
+## CHUNK-R5: Test Coverage
+
+**Status:** FOUND | COMPLETE | PLANNED | IMPLEMENTED
+**Parallel Agent:** Agent 5
+**Ready for Planning:** Yes/No
 
 ### Existing Tests
+
 | Test File | Coverage Area |
 |-----------|---------------|
 | `tests/test_feature.ext` | [What scenarios] |
@@ -110,7 +179,7 @@ Check `.ai-context/context/KNOWN_GOTCHAS.md` for:
 
 **Word Count Target: 150 words max**
 
-[Feature/Bug Name] is implemented across [X] files in [system area].
+[Feature/Bug Name] is implemented across [X] files in [system area], organized into [N] research chunks.
 
 **Entry Points:**
 - [Primary entry point with file:line]
@@ -119,10 +188,10 @@ Check `.ai-context/context/KNOWN_GOTCHAS.md` for:
 **Core Logic:**
 [1-2 sentences describing what the feature does]
 
-**Key Files:**
-1. [file_path] - [role in feature]
-2. [file_path] - [role in feature]
-3. [file_path] - [role in feature]
+**Key Files by Chunk:**
+1. CHUNK-R1 (API): [file_path:line]
+2. CHUNK-R2 (Logic): [file_path:line]
+3. CHUNK-R3 (DB): [file_path:line]
 
 **Dependencies:**
 - External: [API names]
@@ -138,16 +207,39 @@ Check `.ai-context/context/KNOWN_GOTCHAS.md` for:
 
 ---
 
+## Inter-Phase Contract (RPI-Plan Consumption)
+
+```
+EXPECTED_CONSUMER: rpi-plan
+CHUNK_PROCESSING_ORDER: sequential (R1 → R2 → R3 → R4 → R5)
+MARK_AS_PLANNED_WHEN: chunk todolist created
+REQUIRED_OUTPUT: CHUNK-Pn per CHUNK-Rn
+STATUS_UPDATE_FIELD: "Status" in each chunk section
+```
+
+**What RPI-Plan Should Do:**
+1. Read each CHUNK-Rn in order
+2. Create corresponding CHUNK-Pn with todolist
+3. Mark CHUNK-Rn status as `PLANNED`
+4. Proceed to next chunk
+5. Loop until all chunks are PLANNED
+
+---
+
 ## Next Steps
 
 After research completes:
 1. ✅ Research document saved in `.ai-context/research/active/`
-2. ⏳ Run `/rpi-plan [feature-name]` to create implementation plan
-3. ⏳ Human reviews plan before `/rpi-implement`
+2. ✅ All chunks marked as COMPLETE
+3. ⏳ Run `/rpi-plan [feature-name]` to create implementation plan
+4. ⏳ RPI-Plan will process chunks and create todolists
+5. ⏳ Human reviews plan before `/rpi-implement`
 
 ---
 
 **Context Usage Report:**
 - Files read: X
 - Tokens used: ~Xk (X% of 200k)
+- Parallel agents spawned: 3-5
+- Chunks created: N
 - Compaction needed: Yes/No

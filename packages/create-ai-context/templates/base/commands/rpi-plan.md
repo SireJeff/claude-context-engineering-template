@@ -1,82 +1,134 @@
 ---
 name: rpi-plan
-version: "1.0.0"
-description: "RPI Plan Phase: Create implementation blueprint with file:line precision"
+version: "2.0.0"
+description: "RPI Plan Phase: Create chunk-based implementation blueprint with todolists for rpi-implement consumption"
 category: "rpi-orchestration"
 rpi_phase: "plan"
 context_budget_estimate: "35K tokens"
 typical_context_usage: "17%"
+chunk_input: true
+chunk_output: true
+inter_phase_aware: true
 prerequisites:
   - "Research document exists in .ai-context/research/active/"
-  - "/rpi-research phase completed"
+  - "/rpi-research phase completed with chunk manifest"
 outputs:
   - "Plan document in .ai-context/plans/active/[name]_plan.md"
-  - "Modification table with file:line references"
-  - "Step-by-step implementation guide"
-  - "Test strategy"
-  - "Rollback plan"
+  - "Chunk-based todolists (CHUNK-Pn per CHUNK-Rn)"
+  - "Modification table with file:line references per chunk"
+  - "Step-by-step implementation guide per chunk"
+  - "Test strategy per chunk"
+  - "Rollback plan per chunk"
+  - "Inter-phase contract for rpi-implement"
 next_commands: ["/rpi-implement"]
 related_agents: ["core-architect", "database-ops", "api-developer"]
 examples:
   - command: "/rpi-plan user-authentication"
-    description: "Create implementation plan for auth feature"
+    description: "Create chunk-based implementation plan for auth feature"
   - command: "/rpi-plan payment-bug-fix"
-    description: "Plan the fix for payment issue"
+    description: "Plan the fix with chunk-todolists for payment issue"
 exit_criteria:
   - "Plan document created in .ai-context/plans/active/"
-  - "All file modifications listed with line numbers"
-  - "Step-by-step implementation defined"
-  - "Test strategy documented"
+  - "Chunk manifest created with CHUNK-Pn per CHUNK-Rn"
+  - "All research chunks marked as PLANNED"
+  - "All file modifications listed with line numbers per chunk"
+  - "Chunk-todolists defined with atomic actions"
+  - "Test strategy documented per chunk"
   - "Human approval obtained"
+  - "Inter-phase contract documented for rpi-implement"
 ---
 
-# RPI Plan Phase
+# RPI Plan Phase (Enhanced with Chunk-Based Todolists)
 
-**Purpose:** Create detailed implementation blueprint
+**Purpose:** Create detailed implementation blueprint using chunk-based todolists that RPI-Implement will process
 
 **Syntax:** `/rpi-plan [feature-name]`
 
-**Prerequisites:** Research document must exist in `.ai-context/research/active/`
+**Prerequisites:** Research document must exist in `.ai-context/research/active/` with chunk manifest
+
+---
+
+## Key Innovation: Inter-Phase Awareness
+
+RPI-Plan **KNOWS**:
+- RPI-Research structured chunks specifically for sequential processing
+- RPI-Implement will read each CHUNK-Pn as an atomic implementation unit
+- Each CHUNK-Pn todolist must be independently executable
+- Chunk dependencies must be explicit for proper execution ordering
+
+---
+
+## Chunk Processing Loop
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ RPI-PLAN CHUNK PROCESSING LOOP                          │
+├─────────────────────────────────────────────────────────┤
+│ FOR each CHUNK-Rn in research_chunks:                   │
+│   1. Read CHUNK-Rn content                              │
+│   2. Create CHUNK-Pn todolist:                          │
+│      - Define atomic action items                       │
+│      - Specify file:line for each action                │
+│      - Assign test for each action                      │
+│      - Document chunk-specific rollback                 │
+│   3. Mark CHUNK-Rn status as PLANNED                    │
+│   4. Define CHUNK-Pn dependencies                       │
+│   5. Proceed to next CHUNK-R(n+1)                       │
+│ END LOOP                                                │
+└─────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## Execution Steps
 
 ### Step 1: Load Research Document
-Read `.ai-context/research/active/[feature]_research.md`
+Read `.ai-context/research/active/[feature]_research.md` and extract chunk manifest
 
-### Step 2: Define Scope
-- In scope (explicit list)
+### Step 2: Process Each Research Chunk
+
+For each CHUNK-Rn:
+1. Analyze chunk content (files, deps, call chains)
+2. Create CHUNK-Pn todolist with atomic actions
+3. Mark CHUNK-Rn status as PLANNED
+4. Document chunk dependencies
+
+### Step 3: Define Scope
+- In scope (explicit list per chunk)
 - Out of scope (what we're NOT touching)
 
-### Step 3: List File Modifications
-| File | Lines | Change | Risk |
-|------|-------|--------|------|
-Each modification with exact line numbers
+### Step 4: Create Chunk Dependency Graph
+```
+CHUNK-P1 ───→ CHUNK-P2 ───→ CHUNK-P3
+```
 
-### Step 4: Create Step-by-Step Plan
-For each step:
-- Current code
-- Proposed change
-- Test to run after
+### Step 5: Plan Testing Strategy (Per Chunk)
+- Tests to run after each todo
+- Tests to run after chunk completion
 
-### Step 5: Define Test Strategy
-- Unit tests required
-- Integration tests required
-- E2E tests if applicable
+### Step 6: Document Rollback Plan (Per Chunk)
+- Per-chunk rollback commands
+- Safe commits per chunk
 
-### Step 6: Document Rollback Plan
-- How to revert
-- Safe commit to return to
+### Step 7: Finalize Inter-Phase Contract
+```
+EXPECTED_CONSUMER: rpi-implement
+CHUNK_PROCESSING_ORDER: dependency-ordered
+MARK_AS_IMPLEMENTED_WHEN: all chunk todos complete
+UPDATE_RESEARCH_STATUS: true
+```
 
-### Step 7: Request Human Approval
+### Step 8: Request Human Approval
 Plan requires human review before implementation
 
 ---
 
 ## Output
 
-Plan document in `.ai-context/plans/active/[feature]_plan.md`
+Plan document in `.ai-context/plans/active/[feature]_plan.md` with:
+- Chunk manifest
+- Per-chunk todolists
+- Inter-phase contract for RPI-Implement
 
 ---
 
@@ -91,3 +143,5 @@ Plan document in `.ai-context/plans/active/[feature]_plan.md`
 ## Next Step
 
 After human approval: `/rpi-implement [feature-name]`
+
+RPI-Implement will process chunks in dependency order, executing todos atomically
