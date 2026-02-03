@@ -1,80 +1,146 @@
 {{!-- Aider Configuration Template --}}
 # {{project.name}} - Aider Configuration
 # Generated: {{metadata.timestamp}}
+# Documentation: https://aider.chat/docs/config.html
 
-# Model selection (uncomment and configure as needed)
-# model: gpt-4
-# model: claude-3-opus-20240229
-# model: deepseek-coder
+#=============================================================================
+# MODEL CONFIGURATION
+#=============================================================================
+# Recommended: Claude Sonnet for best code understanding
+# Uncomment ONE of the following based on your API access:
 
-# Auto-commit settings
-auto-commits: true
+# model: claude-3-5-sonnet-20241022   # Best overall (Anthropic API)
+# model: gpt-4o                        # Good alternative (OpenAI API)
+# model: deepseek-coder                # Budget option
+
+#=============================================================================
+# GIT & AUTO-COMMIT SETTINGS
+#=============================================================================
+# Auto-commit is disabled by default for safety
+# This prevents accidental commits - you review changes first
+# Note: Both 'auto-commits' (plural) and 'auto-commit' (singular) are 
+# included for compatibility with different Aider versions
+auto-commits: false
 auto-commit: false
-commit_prompt: "docs: update {path} per AI pair-programming session"
 
-# File handling
-{{#if key_files.entry_points}}
-# Add only these files to context
-add: {{join key_files.entry_points ","}}
-{{/if}}
+# Commit message format when auto-commit is enabled
+commit-prompt: "feat({{project.name}}): {{message}}"
 
-# Exclude patterns
-exclude:
-  - node_modules/
-  - build/
-  - dist/
-  - .git/
-  - coverage/
-  - "*.min.js"
-  - "*.min.css"
-
-# Git settings
+# Git integration
 gitignore: true
-git-detect: true
+git: true
 
-# Editor settings
-editor: vscode
-# editor-model: gpt-4
+#=============================================================================
+# CONTEXT OPTIMIZATION
+#=============================================================================
+# Map tokens control how much context Aider uses for file mapping
+# Higher = more context awareness, but uses more tokens
+map-tokens: 2048
+map-refresh: auto
 
-# Language detection
-{{#if project.primary_language}}
-language: {{project.primary_language}}
+# Subtree mode - only work with files in current directory tree
+subtree-only: false
+
+#=============================================================================
+# FILE HANDLING
+#=============================================================================
+{{#if key_files.entry_points}}
+# Auto-add entry point files to context
+read:
+{{#each key_files.entry_points}}
+  - {{this}}
+{{/each}}
 {{/if}}
 
-# Testing
+# Exclude patterns (sensible defaults for most projects)
+# These files/directories are never added to context
+# Note: Uses .gitignore patterns
+{{#if project.type}}
+{{#if (eq project.type "python")}}
+# Python-specific excludes
+# exclude patterns handled by .gitignore
+{{else if (eq project.type "node")}}
+# Node.js-specific excludes
+# exclude patterns handled by .gitignore
+{{/if}}
+{{/if}}
+
+#=============================================================================
+# LANGUAGE & FRAMEWORK
+#=============================================================================
+{{#if project.primary_language}}
+# Detected primary language
+# language: {{project.primary_language}}
+{{/if}}
+
+#=============================================================================
+# EDITOR INTEGRATION
+#=============================================================================
+# Your preferred editor for file viewing
+editor: vscode
+
+#=============================================================================
+# TESTING INTEGRATION
+#=============================================================================
+{{#if commands.test}}
+# Run tests automatically after changes
 test-cmd: {{commands.test}}
+auto-test: false
+{{else}}
+# Configure your test command
+# test-cmd: npm test
+# auto-test: false
+{{/if}}
 
-# Linting (configure as needed)
+#=============================================================================
+# LINTING INTEGRATION
+#=============================================================================
+{{#if commands.lint}}
+# Run linter automatically after changes
+lint-cmd: {{commands.lint}}
+auto-lint: false
+{{else}}
+# Configure your lint command
 # lint-cmd: npm run lint
-# lint-cmd: python -m flake8 .
+# auto-lint: false
+{{/if}}
 
-# Security
-# unsafe-install: false  # Set to true to allow pip installs without confirmation
+#=============================================================================
+# DISPLAY & OUTPUT
+#=============================================================================
+# Stream output for real-time feedback
+stream: true
 
-# Shell commands
-# shell-commands: true  # Allow aider to run shell commands
+# Pretty formatting
+pretty: true
+
+# Dark mode for terminals with dark backgrounds
+# dark-mode: auto
+
+#=============================================================================
+# CHAT HISTORY
+#=============================================================================
+# Save chat history for reference
+chat-history-file: .aider.chat.history.md
+
+#=============================================================================
+# SAFETY SETTINGS
+#=============================================================================
+# Suggest shell commands instead of running automatically
+suggest-shell-commands: true
+
+# Require confirmation for pip installs
+# unsafe-install: false
+
+#=============================================================================
+# ADVANCED SETTINGS
+#=============================================================================
+# Git author attribution
+# attribute-author: true
+# attribute-committer: true
 
 # Voice input (experimental)
 # voice-input: false
-
-# Chat history
-# chat-history: .aider.chat.history
-# chat-history-file: .aider.chat.history
-
-# Display settings
-# color: true
-# progress-spinner: true
-
-# Map tokens (for context optimization)
-# map-tokens: 2048
-
-# Message formatting
-# stream: true
-# dark-mode: false
-
-# Advanced settings
-# attribute-author: true
-# attribute-committer: true
 
 ---
 {{{coordination.footer}}}

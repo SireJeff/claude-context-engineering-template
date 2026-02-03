@@ -12,6 +12,7 @@ const {
   getToolContextFiles,
   detectChangedTool,
   checkSyncStatus,
+  updateSyncStateOnly,
   TOOL_CONTEXT_FILES,
   CONFLICT_STRATEGY
 } = require('../../lib/cross-tool-sync');
@@ -255,6 +256,58 @@ describe('Cross-Tool Sync', () => {
 
       expect(formatted).toContain('Cross-Tool Sync Status');
       expect(formatted).toContain('Overall:');
+    });
+  });
+
+  describe('Update Sync State Only', () => {
+    test('should update sync state without regenerating files', () => {
+      // Create an AI context file
+      const aiContextPath = path.join(testDir, 'AI_CONTEXT.md');
+      fs.writeFileSync(aiContextPath, '# Test Context');
+
+      // Update sync state only
+      const result = updateSyncStateOnly(testDir);
+
+      expect(result.updated).toBe(true);
+      expect(result.timestamp).toBeTruthy();
+      expect(result.hashes).toBeDefined();
+    });
+
+    test('should record post-commit source in history', () => {
+      // Update sync state only
+      updateSyncStateOnly(testDir);
+
+      // Check sync state file
+      const statePath = path.join(testDir, '.ai-context', 'sync-state.json');
+      const state = JSON.parse(fs.readFileSync(statePath, 'utf-8'));
+
+      expect(state.syncHistory).toHaveLength(1);
+      expect(state.syncHistory[0].source).toBe('post-commit');
+      expect(state.syncHistory[0].strategy).toBe('state_only');
+      expect(state.syncHistory[0].propagatedCount).toBe(0);
+    });
+
+    test('should not create any new context files', () => {
+      // Record files before
+      const filesBefore = fs.readdirSync(testDir);
+
+      // Update sync state only
+      updateSyncStateOnly(testDir);
+
+      // Only .ai-context directory should be added
+      const filesAfter = fs.readdirSync(testDir);
+      const newFiles = filesAfter.filter(f => !filesBefore.includes(f));
+
+      expect(newFiles).toEqual(['.ai-context']);
+    });
+
+    test('should update lastSync timestamp', () => {
+      const result = updateSyncStateOnly(testDir);
+
+      const statePath = path.join(testDir, '.ai-context', 'sync-state.json');
+      const state = JSON.parse(fs.readFileSync(statePath, 'utf-8'));
+
+      expect(state.lastSync).toBe(result.timestamp);
     });
   });
 });
