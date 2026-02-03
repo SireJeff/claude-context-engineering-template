@@ -79,7 +79,7 @@ C) Improved documentation structure
 D) Better cross-referencing and navigation
 ```
 
-**Question 4: Urgency Level**
+**Question 4: TODO Priority Order**
 ```
 How should the TODO list be structured?
 A) Quick wins first (< 30 min each)
