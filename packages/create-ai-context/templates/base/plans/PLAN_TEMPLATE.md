@@ -33,10 +33,11 @@
 
 ```
 CHUNK-P1 (API) ─────┬───→ CHUNK-P2 (Logic) ───→ CHUNK-P3 (DB)
-                    │
-CHUNK-P4 (External) │
-                    │
-                    └───→ CHUNK-P5 (Tests) ←── CHUNK-P2
+                    │              │
+CHUNK-P4 (External) │              │
+                    │              ↓
+                    └───→ CHUNK-P5 (Tests) ←───┘
+                         (depends on P1 and P2)
 ```
 
 **Execution Order:** P1 → P4 (parallel) → P2 → P3 → P5

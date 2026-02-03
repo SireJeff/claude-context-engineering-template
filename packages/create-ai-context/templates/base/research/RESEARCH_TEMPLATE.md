@@ -5,7 +5,7 @@
 **Status:** IN_PROGRESS | COMPLETE | BLOCKED
 **Context Budget Used:** X% of 200k
 **Total Chunks:** N
-**Parallel Agents Used:** 3-5
+**Parallel Agents Used:** N (3 minimum, up to 5 for complex features)
 
 ---
 

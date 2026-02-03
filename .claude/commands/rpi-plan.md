@@ -67,16 +67,16 @@ RPI-Plan **KNOWS**:
 │ 1. Load research document                               │
 │ 2. Read chunk manifest from research                    │
 │                                                         │
-│ FOR each CHUNK-Rn in research_chunks:                   │
-│   a. Read CHUNK-Rn content (files, deps, call chains)   │
-│   b. Create CHUNK-Pn todolist:                          │
+│ FOR each research_chunk (CHUNK-R1 to CHUNK-RN):         │
+│   a. Read research_chunk content (files, deps, chains)  │
+│   b. Create corresponding CHUNK-Pn todolist:            │
 │      - Define atomic action items                       │
 │      - Specify file:line for each action                │
 │      - Assign test for each action                      │
 │      - Document chunk-specific rollback                 │
-│   c. Mark CHUNK-Rn status as PLANNED                    │
+│   c. Mark research_chunk status as PLANNED              │
 │   d. Define CHUNK-Pn dependencies                       │
-│   e. Proceed to next CHUNK-R(n+1)                       │
+│   e. Proceed to next research chunk                     │
 │ END LOOP                                                │
 │                                                         │
 │ 3. Generate chunk dependency graph                      │

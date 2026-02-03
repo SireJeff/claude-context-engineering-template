@@ -64,16 +64,16 @@ RPI-Plan **KNOWS**:
 ┌─────────────────────────────────────────────────────────┐
 │ RPI-PLAN CHUNK PROCESSING LOOP                          │
 ├─────────────────────────────────────────────────────────┤
-│ FOR each CHUNK-Rn in research_chunks:                   │
-│   1. Read CHUNK-Rn content                              │
-│   2. Create CHUNK-Pn todolist:                          │
+│ FOR each research_chunk (CHUNK-R1 to CHUNK-RN):         │
+│   1. Read research_chunk content                        │
+│   2. Create corresponding CHUNK-Pn todolist:            │
 │      - Define atomic action items                       │
 │      - Specify file:line for each action                │
 │      - Assign test for each action                      │
 │      - Document chunk-specific rollback                 │
-│   3. Mark CHUNK-Rn status as PLANNED                    │
+│   3. Mark research_chunk status as PLANNED              │
 │   4. Define CHUNK-Pn dependencies                       │
-│   5. Proceed to next CHUNK-R(n+1)                       │
+│   5. Proceed to next research chunk                     │
 │ END LOOP                                                │
 └─────────────────────────────────────────────────────────┘
 ```

@@ -169,7 +169,7 @@ ONE CHUNK → COMPLETE TODOLIST → MARK DONE → NEXT CHUNK
       - Commit if pass, stop if fail
    c. Update documentation for this chunk
    d. Mark CHUNK-Pn as `IMPLEMENTED`
-   e. Mark corresponding CHUNK-Rn in research as `COMPLETE`
+   e. Mark corresponding CHUNK-Rn in research as `IMPLEMENTED`
    f. Proceed to next CHUNK-P(n+1)
 3. **Loop until all plan chunks are processed**
 4. Run full test suite after all chunks complete
