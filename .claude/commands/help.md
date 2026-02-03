@@ -55,6 +55,7 @@ Display help and reference information for Claude Context Engineering.
 | `/rpi-research [name]` | RPI | Research phase - systematic codebase exploration |
 | `/rpi-plan [name]` | RPI | Plan phase - create implementation blueprint |
 | `/rpi-implement [name]` | RPI | Implement phase - execute with continuous testing |
+| `/context-optimize` | Orchestration | Generate RPI TODO list with interactive scoping |
 | `/verify-docs-current [file]` | Validation | Check documentation accuracy against code |
 | `/validate-all` | Validation | Run complete validation suite |
 | `/help [topic]` | System | Display this help information |
@@ -158,6 +159,40 @@ The Research-Plan-Implement workflow prevents cascading errors through structure
 **Example:**
 ```bash
 /rpi-implement user-authentication
+```
+
+---
+
+### Orchestration Commands
+
+#### `/context-optimize`
+
+**Purpose:** Generate RPI workflow TODO list with interactive scoping to optimize the context engineering system.
+
+**Context Budget:** ~40K tokens (20%)
+
+**What it does:**
+1. Asks up to 4 multiple choice questions to scope optimization goals
+2. Audits current context system for completeness and accuracy
+3. Generates actionable TODO list with RPI phases (research, plan, implement)
+4. Identifies redundant or outdated context files
+5. Recommends new agents or commands based on codebase patterns
+
+**Scoping Questions:**
+- Optimization focus (functionalize, update, cleanup, enhance)
+- Codebase coverage priority (core logic, API, database, all)
+- Enhancement preferences (agents, commands, docs, navigation)
+- TODO priority order (quick wins, high impact, grouped, dependency order)
+
+**Output:**
+- TODO checklist: `.claude/plans/active/context-optimization_plan.md`
+- Audit report: `.claude/research/active/context-audit_research.md`
+
+**Examples:**
+```bash
+/context-optimize              # Interactive mode
+/context-optimize --auto       # Automatic scoping
+/context-optimize --scope documentation
 ```
 
 ---

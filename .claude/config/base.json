@@ -29,6 +29,7 @@
   },
   "commands": {
     "rpi_commands": ["/rpi-research", "/rpi-plan", "/rpi-implement"],
+    "orchestration_commands": ["/context-optimize"],
     "validation_commands": ["/verify-docs-current", "/validate-all"]
   },
   "validation": {

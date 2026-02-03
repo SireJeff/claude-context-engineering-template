@@ -209,7 +209,7 @@ packages/
 **Agents:** @context-engineer (setup), @core-architect (design), @api-developer (endpoints), @database-ops (schema), @integration-hub (external), @deployment-ops (CI/CD)
 **Full matrix:** [.claude/indexes/agents/router.md](./.claude/indexes/agents/router.md)
 
-**Commands:** /rpi-research, /rpi-plan, /rpi-implement, /verify-docs-current, /validate-all, /help, /collab, /analytics
+**Commands:** /rpi-research, /rpi-plan, /rpi-implement, /context-optimize, /verify-docs-current, /validate-all, /help, /collab, /analytics
 **All commands:** [.claude/commands/](./.claude/commands/)
 
 ---
