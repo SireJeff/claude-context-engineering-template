@@ -37,3 +37,6 @@ export { listResources, readResource, getResourceTemplates, type Resource, type 
 
 // Prompts
 export { PROMPT_DEFINITIONS, getPrompt, type Prompt, type PromptMessage, type PromptContext } from './prompts/handlers.js';
+
+// Watcher / Auto-Sync
+export { FileWatcher, SyncService, createSyncService, type FileChangeEvent, type WatcherConfig, type SyncServiceConfig, type SyncResult } from './watcher/index.js';
