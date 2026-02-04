@@ -172,6 +172,30 @@ Options:
   --format <format>   Export format: shadow (individual files) or single (one file)
 ```
 
+### mcp:sync
+
+Export database to all AI tool formats (cross-tool sync).
+
+```bash
+npx create-ai-context mcp:sync [options]
+
+Options:
+  -p, --path <dir>   Project directory (defaults to current)
+  --db <path>        Database filename (defaults to .ai-context.db)
+  --tools <tools>    Comma-separated list of tools (copilot,cline,antigravity,windsurf,aider,continue,all)
+  -f, --force        Force overwrite of existing non-managed files
+  --status           Show sync status without exporting
+  -v, --verbose      Show detailed output
+```
+
+Supported tools:
+- **GitHub Copilot** → `.github/copilot-instructions.md`
+- **Cline** → `.clinerules`
+- **Antigravity** → `.agent/context.md`
+- **Windsurf** → `.windsurf/rules.md`
+- **Aider** → `.aider.conf.yml` and `.aiderignore`
+- **Continue** → `.continue/config.json`
+
 ## MCP Tools
 
 | Tool | Description |
@@ -286,6 +310,89 @@ npm run dev
                               ↓
                      .ai-context/*.md (shadow files for git)
 ```
+
+## Troubleshooting
+
+### "OPENROUTER_API_KEY not set"
+
+The MCP server requires an OpenRouter API key for generating embeddings. 
+
+```bash
+# Set environment variable
+export OPENROUTER_API_KEY="your-key-here"
+
+# Or add to Claude Desktop config
+{
+  "mcpServers": {
+    "ai-context": {
+      "env": {
+        "OPENROUTER_API_KEY": "your-key-here"
+      }
+    }
+  }
+}
+```
+
+Get an API key at [openrouter.ai](https://openrouter.ai/).
+
+### "Database not found"
+
+Run `mcp:init` first to create the database:
+
+```bash
+npx create-ai-context mcp:init
+```
+
+### "MCP server package not found"
+
+The MCP server package may need to be installed or built:
+
+```bash
+cd packages/ai-context-mcp-server
+npm install
+npm run build
+```
+
+### MCP Server Not Appearing in Claude Desktop
+
+1. Verify config file location:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+   - **Linux**: `~/.config/Claude/claude_desktop_config.json`
+
+2. Validate JSON syntax in the config file
+
+3. Restart Claude Desktop after changes
+
+4. Check Claude Desktop logs for connection errors
+
+### Embeddings Not Working
+
+If semantic search returns no results:
+
+1. Verify OpenRouter API key is valid
+2. Check if embeddings were generated: `npx create-ai-context mcp:status`
+3. Re-index with: `npx create-ai-context mcp:init --force`
+
+### Cross-Tool Sync Conflicts
+
+If files exist that aren't managed by the MCP server:
+
+```bash
+# Show which files would conflict
+npx create-ai-context mcp:sync --status
+
+# Force overwrite existing files
+npx create-ai-context mcp:sync --force
+```
+
+### Database Locked
+
+If you see "database is locked" errors:
+
+1. Stop any running `mcp:watch` processes
+2. Close other applications accessing the database
+3. Check for `.ai-context.db-journal` file (delete if exists)
 
 ## License
 

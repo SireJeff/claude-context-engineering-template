@@ -1353,4 +1353,155 @@ program
     }
   });
 
+// MCP Sync command - export database to all AI tool formats
+program
+  .command('mcp:sync')
+  .description('Export MCP database to all AI tool formats (Copilot, Cline, Antigravity, Windsurf, Aider, Continue)')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--db <path>', 'Database filename (defaults to .ai-context.db)')
+  .option('--tools <tools>', 'Comma-separated list of tools to export (copilot,cline,antigravity,windsurf,aider,continue,all)', 'all')
+  .option('-f, --force', 'Force overwrite of existing non-managed files')
+  .option('--status', 'Show sync status without exporting')
+  .option('-v, --verbose', 'Show detailed output')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    const spinner = createSpinner();
+    
+    console.log(chalk.cyan('\n  Cross-Tool Sync...'));
+    console.log(chalk.gray(`  Project: ${projectRoot}`));
+    console.log();
+
+    try {
+      // Check if database exists
+      const dbPath = path.join(projectRoot, options.db || '.ai-context.db');
+      if (!fs.existsSync(dbPath)) {
+        console.log(chalk.yellow('  ⚠ Database not found. Run `npx create-ai-context mcp:init` first.'));
+        process.exit(1);
+      }
+
+      // Import MCP server components
+      let mcpPackage;
+      try {
+        const mcpServerPath = require.resolve('@ai-context/mcp-server', { paths: [projectRoot, __dirname] });
+        mcpPackage = require(mcpServerPath);
+      } catch {
+        const devPath = path.join(__dirname, '../../ai-context-mcp-server/dist/index.js');
+        if (fs.existsSync(devPath)) {
+          mcpPackage = require(devPath);
+        } else {
+          console.error(chalk.red('\n✖ MCP server package not found.'));
+          process.exit(1);
+        }
+      }
+
+      const { DatabaseClient, CrossToolExporter, getSupportedTools, getToolDisplayName, getToolOutputPath } = mcpPackage;
+      
+      // Open database
+      const db = new DatabaseClient(projectRoot, options.db || '.ai-context.db');
+
+      // Parse tools
+      const allTools = getSupportedTools();
+      let selectedTools = allTools;
+      if (options.tools && options.tools !== 'all') {
+        selectedTools = options.tools.split(',').map(t => t.trim().toLowerCase());
+        const invalid = selectedTools.filter(t => !allTools.includes(t));
+        if (invalid.length > 0) {
+          console.error(chalk.red(`\n✖ Invalid tools: ${invalid.join(', ')}`));
+          console.error(chalk.gray(`  Valid options: ${allTools.join(', ')}`));
+          db.close();
+          process.exit(1);
+        }
+      }
+
+      // Create exporter
+      const exporter = new CrossToolExporter(db, projectRoot, {
+        tools: selectedTools,
+        force: options.force || false,
+        verbose: options.verbose || false
+      });
+
+      // Status mode
+      if (options.status) {
+        console.log(chalk.bold('  Sync Status:'));
+        console.log();
+        
+        const status = exporter.getSyncStatus();
+        for (const tool of allTools) {
+          const toolStatus = status[tool];
+          const displayName = getToolDisplayName(tool);
+          const outputPath = getToolOutputPath(tool);
+          
+          let statusIcon = '✗';
+          let statusColor = chalk.gray;
+          let statusText = 'Not exported';
+          
+          if (toolStatus.exists) {
+            if (toolStatus.managed) {
+              statusIcon = '✓';
+              statusColor = chalk.green;
+              statusText = toolStatus.lastSync 
+                ? `Synced ${new Date(toolStatus.lastSync).toLocaleString()}`
+                : 'Synced';
+            } else {
+              statusIcon = '⚠';
+              statusColor = chalk.yellow;
+              statusText = 'Exists (not managed)';
+            }
+          }
+          
+          console.log(`  ${statusColor(statusIcon)} ${displayName.padEnd(20)} ${chalk.gray(outputPath)}`);
+          console.log(`    ${chalk.gray(statusText)}`);
+        }
+        
+        console.log();
+        db.close();
+        return;
+      }
+
+      // Export mode
+      spinner.start(`Exporting to ${selectedTools.length} tools...`);
+      
+      const result = await exporter.exportAll();
+      
+      spinner.succeed(`Exported to ${result.totalFiles} files`);
+      
+      console.log(chalk.bold('\n  Export Results:'));
+      console.log();
+      
+      for (const toolResult of result.results) {
+        const displayName = getToolDisplayName(toolResult.tool);
+        
+        if (toolResult.success) {
+          console.log(`  ${chalk.green('✓')} ${displayName}`);
+          for (const file of toolResult.files) {
+            console.log(chalk.gray(`    → ${file}`));
+          }
+        } else {
+          console.log(`  ${chalk.red('✗')} ${displayName}`);
+          for (const error of toolResult.errors) {
+            console.log(chalk.yellow(`    ⚠ ${error}`));
+          }
+        }
+      }
+      
+      if (result.totalErrors > 0) {
+        console.log(chalk.yellow(`\n  ⚠ ${result.totalErrors} errors during export.`));
+        console.log(chalk.gray('  Use --force to overwrite existing non-managed files.'));
+      }
+      
+      console.log();
+      db.close();
+      
+    } catch (error) {
+      spinner.fail('Sync failed');
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      if (options.verbose) {
+        console.error(chalk.gray(error.stack));
+      }
+      process.exit(1);
+    }
+  });
+
 program.parse();
