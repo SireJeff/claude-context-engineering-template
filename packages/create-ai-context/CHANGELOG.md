@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- MCP server CLI commands: `mcp:init`, `mcp:status`, `mcp:start`, `mcp:watch`, `mcp:migrate`, `mcp:export`, `mcp:sync`
+- Cross-tool export from MCP database to all AI tool formats
+
 ### Fixed
 - **Post-commit hook file revision bug**: Fixed issue where post-commit hooks triggered file regeneration, creating uncommitted changes after each commit. Hooks now use `sync:state` instead of `sync:all` to only update state tracking.
 - Improved error reporting in sync:all and sync:from commands (no more "undefined" errors)

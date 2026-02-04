@@ -190,6 +190,8 @@ See [MCP Server README](packages/ai-context-mcp-server/README.md) for full docum
 | `/rpi-research` | Explore codebase, create research document | Deep dive into unknown code, investigate features |
 | `/rpi-plan` | Create implementation plan from research | Design step-by-step implementation strategy |
 | `/rpi-implement` | Execute plan with atomic commits | Build feature with validation between steps |
+| `/context-optimize` | Orchestrate context optimization | Generate RPI TODO list with interactive scoping |
+| `/verify-docs-current` | Validate documentation accuracy | Check doc line references against code |
 | `/validate-all` | Run validation suite on documentation | Check completeness, consistency, accuracy |
 | `/auto-sync` | Synchronize docs with codebase | Update docs after code changes |
 | `/session-save` | Save current Claude Code session state | Preserve work across restarts |
@@ -236,10 +238,12 @@ my-project/
 │   │   ├── database-ops.md
 │   │   ├── deployment-ops.md
 │   │   └── integration-hub.md
-│   ├── commands/                     ← 11 slash commands
+│   ├── commands/                     ← 12 slash commands
 │   │   ├── rpi-research.md
 │   │   ├── rpi-plan.md
 │   │   ├── rpi-implement.md
+│   │   ├── context-optimize.md
+│   │   ├── verify-docs-current.md
 │   │   ├── validate-all.md
 │   │   ├── auto-sync.md
 │   │   ├── session-save.md

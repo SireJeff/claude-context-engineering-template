@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.0] - 2026-02-04
+
+### Added
+- **MCP Server** - Database-backed context via SQLite + vector search
+  - New package: `@ai-context/mcp-server`
+  - CLI commands: `mcp:init`, `mcp:status`, `mcp:start`, `mcp:watch`, `mcp:migrate`, `mcp:export`, `mcp:sync`
+  - Cross-tool export from the MCP database to all AI tool formats
+- **RPI Workflow Enhancements**
+  - Parallel agent research with chunked outputs
+  - Chunk-based planning and implementation todolists
+- **/context-optimize Command** - Orchestrated context optimization with interactive scoping
+
+### Documentation
+- Added MCP server docs and troubleshooting guidance
+- Updated quick start and migration guides for new AI tool outputs
+
+---
+
 ## [2.4.0] - 2026-01-31
 
 ### Added

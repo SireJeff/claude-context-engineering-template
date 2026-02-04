@@ -19,7 +19,7 @@ This single command:
 - Creates the `.ai-context/` directory structure
 - Detects your tech stack automatically
 - Generates `AI_CONTEXT.md` at your project root
-- Generates context for multiple AI tools (Claude, Copilot, Cline, Antigravity)
+- Generates context for multiple AI tools (Claude, Copilot, Cline, Antigravity, Windsurf, Aider, Continue)
 
 ### Alternative: Manual Installation
 
@@ -141,6 +141,25 @@ npx .ai-context/tools/bin/claude-context.js validate --all
 | Validation fails | Run `npx .ai-context/tools/bin/claude-context.js diagnose --fix` |
 
 See [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) for more.
+
+---
+
+## Optional: MCP Server (Advanced)
+
+Use the MCP server for database-backed context and cross-tool exports.
+
+```bash
+# Initialize database from your project
+npx create-ai-context mcp:init
+
+# Start MCP server for Claude Desktop
+npx create-ai-context mcp:start
+
+# Export database to all AI tools
+npx create-ai-context mcp:sync --force
+```
+
+See [MCP server README](../packages/ai-context-mcp-server/README.md) for configuration details.
 
 ---
 
