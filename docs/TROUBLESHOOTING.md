@@ -505,7 +505,8 @@ npx create-ai-context mcp:sync --force
 
 **B. Recreate database index**
 ```bash
-npx create-ai-context mcp:init --force
+rm -f .ai-context.db
+npx create-ai-context mcp:init
 ```
 
 **C. Ensure database exists**

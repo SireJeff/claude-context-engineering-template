@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [2.5.0] - 2026-02-04
+
 ### Added
 - MCP server CLI commands: `mcp:init`, `mcp:status`, `mcp:start`, `mcp:watch`, `mcp:migrate`, `mcp:export`, `mcp:sync`
 - Cross-tool export from MCP database to all AI tool formats
