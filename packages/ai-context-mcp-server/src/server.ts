@@ -13,9 +13,8 @@ import { DatabaseClient } from './db/client.js';
 import { EmbeddingsManager } from './db/embeddings.js';
 import { createEmbeddingsClient } from './embeddings/openrouter.js';
 import { handleToolCall, type ToolContext } from './tools/handlers.js';
-import { listResources, readResource, getResourceTemplates, type ResourceContext } from './resources/handlers.js';
+import { listResources, readResource, type ResourceContext } from './resources/handlers.js';
 import { getPrompt, type PromptContext } from './prompts/handlers.js';
-import type { ContextType, RelationType } from './db/schema.js';
 
 /**
  * Server configuration
@@ -251,8 +250,12 @@ export async function createServer(config: ServerConfig): Promise<McpServer> {
           return { contents: [{ uri: content.uri, mimeType: content.mimeType, text: content.text }] };
         }
       );
-    } catch {
+    } catch (error) {
       // Resource may already be registered or have invalid URI
+      console.error(
+        `Failed to register resource "${resource.name}" with URI "${resource.uri}":`,
+        error
+      );
     }
   }
 

@@ -6,7 +6,6 @@ dist/
 
 # Test database
 *.db
-.ai-context.db
 
 # Coverage
 coverage/
