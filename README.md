@@ -92,6 +92,68 @@ npx create-universal-ai-context
 | `--no-git` | Skip git initialization |
 | `--no-plugin` | Skip plugin installation |
 
+### MCP Server Commands (Database-Backed Context)
+
+| Command | One-Line Explanation |
+|---------|----------------------|
+| `npx create-ai-context mcp:init` | Initialize SQLite database and index project context |
+| `npx create-ai-context mcp:status` | Show database statistics |
+| `npx create-ai-context mcp:start` | Start MCP server for Claude Desktop |
+| `npx create-ai-context mcp:watch` | Watch for file changes and auto-sync |
+| `npx create-ai-context mcp:migrate` | Migrate file-based context to database |
+| `npx create-ai-context mcp:export` | Export database to markdown files |
+| `npx create-ai-context mcp:sync` | Export database to all AI tool formats (cross-tool sync) |
+
+---
+
+## MCP Server (Advanced)
+
+The MCP Server provides a **database-backed alternative** to file-based context. Instead of managing multiple `.md` files, it stores everything in a SQLite database with vector search capabilities.
+
+### Features
+
+- **SQLite + sqlite-vec** - Single portable `.ai-context.db` file
+- **Semantic Search** - OpenRouter-powered embeddings for intelligent search
+- **Knowledge Graph** - 14 typed relationships between context items
+- **Cross-Tool Sync** - Export to all AI tools from one source
+- **File Watcher** - Auto-sync on file changes
+
+### Quick Start
+
+```bash
+# Initialize database from your codebase
+npx create-ai-context mcp:init
+
+# Check status
+npx create-ai-context mcp:status
+
+# Start MCP server for Claude Desktop
+npx create-ai-context mcp:start
+
+# Export to all AI tools
+npx create-ai-context mcp:sync --force
+```
+
+### Claude Desktop Configuration
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "ai-context": {
+      "command": "npx",
+      "args": ["create-ai-context", "mcp:start"],
+      "env": {
+        "OPENROUTER_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+See [MCP Server README](packages/ai-context-mcp-server/README.md) for full documentation.
+
 ---
 
 ## AI Tools Generated
