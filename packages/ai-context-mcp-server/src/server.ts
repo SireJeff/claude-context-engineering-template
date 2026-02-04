@@ -237,21 +237,21 @@ export async function createServer(config: ServerConfig): Promise<McpServer> {
 
   // ==================== Register Resources ====================
 
-  // Register static resources
-  const resources = listResources(ctx);
-  for (const resource of resources) {
+  // Register resource templates to avoid eagerly loading all database-backed resources
+  const resourceTemplates = getResourceTemplates(ctx);
+  for (const template of resourceTemplates) {
     try {
-      server.registerResource(
-        resource.name,
-        resource.uri,
-        { description: resource.description, mimeType: resource.mimeType },
-        () => {
-          const content = readResource(resource.uri, ctx);
+      server.registerResourceTemplate(
+        template.name,
+        template.uriTemplate,
+        { description: template.description, mimeType: template.mimeType },
+        (request) => {
+          const content = readResource(request.uri, ctx);
           return { contents: [{ uri: content.uri, mimeType: content.mimeType, text: content.text }] };
         }
       );
-    } catch (error) {
-      // Resource may already be registered or have invalid URI
+    } catch {
+      // Resource template may already be registered or have invalid URI template
       console.error(
         `Failed to register resource "${resource.name}" with URI "${resource.uri}":`,
         error
