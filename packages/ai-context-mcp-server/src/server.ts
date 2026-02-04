@@ -237,26 +237,34 @@ export async function createServer(config: ServerConfig): Promise<McpServer> {
 
   // ==================== Register Resources ====================
 
-  // Register resource templates to avoid eagerly loading all database-backed resources
-  const resourceTemplates = getResourceTemplates(ctx);
-  for (const template of resourceTemplates) {
-    try {
-      server.registerResourceTemplate(
-        template.name,
-        template.uriTemplate,
-        { description: template.description, mimeType: template.mimeType },
-        (request) => {
-          const content = readResource(request.uri, ctx);
-          return { contents: [{ uri: content.uri, mimeType: content.mimeType, text: content.text }] };
-        }
-      );
-    } catch {
-      // Resource template may already be registered or have invalid URI template
-      console.error(
-        `Failed to register resource "${resource.name}" with URI "${resource.uri}":`,
-        error
-      );
-    }
+  // Register static resources that list available context
+  // Note: Dynamic resources are accessed through the search_context and get_item tools
+  try {
+    server.registerResource(
+      'context-index',
+      'context://index',
+      { description: 'Index of all context items', mimeType: 'text/markdown' },
+      (uri: URL) => {
+        const content = readResource(uri.toString(), ctx);
+        return { contents: [{ uri: content.uri, mimeType: content.mimeType, text: content.text }] };
+      }
+    );
+  } catch (error) {
+    console.error('Failed to register resource "context-index" (context://index):', error);
+  }
+
+  try {
+    server.registerResource(
+      'context-stats',
+      'context://stats',
+      { description: 'Database statistics and metrics', mimeType: 'application/json' },
+      (uri: URL) => {
+        const content = readResource(uri.toString(), ctx);
+        return { contents: [{ uri: content.uri, mimeType: content.mimeType, text: content.text }] };
+      }
+    );
+  } catch (error) {
+    console.error('Failed to register resource "context-stats" (context://stats):', error);
   }
 
   // ==================== Register Prompts ====================

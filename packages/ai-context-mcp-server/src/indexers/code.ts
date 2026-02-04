@@ -492,4 +492,32 @@ export class CodeIndexer {
     
     return removed;
   }
+
+  /**
+   * Remove indexed code by file path
+   */
+  removeFile(filePath: string): number {
+    // Normalize the path for cross-platform compatibility
+    const normalizedPath = path.isAbsolute(filePath) 
+      ? path.relative(this.projectRoot, filePath) 
+      : filePath;
+    const normalizedForComparison = normalizedPath.replace(/\\/g, '/');
+    
+    // Find all code items for this file
+    const items = this.db.getItemsByType('code');
+    let removed = 0;
+    
+    for (const item of items) {
+      // Normalize stored path for comparison
+      const itemPath = item.filePath?.replace(/\\/g, '/') || '';
+      if (itemPath === normalizedForComparison) {
+        if (this.db.deleteItem(item.id)) {
+          this.embeddings.deleteEmbedding(item.id);
+          removed++;
+        }
+      }
+    }
+    
+    return removed;
+  }
 }
