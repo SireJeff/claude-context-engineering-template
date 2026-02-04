@@ -40,3 +40,15 @@ export { PROMPT_DEFINITIONS, getPrompt, type Prompt, type PromptMessage, type Pr
 
 // Watcher / Auto-Sync
 export { FileWatcher, SyncService, createSyncService, type FileChangeEvent, type WatcherConfig, type SyncServiceConfig, type SyncResult } from './watcher/index.js';
+
+// Cross-Tool Export
+export { 
+  CrossToolExporter, 
+  getSupportedTools, 
+  getToolDisplayName, 
+  getToolOutputPath,
+  type AIToolName, 
+  type ExportConfig, 
+  type ExportResult, 
+  type ToolExportResult 
+} from './export/cross-tool-exporter.js';

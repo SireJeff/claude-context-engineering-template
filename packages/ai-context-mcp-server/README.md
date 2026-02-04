@@ -172,6 +172,30 @@ Options:
   --format <format>   Export format: shadow (individual files) or single (one file)
 ```
 
+### mcp:sync
+
+Export database to all AI tool formats (cross-tool sync).
+
+```bash
+npx create-ai-context mcp:sync [options]
+
+Options:
+  -p, --path <dir>   Project directory (defaults to current)
+  --db <path>        Database filename (defaults to .ai-context.db)
+  --tools <tools>    Comma-separated list of tools (copilot,cline,antigravity,windsurf,aider,continue,all)
+  -f, --force        Force overwrite of existing non-managed files
+  --status           Show sync status without exporting
+  -v, --verbose      Show detailed output
+```
+
+Supported tools:
+- **GitHub Copilot** → `.github/copilot-instructions.md`
+- **Cline** → `.clinerules`
+- **Antigravity** → `.agent/context.md`
+- **Windsurf** → `.windsurf/rules.md`
+- **Aider** → `.aider.conf.yml` and `.aiderignore`
+- **Continue** → `.continue/config.json`
+
 ## MCP Tools
 
 | Tool | Description |
