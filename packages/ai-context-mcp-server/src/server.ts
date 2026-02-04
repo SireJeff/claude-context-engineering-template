@@ -250,7 +250,7 @@ export async function createServer(config: ServerConfig): Promise<McpServer> {
       }
     );
   } catch (error) {
-    console.error('Failed to register context-index resource:', error);
+    console.error('Failed to register resource "context-index" (context://index):', error);
   }
 
   try {
@@ -264,7 +264,7 @@ export async function createServer(config: ServerConfig): Promise<McpServer> {
       }
     );
   } catch (error) {
-    console.error('Failed to register context-stats resource:', error);
+    console.error('Failed to register resource "context-stats" (context://stats):', error);
   }
 
   // ==================== Register Prompts ====================

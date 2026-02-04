@@ -41,24 +41,25 @@
 - [x] Add `mcp:start` command to `create-ai-context` CLI
 - [x] Add `mcp:init` command to initialize database from existing `.ai-context/`
 - [x] Add `mcp:status` command to show database statistics
-- [ ] Add `mcp:migrate` command to migrate file-based context to database
-- [ ] Add `mcp:export` command to export database to files
+- [x] Add `mcp:migrate` command to migrate file-based context to database
+- [x] Add `mcp:export` command to export database to files
 - [x] Update CLI help text and documentation
 
 ### 2.3 Initial Indexing ✅
 - [x] Implement first-run indexing workflow (via mcp:init)
 - [x] Add progress indicators for indexing
 - [x] Handle large codebases gracefully (--skip-code, --skip-git flags)
-- [ ] Implement incremental indexing (only changed files)
+- [x] Implement incremental indexing (only changed files) - via SyncService
 
 ---
 
-## Phase 3: Advanced Features
+## Phase 3: Advanced Features ✅ COMPLETE
 
-### 3.1 Auto-Sync
-- [ ] File watcher for real-time updates
-- [ ] Debounced re-indexing on file changes
-- [ ] Git hooks integration (pre-commit, post-merge)
+### 3.1 Auto-Sync ✅
+- [x] File watcher for real-time updates (FileWatcher class)
+- [x] Debounced re-indexing on file changes (configurable debounce)
+- [x] `mcp:watch` CLI command for auto-sync
+- [ ] Git hooks integration (pre-commit, post-merge) - Deferred
 
 ### 3.2 Enhanced Knowledge Graph
 - [ ] Auto-detect relationships from code analysis

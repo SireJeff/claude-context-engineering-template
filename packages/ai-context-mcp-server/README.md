@@ -10,6 +10,8 @@
 - **Code + Git Indexing** - Index source code and git history
 - **Shadow Files** - Auto-generate .md files for git visibility
 - **MCP Protocol** - stdio transport for Claude Desktop compatibility
+- **File Watcher** - Auto-sync on file changes with debounce
+- **CLI Integration** - Full CLI for init, status, watch, migrate, export
 
 ## Quick Start
 
@@ -22,6 +24,9 @@ npx create-ai-context mcp:status
 
 # Start the MCP server
 npx create-ai-context mcp:start
+
+# Watch for file changes (auto-sync)
+npx create-ai-context mcp:watch
 ```
 
 ## Installation
@@ -30,33 +35,142 @@ npx create-ai-context mcp:start
 npm install @ai-context/mcp-server
 ```
 
-## Configuration
+## Claude Desktop Configuration
 
-### Claude Desktop
+### Step 1: Locate Config File
 
-Add to your `claude_desktop_config.json`:
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+- **Linux**: `~/.config/Claude/claude_desktop_config.json`
+
+### Step 2: Add MCP Server Configuration
+
+Add the following to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "ai-context": {
       "command": "npx",
-      "args": ["@ai-context/mcp-server"],
+      "args": ["create-ai-context", "mcp:start"],
       "env": {
-        "OPENROUTER_API_KEY": "your-api-key"
+        "OPENROUTER_API_KEY": "your-api-key-here"
       }
     }
   }
 }
 ```
 
+### Step 3: Initialize Database
+
+Before starting Claude Desktop, initialize the database in your project:
+
+```bash
+cd /path/to/your/project
+npx create-ai-context mcp:init
+```
+
+### Step 4: Restart Claude Desktop
+
+Restart Claude Desktop to load the MCP server. You should see "ai-context" in the server list when you click the MCP icon.
+
+### Step 5: Test the Integration
+
+Try these prompts in Claude Desktop:
+
+- "Search for authentication related code"
+- "What workflows are documented in this project?"
+- "Show me the knowledge graph for the API module"
+- "What changed in the last 10 commits?"
+
 ### Environment Variables
 
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `OPENROUTER_API_KEY` | Yes | OpenRouter API key for embeddings |
-| `AI_CONTEXT_DB_PATH` | No | Custom database path (default: `.ai-context.db`) |
-| `AI_CONTEXT_SHADOW_DIR` | No | Shadow files output directory (default: `.ai-context/`) |
+| `AI_CONTEXT_PROJECT_ROOT` | No | Project directory (defaults to cwd) |
+| `AI_CONTEXT_DB_PATH` | No | Database filename (default: `.ai-context.db`) |
+
+## CLI Commands
+
+### mcp:init
+
+Initialize the MCP database and index existing context.
+
+```bash
+npx create-ai-context mcp:init [options]
+
+Options:
+  -p, --path <dir>   Project directory (defaults to current)
+  --db <path>        Database filename (defaults to .ai-context.db)
+  --skip-code        Skip source code indexing
+  --skip-git         Skip git history indexing
+```
+
+### mcp:status
+
+Show database status and statistics.
+
+```bash
+npx create-ai-context mcp:status [options]
+
+Options:
+  -p, --path <dir>   Project directory (defaults to current)
+  --db <path>        Database filename (defaults to .ai-context.db)
+```
+
+### mcp:start
+
+Start the MCP server for Claude Desktop.
+
+```bash
+npx create-ai-context mcp:start [options]
+
+Options:
+  -p, --path <dir>   Project directory (defaults to current)
+  --db <path>        Database filename (defaults to .ai-context.db)
+```
+
+### mcp:watch
+
+Watch for file changes and auto-sync to the database.
+
+```bash
+npx create-ai-context mcp:watch [options]
+
+Options:
+  -p, --path <dir>     Project directory (defaults to current)
+  --db <path>          Database filename (defaults to .ai-context.db)
+  --debounce <ms>      Debounce delay in milliseconds (default: 500)
+  -v, --verbose        Show detailed output
+```
+
+### mcp:migrate
+
+Migrate existing file-based AI context to the database.
+
+```bash
+npx create-ai-context mcp:migrate [options]
+
+Options:
+  -p, --path <dir>   Project directory (defaults to current)
+  --db <path>        Database filename (defaults to .ai-context.db)
+  --dry-run          Show what would be migrated without making changes
+```
+
+### mcp:export
+
+Export database content to markdown files.
+
+```bash
+npx create-ai-context mcp:export [options]
+
+Options:
+  -p, --path <dir>    Project directory (defaults to current)
+  --db <path>         Database filename (defaults to .ai-context.db)
+  -o, --output <dir>  Output directory (default: .ai-context-export)
+  --format <format>   Export format: shadow (individual files) or single (one file)
+```
 
 ## MCP Tools
 
