@@ -11,6 +11,19 @@
 - **Shadow Files** - Auto-generate .md files for git visibility
 - **MCP Protocol** - stdio transport for Claude Desktop compatibility
 
+## Quick Start
+
+```bash
+# Initialize the database with your project context
+npx create-ai-context mcp:init
+
+# Check database status
+npx create-ai-context mcp:status
+
+# Start the MCP server
+npx create-ai-context mcp:start
+```
+
 ## Installation
 
 ```bash
