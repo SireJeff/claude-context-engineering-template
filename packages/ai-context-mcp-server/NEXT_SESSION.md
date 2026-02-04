@@ -8,19 +8,26 @@ Copy and paste this entire prompt to start the next session:
 
 I'm continuing development on the `@ai-context/mcp-server` package - a database-backed MCP server for AI context storage.
 
-### What Was Completed Last Session
+### What Was Completed (Phase 1 & 2 ✅)
 
-1. Created the full MCP server package at `packages/ai-context-mcp-server/`
-2. Implemented SQLite + sqlite-vec database schema (7 tables)
-3. Implemented OpenRouter embeddings integration
-4. Implemented MCP server with stdio transport
-5. Implemented 10 MCP tools (search_context, get_item, add_knowledge, etc.)
-6. Implemented 6 MCP prompts (context-engineer, core-architect, etc.)
-7. Implemented 3 indexers (context, code, git)
-8. Implemented knowledge graph with 14 typed relations
-9. Implemented shadow file generator for git visibility
-10. Added unit tests
-11. Fixed security vulnerabilities in dependencies
+**Phase 1: Core MCP Server**
+- Full MCP server package at `packages/ai-context-mcp-server/`
+- SQLite + sqlite-vec database schema (7 tables)
+- OpenRouter embeddings integration
+- MCP server with stdio transport (10 tools, 6 prompts)
+- 3 indexers (context, code, git)
+- Knowledge graph with 14 typed relations
+- Shadow file generator for git visibility
+- Unit tests (89 passing)
+- Security vulnerabilities fixed
+
+**Phase 2: Build & Integration**
+- Fixed TypeScript build for MCP SDK v1.26.0
+- All 89 tests passing
+- CLI integration complete:
+  - `npx create-ai-context mcp:init` - Initialize database & index content
+  - `npx create-ai-context mcp:status` - Show database statistics
+  - `npx create-ai-context mcp:start` - Start MCP server
 
 ### Architecture Decisions (Already Made)
 
@@ -35,65 +42,77 @@ I'm continuing development on the `@ai-context/mcp-server` package - a database-
 
 ## Task for This Session
 
-**Phase 2: Build & Integration**
+**Phase 3: Advanced Features**
 
-### Priority 1: Build & Verify
+### Priority 1: Claude Desktop Testing
 
-1. Navigate to `packages/ai-context-mcp-server/`
-2. Run `npm install` to install dependencies
-3. Run `npm run build` to compile TypeScript
-4. Fix any TypeScript compilation errors
-5. Run `npm test` to verify tests pass
-6. Manually test: `node dist/cli.js` (should start MCP server)
+1. Configure Claude Desktop to use the MCP server:
+   ```json
+   {
+     "mcpServers": {
+       "ai-context": {
+         "command": "npx",
+         "args": ["create-ai-context", "mcp:start"],
+         "env": {
+           "OPENROUTER_API_KEY": "your-key"
+         }
+       }
+     }
+   }
+   ```
+2. Test semantic search with real queries
+3. Test knowledge graph traversal
+4. Verify tool responses are correct
 
-### Priority 2: CLI Integration
+### Priority 2: Auto-Sync (File Watcher)
 
-1. Open `packages/create-ai-context/bin/create-ai-context.js`
-2. Add new commands:
-   - `mcp:start` - Start the MCP server
-   - `mcp:init` - Initialize database from existing `.ai-context/`
-   - `mcp:status` - Show MCP server status
+1. Implement file watcher for real-time updates
+2. Debounce re-indexing on file changes
+3. Add git hooks integration (pre-commit, post-merge)
 
-### Priority 3: First-Run Experience
+### Priority 3: Remaining CLI Commands
 
-1. Create initialization workflow that:
-   - Creates `.ai-context.db` database
-   - Indexes existing context documents
-   - Indexes source code
-   - Indexes git history
-   - Generates embeddings
-   - Shows progress
+1. Add `mcp:migrate` command to migrate file-based context to database
+2. Add `mcp:export` command to export database to files
+3. Implement incremental indexing (only changed files)
 
 ---
 
 ## Files to Reference
 
 - **Roadmap**: `packages/ai-context-mcp-server/ROADMAP.md`
-- **Package**: `packages/ai-context-mcp-server/package.json`
 - **Server**: `packages/ai-context-mcp-server/src/server.ts`
-- **CLI Entry**: `packages/ai-context-mcp-server/src/cli.ts`
-- **Existing CLI**: `packages/create-ai-context/bin/create-ai-context.js`
+- **Indexers**: `packages/ai-context-mcp-server/src/indexers/`
+- **CLI**: `packages/create-ai-context/bin/create-ai-context.js`
+- **Shadow Generator**: `packages/ai-context-mcp-server/src/shadow/generator.ts`
 
 ---
 
 ## Expected Outcomes
 
 By end of session:
-- [ ] Package builds without errors
-- [ ] Tests pass
-- [ ] MCP server starts successfully
-- [ ] At least one CLI command integrated
-- [ ] Can demo: `npx create-ai-context mcp:start`
+- [ ] MCP server tested with Claude Desktop
+- [ ] File watcher implemented for auto-sync
+- [ ] `mcp:migrate` command working
+- [ ] `mcp:export` command working
+- [ ] Incremental indexing implemented
 
 ---
 
 ## Commands to Run First
 
 ```bash
+# Verify build still works
 cd packages/ai-context-mcp-server
-npm install
 npm run build
 npm test
+
+# Initialize a test database
+cd ../.. 
+npx create-ai-context mcp:init
+
+# Check status
+npx create-ai-context mcp:status
 ```
 
 ---
@@ -101,9 +120,10 @@ npm test
 ## Notes
 
 - OpenRouter API key needed for embeddings: `export OPENROUTER_API_KEY=your-key`
-- sqlite-vec requires native compilation (may need build tools)
-- If native deps fail, consider falling back to pure JS alternatives
+- MCP SDK is v1.26.0 with McpServer class for tool/prompt registration
+- Database file is `.ai-context.db` in project root
+- Shadow files go to `.ai-context/*.md`
 
 ---
 
-*Ready to continue from Phase 2!*
+*Ready to continue with Phase 3: Advanced Features!*
