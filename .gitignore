@@ -1,5 +1,9 @@
 # Claude Context Engineering - Ignored Files
 
+# MCP Database files
+.ai-context.db
+*.db
+
 # Articles (kept separate)
 linkedin-article-english.md
 virgool-article.md
