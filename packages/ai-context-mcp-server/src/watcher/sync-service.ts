@@ -156,18 +156,21 @@ export class SyncService extends EventEmitter {
     return this.running;
   }
 
+  /** Accumulator for pending changes while sync is in progress */
+  private pendingChangesAccumulator: FileChangeEvent[] = [];
+
   /**
    * Handle file changes
    */
   private async handleChanges(changes: FileChangeEvent[]): Promise<void> {
-    // If sync is in progress, mark for pending sync
+    // If sync is in progress, accumulate changes for later processing
     if (this.syncInProgress) {
       this.pendingSync = true;
+      this.pendingChangesAccumulator.push(...changes);
       return;
     }
 
     this.syncInProgress = true;
-    const startTime = Date.now();
 
     try {
       const result = await this.processChanges(changes);
@@ -191,13 +194,18 @@ export class SyncService extends EventEmitter {
     } finally {
       this.syncInProgress = false;
 
-      // Process pending sync if any
+      // Process accumulated pending changes if any
       if (this.pendingSync) {
         this.pendingSync = false;
-        // Schedule a full re-index
-        setTimeout(() => {
-          this.handleChanges([]);
-        }, 100);
+        const accumulatedChanges = [...this.pendingChangesAccumulator];
+        this.pendingChangesAccumulator = [];
+        
+        if (accumulatedChanges.length > 0) {
+          // Process accumulated changes
+          setTimeout(() => {
+            this.handleChanges(accumulatedChanges);
+          }, 100);
+        }
       }
     }
   }
@@ -246,7 +254,11 @@ export class SyncService extends EventEmitter {
     // Process code file changes
     for (const change of codeChanges) {
       try {
-        if (change.type !== 'delete') {
+        if (change.type === 'delete') {
+          // Remove indexed code for deleted file
+          const removed = this.codeIndexer.removeFile(change.path);
+          result.removed += removed;
+        } else {
           const language = this.detectLanguage(change.relativePath);
           if (language) {
             const chunks = await this.codeIndexer.indexFile(change.path, language);

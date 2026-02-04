@@ -8,7 +8,6 @@
 import fs from 'fs';
 import path from 'path';
 import { EventEmitter } from 'events';
-import { glob } from 'glob';
 
 /**
  * File change event
