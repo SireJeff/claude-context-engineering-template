@@ -34,6 +34,9 @@ social-post.md
 .claude/tools/node_modules/
 packages/*/node_modules/
 
+# Build artifacts
+packages/*/dist/
+
 # Generated files
 .ai-context/
 .claude/docs/generated/

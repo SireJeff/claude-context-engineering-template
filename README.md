@@ -4,20 +4,42 @@
 
 # Universal AI Context Engineering
 
-![npm](https://img.shields.io/npm/v/create-universal-ai-context)
-![npm downloads](https://img.shields.io/npm/dm/create-universal-ai-context)
+![npm](https://img.shields.io/npm/v/ai-context)
+![npm downloads](https://img.shields.io/npm/dm/ai-context)
 ![GitHub Stars](https://img.shields.io/github/stars/SireJeff/claude-context-engineering-template?style=social)
 ![GitHub License](https://img.shields.io/github/license/SireJeff/claude-context-engineering-template)
 
 **One command to supercharge your AI coding assistant with intelligent context.**
 
-Supports: **Claude Code**, **GitHub Copilot**, **Cline**, **Antigravity**, **Windsurf**, **Aider**, **Continue**
+Supports: **Claude Code**, **GitHub Copilot**, **Cline**, **Antigravity**, **Windsurf**, **Aider**, **Continue**, **Cursor**, **Gemini**
+
+---
+
+## 🆕 Version 3.0: Unified Package with Intelligent Initialization
+
+Version 3.0 introduces a **unified package** (`ai-context`) that combines all functionality:
+- **Intelligent Analysis** using OpenRouter API for smart codebase understanding
+- **Database-Backed Storage** for context with semantic search
+- **MCP Server** for AI tools to query context
+- **Automatic Discovery** of docs, code, and AI tool configurations (.claude, .gemini, etc.)
+
+### Requirements
+
+- Node.js 18+
+- OpenRouter API key for intelligent analysis (optional but recommended)
 
 ---
 
 ## Quick Start
 
 ```bash
+# Set your OpenRouter API key for intelligent analysis
+export OPENROUTER_API_KEY="your-key-here"
+
+# Initialize with intelligent analysis
+npx ai-context init
+
+# Or use the legacy package (still supported)
 npx create-universal-ai-context
 ```
 
@@ -25,7 +47,20 @@ npx create-universal-ai-context
 
 ## Complete CLI Reference
 
-### Initialization Commands
+### New Unified Package Commands (`ai-context`)
+
+| Command | One-Line Explanation |
+|---------|----------------------|
+| `npx ai-context init` | Initialize with intelligent OpenRouter-powered analysis |
+| `npx ai-context init --no-intelligent` | Initialize with basic static analysis only |
+| `npx ai-context generate` | Generate context files for all AI tools |
+| `npx ai-context mcp` | Start MCP server for AI tools to connect |
+| `npx ai-context sync` | Synchronize context across all AI tools |
+| `npx ai-context index` | Index codebase into the database |
+| `npx ai-context search <query>` | Semantic search across indexed content |
+| `npx ai-context stats` | Show database statistics |
+
+### Initialization Commands (Legacy)
 
 | Command | One-Line Explanation |
 |---------|----------------------|
@@ -106,9 +141,9 @@ npx create-universal-ai-context
 
 ---
 
-## MCP Server (Advanced)
+## MCP Server
 
-The MCP Server provides a **database-backed alternative** to file-based context. Instead of managing multiple `.md` files, it stores everything in a SQLite database with vector search capabilities.
+The MCP Server provides a **database-backed alternative** to file-based context. The new `ai-context` package includes this functionality built-in.
 
 ### Features
 
@@ -116,9 +151,26 @@ The MCP Server provides a **database-backed alternative** to file-based context.
 - **Semantic Search** - OpenRouter-powered embeddings for intelligent search
 - **Knowledge Graph** - 14 typed relationships between context items
 - **Cross-Tool Sync** - Export to all AI tools from one source
-- **File Watcher** - Auto-sync on file changes
+- **Intelligent Analysis** - OpenRouter-powered codebase understanding
+- **Automatic Discovery** - Scans docs, code, and tool configs automatically
 
-### Quick Start
+### Quick Start (New Package)
+
+```bash
+# Set OpenRouter API key
+export OPENROUTER_API_KEY="your-key"
+
+# Initialize with intelligent analysis
+npx ai-context init
+
+# Start MCP server
+npx ai-context mcp
+
+# Check stats
+npx ai-context stats
+```
+
+### Quick Start (Legacy Package)
 
 ```bash
 # Initialize database from your codebase
@@ -167,6 +219,8 @@ See [MCP Server README](packages/ai-context-mcp-server/README.md) for full docum
 | **Windsurf** | `.windsurf/rules.md` | XML-tagged rules for Windsurf Cascade AI |
 | **Aider** | `.aider.conf.yml` | Configuration for terminal-based pair programming |
 | **Continue** | `.continue/config.json` | Configuration with slash commands for VS Code autopilot |
+| **Cursor** | `.cursor/`, `.cursorrules` | Rules and settings for Cursor AI |
+| **Gemini** | `.gemini/` | Configuration for Google Gemini |
 
 ---
 
@@ -346,4 +400,4 @@ MIT
 
 ---
 
-**Version:** 2.5.0 | **Updated:** 2026-01-31
+**Version:** 3.0.0 | **Updated:** 2026-02-05
