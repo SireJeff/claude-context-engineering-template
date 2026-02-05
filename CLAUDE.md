@@ -20,16 +20,10 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Essential Commands
 
-### Development (New Unified Package)
+### Development
 ```bash
-cd packages/ai-context && npm install
+npm install
 npm run build
-npm test
-```
-
-### Development (Legacy Package)
-```bash
-cd packages/create-ai-context && npm install
 npm test
 ```
 
@@ -125,12 +119,12 @@ npx create-ai-context hooks:install           # Install git hooks
 
 **Environment variables:**
 ```bash
-grep -r "process.env" packages/create-ai-context/lib/
+grep -r "process.env" lib/
 ```
 
 **Hardcoded URLs/domains:**
 ```bash
-grep -r "https://" packages/ --include="*.js"
+grep -r "https://" src/ --include="*.ts" --include="*.js"
 ```
 
 ---
@@ -138,26 +132,26 @@ grep -r "https://" packages/ --include="*.js"
 ### Finding Business Logic
 
 **New Package Core Files (TypeScript):**
-- `packages/ai-context/src/analyzer/intelligent-analyzer.ts` - Intelligent codebase analysis
-- `packages/ai-context/src/db/client.ts` - SQLite database operations
-- `packages/ai-context/src/embeddings/openrouter.ts` - OpenRouter API integration
-- `packages/ai-context/src/mcp.ts` - MCP server implementation
-- `packages/ai-context/src/cli/index.ts` - CLI commands
+- `src/analyzer/intelligent-analyzer.ts` - Intelligent codebase analysis
+- `src/db/client.ts` - SQLite database operations
+- `src/embeddings/openrouter.ts` - OpenRouter API integration
+- `src/mcp.ts` - MCP server implementation
+- `src/cli/index.ts` - CLI commands
 
 **Legacy Package Core Files (JavaScript):**
-- `packages/create-ai-context/lib/static-analyzer.js` - Codebase analysis
-- `packages/create-ai-context/lib/template-populator.js` - Template generation
-- `packages/create-ai-context/lib/detector.js` - Tech stack detection
-- `packages/create-ai-context/lib/doc-discovery.js` - Existing docs detection
-- `packages/create-ai-context/lib/drift-checker.js` - Documentation drift
-- `packages/create-ai-context/lib/smart-merge.js` - Merge strategies
-- `packages/create-ai-context/lib/cross-tool-sync/sync-manager.js` - Cross-tool sync logic
+- `lib/static-analyzer.js` - Codebase analysis
+- `lib/template-populator.js` - Template generation
+- `lib/detector.js` - Tech stack detection
+- `lib/doc-discovery.js` - Existing docs detection
+- `lib/drift-checker.js` - Documentation drift
+- `lib/smart-merge.js` - Merge strategies
+- `lib/cross-tool-sync/sync-manager.js` - Cross-tool sync logic
 
 ---
 
 ### Finding Database Schema
 
-**Models:** `packages/ai-context/src/db/schema.ts`
+**Models:** `src/db/schema.ts`
 **Database:** SQLite at `.ai-context.db`
 
 ---
@@ -174,30 +168,20 @@ grep -r "https://" packages/ --include="*.js"
 ## System Architecture Mini-Map
 
 ```
-packages/
-├── ai-context/                 # NEW: Unified package (v3.0)
-│   ├── bin/                    # CLI entry point
-│   ├── src/                    # TypeScript source
-│   │   ├── cli/                # CLI commands
-│   │   ├── db/                 # SQLite database client
-│   │   ├── embeddings/         # OpenRouter integration
-│   │   ├── analyzer/           # Intelligent codebase analysis
-│   │   └── mcp.ts              # MCP server
-│   ├── agents/                 # Agent definitions
-│   ├── skills/                 # RPI workflow skills
-│   └── tests/                  # Vitest tests
-├── create-ai-context/          # Legacy CLI package
-│   ├── bin/                    # CLI entry point
-│   ├── lib/                    # Core modules
-│   │   ├── static-analyzer.js  # Codebase analysis
-│   │   ├── detector.js         # Tech detection
-│   │   ├── installer.js        # File generation
-│   │   ├── cross-tool-sync/    # Cross-tool synchronization
-│   │   └── adapters/           # AI tool adapters
-│   ├── templates/              # Output templates
-│   └── tests/                  # Jest tests
-├── ai-context-mcp-server/      # Legacy MCP server
-└── claude-context-plugin/      # Claude Code plugin
+ai-context/
+├── bin/                    # CLI entry point
+├── src/                    # TypeScript source
+│   ├── cli/                # CLI commands
+│   ├── db/                 # SQLite database client
+│   ├── embeddings/         # OpenRouter integration
+│   ├── analyzer/           # Intelligent codebase analysis
+│   └── mcp.ts              # MCP server
+├── agents/                 # Agent definitions
+├── skills/                 # RPI workflow skills
+├── templates/              # Output templates
+├── tests/                  # Vitest tests
+├── docs/                   # Documentation
+└── .claude/                # Claude Code development context
 ```
 
 ---
