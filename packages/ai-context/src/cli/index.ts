@@ -16,6 +16,8 @@ import { fileURLToPath } from 'url';
 
 import { createIntelligentAnalyzer } from '../analyzer/intelligent-analyzer.js';
 import { hasOpenRouterKey } from '../embeddings/openrouter.js';
+import { generateCommand } from './generate.js';
+import { syncCommand } from './sync.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -139,29 +141,7 @@ function createProgram(): Command {
     });
 
   // ==================== Generate Command ====================
-  program
-    .command('generate')
-    .description('Generate or regenerate context files for AI tools (coming soon)')
-    .option('--ai <tools>', 'Generate for specific AI tools (comma-separated)', 'all')
-    .action(async (options) => {
-      showBanner();
-      
-      const tools = parseAiTools(options.ai);
-      const spinner = ora();
-
-      try {
-        spinner.start(`Generating context for: ${tools.join(', ')}`);
-        
-        // TODO: Implement generation from database
-        
-        spinner.warn('Generate functionality is not yet implemented. No changes were made.');
-        
-      } catch (error) {
-        spinner.fail('Generation failed');
-        console.error(chalk.red(`\nError: ${error instanceof Error ? error.message : error}`));
-        process.exit(1);
-      }
-    });
+  program.addCommand(generateCommand);
 
   // ==================== MCP Command ====================
   program
@@ -189,53 +169,7 @@ function createProgram(): Command {
     });
 
   // ==================== Sync Command ====================
-  program
-    .command('sync')
-    .description('Synchronize context across all AI tools (coming soon)')
-    .option('--check', 'Only check sync status, do not modify')
-    .option('--from <tool>', 'Sync from a specific tool to others')
-    .option('--to <tool>', 'Sync to a specific tool')
-    .option('-v, --verbose', 'Show detailed output')
-    .action(async (options) => {
-      showBanner();
-      
-      const { check, from, to, verbose } = options;
-      const spinner = ora();
-
-      // Build human-readable description of the requested sync/check operation.
-      const scopeParts: string[] = [];
-      if (from) {
-        scopeParts.push(`from "${from}"`);
-      }
-      if (to) {
-        scopeParts.push(`to "${to}"`);
-      }
-      const scopeDescription =
-        scopeParts.length > 0 ? ` ${scopeParts.join(' ')}` : ' across all tools';
-
-      const operationDescription = check ? 'Checking sync status' : 'Synchronizing context';
-      const startMessage = `${operationDescription}${scopeDescription}...`;
-
-      try {
-        if (verbose) {
-          console.error(chalk.gray('\nSync options:'));
-          console.error(chalk.gray(`  check: ${Boolean(check)}`));
-          console.error(chalk.gray(`  from: ${from ?? 'N/A'}`));
-          console.error(chalk.gray(`  to: ${to ?? 'N/A'}`));
-        }
-
-        spinner.start(startMessage);
-
-        // TODO: Implement sync logic
-
-        spinner.warn('Sync functionality is not yet implemented. No changes were made.');
-        
-      } catch (error) {
-        spinner.fail('Sync failed');
-        console.error(chalk.red(`\nError: ${error instanceof Error ? error.message : error}`));
-        process.exit(1);
-      }
-    });
+  program.addCommand(syncCommand);
 
   // ==================== Index Command ====================
   program

@@ -31,6 +31,7 @@ social-post.md
 # .claude/knowledge/sessions/*.md
 
 # Node modules (for CLI tools)
+node_modules/
 .claude/tools/node_modules/
 packages/*/node_modules/
 

@@ -1,0 +1,39 @@
+{
+  "name": "ai-context-monorepo",
+  "version": "3.0.0",
+  "description": "Unified AI Context Engineering - Primary package: ai-context",
+  "private": true,
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:ai-context": "cd packages/ai-context && npm test",
+    "dev:ai-context": "cd packages/ai-context && npm run dev",
+    "lint": "npm run lint --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present",
+    "publish:ai-context": "cd packages/ai-context && npm publish --access public"
+  },
+  "workspaces": [
+    "packages/ai-context",
+    "packages/create-ai-context",
+    "packages/ai-context-mcp-server",
+    "packages/claude-context-plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SireJeff/claude-context-engineering-template.git"
+  },
+  "keywords": [
+    "ai-context",
+    "claude",
+    "copilot",
+    "cline",
+    "mcp",
+    "openrouter",
+    "context-engineering"
+  ],
+  "author": "SireJeff",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

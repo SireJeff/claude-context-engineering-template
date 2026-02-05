@@ -9,6 +9,10 @@ Common issues and solutions for Claude Context Engineering.
 Run diagnostics to automatically detect issues:
 
 ```bash
+# Using the unified package
+ai-context stats
+
+# Or using the legacy tools (deprecated)
 npx .ai-context/tools/bin/claude-context.js diagnose
 ```
 
@@ -512,6 +516,73 @@ npx create-ai-context mcp:init
 **C. Ensure database exists**
 ```bash
 ls -la .ai-context.db
+```
+
+---
+
+## New Error Codes (v3.0.0)
+
+### TSG-062: Generate Command Failed
+
+**Error:** `Failed to generate context files`
+
+**Diagnosis:**
+1. Check if database is initialized: `ai-context stats`
+2. Verify OpenRouter API key is set
+3. Check file permissions for output directory
+
+**Solution:**
+```bash
+# Re-initialize database
+ai-context init
+ai-context index
+
+# Retry generation
+ai-context generate
+```
+
+---
+
+### TSG-063: Sync Command Failed
+
+**Error:** `Synchronization failed`
+
+**Diagnosis:**
+1. Check sync status: `ai-context sync --check`
+2. Verify tool configurations exist
+3. Check for conflicts
+
+**Solution:**
+```bash
+# Check status
+ai-context sync --check
+
+# Force sync if needed
+ai-context sync --force
+
+# Sync from specific tool
+ai-context sync --from claude
+```
+
+---
+
+### TSG-064: MCP Server Not Starting
+
+**Error:** `MCP server failed to start`
+
+**Diagnosis:**
+1. Verify build: `cd packages/ai-context && npm run build`
+2. Check port availability
+3. Verify OpenRouter API key
+
+**Solution:**
+```bash
+# Rebuild
+cd packages/ai-context
+npm run build
+
+# Test MCP server
+npm run start:mcp
 ```
 
 ---

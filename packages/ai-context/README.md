@@ -110,20 +110,65 @@ Show database and indexing statistics.
 
 ## MCP Server
 
-The MCP server provides:
+The unified `ai-context` package includes a complete MCP server for AI assistant integration.
 
-### Tools
-- `search_context`: Semantic search
-- `get_item`: Get specific items
-- `add_knowledge`: Store insights
-- `analyze`: Run intelligent analysis
-- `get_tool_configs`: View AI tool configs
-- `query_graph`: Traverse knowledge graph
-- `get_stats`: Database statistics
+### Quick Start
 
-### Prompts
-- `context-engineer`: Initialize AI context
-- `core-architect`: Design architecture
+```bash
+# Start the MCP server
+ai-context mcp
+
+# Or with stdio transport (default for Claude Desktop)
+ai-context mcp --stdio
+```
+
+### Claude Desktop Configuration
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "ai-context": {
+      "command": "node",
+      "args": ["C:\\Users\\YourName\\AppData\\Roaming\\npm\\node_modules\\ai-context\\dist\\mcp.js"],
+      "env": {
+        "OPENROUTER_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+### Available Tools
+
+- `search_context` - Semantic search across indexed content
+- `get_item` - Retrieve specific context items by ID or path
+- `add_knowledge` - Store new insights and facts
+- `analyze` - Run intelligent analysis using OpenRouter
+- `get_tool_configs` - View AI tool configurations
+- `query_graph` - Traverse knowledge graph relationships
+- `get_stats` - Database statistics
+- `add_relation` - Add relationships between context items
+- `find_path` - Find paths between context items
+- `run_drift_check` - Check documentation sync
+
+### Available Prompts
+
+- `context-engineer` - Initialize and configure AI context system
+- `core-architect` - Design system architecture
+- `api-developer` - Design API endpoints
+- `database-ops` - Database schema design
+- `deployment-ops` - Deployment planning
+- `integration-hub` - External service integration
+
+### Features
+
+- **SQLite + sqlite-vec** - Single portable `.ai-context.db` file
+- **Semantic Search** - Vector embeddings enable intelligent search
+- **Knowledge Graph** - 14 typed relations between context items
+- **Auto-Sync** - Real-time file watching ensures context stays current
+- **Multi-Tool Support** - Export to 9 different AI tools
 
 ## Environment Variables
 

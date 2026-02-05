@@ -1,5 +1,15 @@
 # create-universal-ai-context
 
+> **⚠️ DEPRECATION NOTICE**
+>
+> This package is **deprecated** as of v3.0.0. Please migrate to the unified [`ai-context`](../ai-context/) package.
+>
+> **Migration Guide:** [docs/MIGRATE_TO_UNIFIED.md](../../docs/MIGRATE_TO_UNIFIED.md)
+>
+> **Support:** Security updates only until **2026-06-01**
+>
+> ---
+
 Universal AI context engineering for any codebase. Generates optimized context for **Claude Code**, **GitHub Copilot**, **Cline**, **Antigravity**, **Windsurf**, **Aider**, and **Continue**.
 
 ![npm](https://img.shields.io/npm/v/create-universal-ai-context)
