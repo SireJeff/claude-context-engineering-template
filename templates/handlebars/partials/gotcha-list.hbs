@@ -1,0 +1,11 @@
+{{!-- Reusable gotcha list partial --}}
+{{#each gotchas}}
+### {{id}}: {{title}}
+
+**Severity:** {{severity}}
+
+{{symptom}}
+
+**Fix:** {{truncate fix 100}}
+
+{{/each}}

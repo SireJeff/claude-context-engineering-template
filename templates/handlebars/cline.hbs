@@ -1,0 +1,62 @@
+{{!-- Cline Rules Template - Compact format for Cline VS Code extension --}}
+# {{project.name}} - Cline Rules
+# Generated: {{metadata.timestamp}}
+
+[identity]
+name={{project.name}}
+description={{project.description}}
+stack={{join project.tech_stack ", "}}
+lang={{project.primary_language}}
+
+[architecture]
+pattern={{architecture.pattern}}
+{{#each architecture.layers}}
+layer.{{@index}}={{name}}={{path}}
+{{/each}}
+
+[entry_points]
+{{#each key_files.entry_points}}
+{{@index}}={{this}}
+{{/each}}
+
+[commands]
+{{#each commands}}
+{{@key}}={{this}}
+{{/each}}
+
+{{#if workflows}}
+[workflows]
+{{#each workflows}}
+{{slugify name}}={{category}}/{{complexity}}
+{{/each}}
+{{/if}}
+
+{{#if gotchas}}
+[gotchas]
+{{#each gotchas}}
+{{id}}={{severity}} | {{title}}
+{{/each}}
+{{/if}}
+
+{{#if critical_constraints}}
+[constraints]
+{{#each critical_constraints}}
+{{@index}}={{this}}
+{{/each}}
+{{/if}}
+
+{{#if environment.required}}
+[env.required]
+{{#each environment.required}}
+{{@index}}={{this}}
+{{/each}}
+{{/if}}
+
+{{#if environment.optional}}
+[env.optional]
+{{#each environment.optional}}
+{{@index}}={{this}}
+{{/each}}
+{{/if}}
+
+{{{coordination.footer}}}

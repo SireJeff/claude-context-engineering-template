@@ -1,0 +1,146 @@
+{{!-- Aider Configuration Template --}}
+# {{project.name}} - Aider Configuration
+# Generated: {{metadata.timestamp}}
+# Documentation: https://aider.chat/docs/config.html
+
+#=============================================================================
+# MODEL CONFIGURATION
+#=============================================================================
+# Recommended: Claude Sonnet for best code understanding
+# Uncomment ONE of the following based on your API access:
+
+# model: claude-3-5-sonnet-20241022   # Best overall (Anthropic API)
+# model: gpt-4o                        # Good alternative (OpenAI API)
+# model: deepseek-coder                # Budget option
+
+#=============================================================================
+# GIT & AUTO-COMMIT SETTINGS
+#=============================================================================
+# Auto-commit is disabled by default for safety
+# This prevents accidental commits - you review changes first
+# Note: Both 'auto-commits' (plural) and 'auto-commit' (singular) are 
+# included for compatibility with different Aider versions
+auto-commits: false
+auto-commit: false
+
+# Commit message format when auto-commit is enabled
+commit-prompt: "feat({{project.name}}): {{message}}"
+
+# Git integration
+gitignore: true
+git: true
+
+#=============================================================================
+# CONTEXT OPTIMIZATION
+#=============================================================================
+# Map tokens control how much context Aider uses for file mapping
+# Higher = more context awareness, but uses more tokens
+map-tokens: 2048
+map-refresh: auto
+
+# Subtree mode - only work with files in current directory tree
+subtree-only: false
+
+#=============================================================================
+# FILE HANDLING
+#=============================================================================
+{{#if key_files.entry_points}}
+# Auto-add entry point files to context
+read:
+{{#each key_files.entry_points}}
+  - {{this}}
+{{/each}}
+{{/if}}
+
+# Exclude patterns (sensible defaults for most projects)
+# These files/directories are never added to context
+# Note: Uses .gitignore patterns
+{{#if project.type}}
+{{#if (eq project.type "python")}}
+# Python-specific excludes
+# exclude patterns handled by .gitignore
+{{else if (eq project.type "node")}}
+# Node.js-specific excludes
+# exclude patterns handled by .gitignore
+{{/if}}
+{{/if}}
+
+#=============================================================================
+# LANGUAGE & FRAMEWORK
+#=============================================================================
+{{#if project.primary_language}}
+# Detected primary language
+# language: {{project.primary_language}}
+{{/if}}
+
+#=============================================================================
+# EDITOR INTEGRATION
+#=============================================================================
+# Your preferred editor for file viewing
+editor: vscode
+
+#=============================================================================
+# TESTING INTEGRATION
+#=============================================================================
+{{#if commands.test}}
+# Run tests automatically after changes
+test-cmd: {{commands.test}}
+auto-test: false
+{{else}}
+# Configure your test command
+# test-cmd: npm test
+# auto-test: false
+{{/if}}
+
+#=============================================================================
+# LINTING INTEGRATION
+#=============================================================================
+{{#if commands.lint}}
+# Run linter automatically after changes
+lint-cmd: {{commands.lint}}
+auto-lint: false
+{{else}}
+# Configure your lint command
+# lint-cmd: npm run lint
+# auto-lint: false
+{{/if}}
+
+#=============================================================================
+# DISPLAY & OUTPUT
+#=============================================================================
+# Stream output for real-time feedback
+stream: true
+
+# Pretty formatting
+pretty: true
+
+# Dark mode for terminals with dark backgrounds
+# dark-mode: auto
+
+#=============================================================================
+# CHAT HISTORY
+#=============================================================================
+# Save chat history for reference
+chat-history-file: .aider.chat.history.md
+
+#=============================================================================
+# SAFETY SETTINGS
+#=============================================================================
+# Suggest shell commands instead of running automatically
+suggest-shell-commands: true
+
+# Require confirmation for pip installs
+# unsafe-install: false
+
+#=============================================================================
+# ADVANCED SETTINGS
+#=============================================================================
+# Git author attribution
+# attribute-author: true
+# attribute-committer: true
+
+# Voice input (experimental)
+# voice-input: false
+
+---
+{{{coordination.footer}}}

@@ -1,0 +1,130 @@
+{{!-- GitHub Copilot Instructions Template --}}
+{{> header}}
+
+# {{project.name}} - Copilot Instructions
+
+## Project Identity
+
+- **Name:** {{project.name}}
+- **Description:** {{project.description}}
+- **Tech Stack:** {{join project.tech_stack ", "}}
+- **Primary Language:** {{project.primary_language}}
+
+---
+
+## Architecture
+
+**Pattern:** {{architecture.pattern}}
+
+{{#if architecture.layers}}
+**Layers:**
+{{#each architecture.layers}}
+- `{{path}}` - {{purpose}}
+{{/each}}
+{{/if}}
+
+---
+
+## Key Files
+
+{{#if key_files.entry_points}}
+### Entry Points
+{{#each key_files.entry_points}}
+- `{{this}}`
+{{/each}}
+{{/if}}
+
+{{#if key_files.api_routes}}
+### API Routes
+{{#each key_files.api_routes}}
+- `{{this}}`
+{{/each}}
+{{/if}}
+
+{{#if key_files.config}}
+### Configuration
+{{#each key_files.config}}
+- `{{this}}`
+{{/each}}
+{{/if}}
+
+---
+
+## Commands
+
+| Command | Script |
+|---------|--------|
+{{#each commands}}
+| {{@key}} | `{{this}}` |
+{{/each}}
+
+---
+
+{{#if workflows}}
+## Relevant Workflows
+
+{{#each workflows}}
+### {{name}}
+
+**Category:** {{category}} | **Complexity:** {{complexity}}
+
+{{description}}
+
+{{#if entry_points}}
+**Entry Points:**
+{{#each entry_points}}
+- `{{endpoint}}` - {{file}}:{{line}}
+{{/each}}
+{{/if}}
+
+{{/each}}
+{{/if}}
+
+---
+
+{{#if gotchas}}
+## Critical Gotchas
+
+{{#each gotchas}}
+### {{id}}: {{title}}
+
+**Severity:** {{severity}}
+
+{{symptom}}
+
+**Fix:** {{fix}}
+
+{{/each}}
+{{/if}}
+
+---
+
+{{#if critical_constraints}}
+## Critical Constraints
+
+{{#each critical_constraints}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+---
+
+{{#if environment.required}}
+## Environment Variables
+
+**Required:**
+{{#each environment.required}}
+- `{{this}}`
+{{/each}}
+
+{{#if environment.optional}}
+**Optional:**
+{{#each environment.optional}}
+- `{{this}}`
+{{/each}}
+{{/if}}
+{{/if}}
+
+---
+
+{{{coordination.footer}}}

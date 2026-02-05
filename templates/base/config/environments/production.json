@@ -1,0 +1,17 @@
+{
+  "$comment": "Production environment overrides",
+  "logging": {
+    "level": "warn"
+  },
+  "validation": {
+    "on_commit": true,
+    "line_accuracy_threshold": 70,
+    "link_check_external": true
+  },
+  "rpi_workflow": {
+    "require_human_approval": true
+  },
+  "documentation": {
+    "auto_commit_docs": false
+  }
+}

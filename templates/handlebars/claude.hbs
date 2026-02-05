@@ -1,0 +1,183 @@
+{{!-- Claude/Universal AI Context Template --}}
+{{> header}}
+
+# AI_CONTEXT.md - {{project.name}}
+
+This file provides guidance to AI coding assistants when working with this repository.
+
+---
+
+## Project Identity
+
+**Platform:** {{project.description}}
+**Tech Stack:** {{join project.tech_stack ", "}}
+**Primary Language:** {{project.primary_language}}
+**Status:** Development
+
+---
+
+## Essential Commands
+
+### Development
+```bash
+{{commands.install}}
+{{commands.dev}}
+```
+
+### Testing
+```bash
+{{commands.test}}
+```
+
+### Build
+```bash
+{{commands.build}}
+```
+
+---
+
+## Architecture
+
+**Pattern:** {{architecture.pattern}}
+
+{{#if architecture.layers}}
+### Layers
+
+| Layer | Path | Purpose |
+|-------|------|---------|
+{{#each architecture.layers}}
+| {{name}} | `{{path}}` | {{purpose}} |
+{{/each}}
+{{/if}}
+
+---
+
+## Key Files
+
+{{#if key_files.entry_points}}
+### Entry Points
+{{#each key_files.entry_points}}
+- `{{this}}`
+{{/each}}
+{{/if}}
+
+{{#if key_files.api_routes}}
+### API Routes
+{{#each key_files.api_routes}}
+- `{{this}}`
+{{/each}}
+{{/if}}
+
+{{#if key_files.config}}
+### Configuration
+{{#each key_files.config}}
+- `{{this}}`
+{{/each}}
+{{/if}}
+
+---
+
+## Workflows
+
+{{#if workflows}}
+{{#each workflows}}
+### {{name}}
+
+**Category:** {{category}} | **Complexity:** {{complexity}}
+
+{{description}}
+
+{{#if entry_points}}
+**Entry Points:**
+{{#each entry_points}}
+- `{{endpoint}}` - {{file}}:{{line}} ({{method}})
+{{/each}}
+{{/if}}
+
+{{#if files}}
+**Files:**
+{{#each (first files 5)}}
+- `{{this}}`
+{{/each}}
+{{/if}}
+
+---
+
+{{/each}}
+{{else}}
+*No workflows discovered. Run AI analysis to populate.*
+{{/if}}
+
+---
+
+## Navigation Rules
+
+### High-Level Task
+1. Start: [.ai-context/context/WORKFLOW_INDEX.md](./.ai-context/context/WORKFLOW_INDEX.md)
+2. Load relevant workflow
+3. Implement with context
+
+### Feature Development
+1. /rpi-research - Explore codebase
+2. /rpi-plan - Create blueprint
+3. /rpi-implement - Execute with tests
+
+---
+
+## Documentation System
+
+**Navigation:** 3-level chain (AI_CONTEXT.md → Category → Domain → Detail)
+**Validation:** Run /verify-docs-current after modifications
+**RPI Workflow:** /rpi-research → /rpi-plan → /rpi-implement
+
+See: [.ai-context/RPI_WORKFLOW_PLAN.md](./.ai-context/RPI_WORKFLOW_PLAN.md)
+
+---
+
+{{#if gotchas}}
+## Critical Gotchas
+
+{{> gotcha-list}}
+{{/if}}
+
+---
+
+{{#if critical_constraints}}
+## Critical Constraints
+
+{{#each critical_constraints}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+---
+
+{{#if environment.required}}
+## Environment Variables
+
+**Required:**
+{{#each environment.required}}
+- `{{this}}`
+{{/each}}
+
+{{#if environment.optional}}
+**Optional:**
+{{#each environment.optional}}
+- `{{this}}`
+{{/each}}
+{{/if}}
+{{/if}}
+
+---
+
+## AI Tools Configuration
+
+This context is optimized for:
+- **Claude Code** - Full context reading (this file)
+- **GitHub Copilot** - See `.github/copilot-instructions.md`
+- **Cline** - See `.clinerules`
+- **Antigravity** - See `.agent/` directory
+
+---
+
+{{{coordination.footer}}}

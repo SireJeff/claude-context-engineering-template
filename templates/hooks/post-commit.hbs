@@ -1,0 +1,28 @@
+#!/bin/bash
+# Post-commit hook for AI context sync
+# This hook updates sync state after successful commits
+# Does NOT regenerate files to avoid creating uncommitted changes
+
+# Don't block commit if this fails
+set +e
+
+# Check if ai-context binary is available
+if ! command -v create-ai-context &> /dev/null; then
+    # Try npx
+    if command -v npx &> /dev/null; then
+        AI_CONTEXT_CMD="npx create-universal-ai-context"
+    else
+        exit 0
+    fi
+else
+    AI_CONTEXT_CMD="create-ai-context"
+fi
+
+# Update sync state only (no file regeneration to avoid creating uncommitted changes)
+# Use sync:state instead of sync:all to prevent the revision loop bug
+(
+    sleep 1  # Wait a bit to not interfere with commit
+    $AI_CONTEXT_CMD sync:state --quiet > /dev/null 2>&1
+) &
+
+exit 0
