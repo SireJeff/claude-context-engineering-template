@@ -215,14 +215,14 @@ export class IntelligentAnalyzer {
   /**
    * Read file content safely
    */
-  private readFileContent(filePath: string, maxSize: number = 50000): string | null {
+  private readFileContent(filePath: string, maxBytes: number = 50000): string | null {
     try {
       const stats = fs.statSync(filePath);
-      if (stats.size > maxSize) {
+      if (stats.size > maxBytes) {
         // Read only first part of large files
         const fd = fs.openSync(filePath, 'r');
-        const buffer = Buffer.alloc(maxSize);
-        fs.readSync(fd, buffer, 0, maxSize, 0);
+        const buffer = Buffer.alloc(maxBytes);
+        fs.readSync(fd, buffer, 0, maxBytes, 0);
         fs.closeSync(fd);
         return buffer.toString('utf-8') + '\n\n... [truncated]';
       }
