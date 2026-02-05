@@ -10,11 +10,11 @@ assignees: ''
 
 ### Environment
 
-**Universal AI Context Engineering Version:**
-<!-- e.g., 2.3.0 -->
+**AI Context Version:**
+<!-- e.g., 3.0.0 -->
 
 **AI Tool(s):**
-<!-- Claude Code, GitHub Copilot, Cline, Antigravity, etc. -->
+<!-- Claude Code, GitHub Copilot, Cline, Cursor, etc. -->
 
 **AI Tool Version (if known):**
 <!-- e.g., Claude Code latest, Copilot v1.200.0 -->
@@ -25,19 +25,16 @@ assignees: ''
 **Operating System:**
 <!-- e.g., Windows 11, macOS 14, Ubuntu 22.04 -->
 
-**Symlink Support:**
-<!-- Yes/No -->
-
 ### Issue Type
 
 <!-- Check one -->
 
 - [ ] Version upgrade broke existing functionality
-- [ ] AI tool incompatible with template version
-- [ ] Schema validation fails after upgrade
+- [ ] AI tool incompatible with ai-context version
+- [ ] MCP server connection issue
 - [ ] CLI command behavior changed unexpectedly
-- [ ] Symlink creation fails (OS-specific)
 - [ ] Cross-tool sync issue
+- [ ] Database/compatibility issue
 - [ ] Other:
 
 ### Description
@@ -83,9 +80,8 @@ assignees: ''
 - [ ] Checked [CHANGELOG](../../CHANGELOG.md) for breaking changes
 - [ ] Searched existing issues for duplicates
 - [ ] Included all version information
-- [ ] Checked if symlink-related (for Windows issues)
-- [ ] Verified AI tool version
+- [ ] Checked troubleshooting guide
 
 ---
 
-**Version:** 2.4.0 | **Universal AI Context Engineering Template**
+**Package:** ai-context

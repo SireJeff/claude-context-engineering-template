@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug in Universal AI Context Engineering
+about: Report a bug in AI Context
 title: '[BUG] '
 labels: bug
 assignees: ''
@@ -10,8 +10,8 @@ assignees: ''
 
 ### Environment
 
-**Universal AI Context Engineering Version:**
-<!-- e.g., 2.3.0 -->
+**AI Context Version:**
+<!-- e.g., 3.0.0 -->
 
 **Node.js Version:**
 <!-- e.g., 18.17.0 -->
@@ -20,10 +20,7 @@ assignees: ''
 <!-- e.g., Windows 11, macOS 14, Ubuntu 22.04 -->
 
 **AI Tool(s) Used:**
-<!-- e.g., Claude Code, GitHub Copilot, Cline, Antigravity -->
-
-**Symlink Support:**
-<!-- Does your OS support symlinks? Yes/No -->
+<!-- e.g., Claude Code, GitHub Copilot, Cline, Cursor -->
 
 ### Description
 
@@ -73,9 +70,8 @@ assignees: ''
 - [ ] Searched existing issues for duplicates
 - [ ] Included version information
 - [ ] Provided steps to reproduce
-- [ ] Checked if symlink-related issue (on Windows)
-- [ ] Ran `npx create-universal-ai-context diagnose` and included output (if applicable)
+- [ ] Checked troubleshooting guide (https://github.com/SireJeff/ai-context/blob/main/docs/TROUBLESHOOTING.md)
 
 ---
 
-**Version:** 2.4.0 | **Universal AI Context Engineering Template**
+**Package:** ai-context

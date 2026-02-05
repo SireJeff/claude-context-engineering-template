@@ -33,20 +33,15 @@ assignees: ''
 
 <!-- Check one or more -->
 
-- [ ] CLI tooling
-- [ ] Symlink architecture
+- [ ] CLI commands
+- [ ] MCP server tools
 - [ ] Cross-tool synchronization
-- [ ] New AI tool adapter (Cursor, Windsurf, Aider, Continue, etc.)
-- [ ] Documentation/Templates
-- [ ] Carbon efficiency
-- [ ] Token optimization
-- [ ] Agents
-- [ ] Commands
+- [ ] New AI tool support
+- [ ] Documentation
+- [ ] Semantic search
+- [ ] Database features
+- [ ] Agents/Skills
 - [ ] Configuration
-- [ ] Validation
-- [ ] Extension system
-- [ ] Team collaboration
-- [ ] CI/CD integration
 - [ ] Other:
 
 ### Impact
@@ -54,17 +49,10 @@ assignees: ''
 <!-- How would this feature help you and others? -->
 
 **Who would benefit:**
-<!-- e.g., Solo developers, teams, extension authors -->
+<!-- e.g., Solo developers, teams, enterprises -->
 
 **Frequency of use:**
 <!-- e.g., Daily, weekly, occasionally -->
-
-**Carbon Efficiency Impact:**
-<!-- Would this reduce token usage? Improve AI accuracy? -->
-- [ ] Reduces token waste (estimated: __%)
-- [ ] Improves context accuracy (estimated: __%)
-- [ ] Enables carbon-aware context optimization
-- [ ] Other efficiency gains:
 
 ### Implementation Ideas
 
@@ -86,8 +74,7 @@ assignees: ''
 - [ ] Provided clear problem statement
 - [ ] Described at least one use case
 - [ ] Considered impact on existing features
-- [ ] Considered carbon efficiency impact (if applicable)
 
 ---
 
-**Version:** 2.4.0 | **Universal AI Context Engineering Template**
+**Package:** ai-context
