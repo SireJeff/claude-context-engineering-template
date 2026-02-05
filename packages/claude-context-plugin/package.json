@@ -1,6 +1,6 @@
 {
   "name": "claude-context-plugin",
-  "version": "2.1.4",
+  "version": "2.2.0-final",
   "description": "Claude Code plugin for context engineering - RPI workflow and documentation optimization",
   "keywords": [
     "claude-code",
