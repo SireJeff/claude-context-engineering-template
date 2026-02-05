@@ -14,7 +14,7 @@ This guide helps you upgrade from Claude Context Engineering v1.x to v2.0, which
 
 ### New Features
 
-- **Multi-AI Tool Output**: Generate context for Claude, Copilot, Cline, Antigravity
+- **Multi-AI Tool Output**: Generate context for Claude, Copilot, Cline, Antigravity, Windsurf, Aider, Continue
 - **Automatic Workflow Generation**: 5-15 workflow docs auto-generated
 - **Enhanced Analysis**: LOC counting, file purpose classification
 - **New CLI Flags**: `--ai <tool>`, `--static`, `--force-ai`
@@ -66,6 +66,9 @@ mv CLAUDE.md AI_CONTEXT.md
 npx create-universal-ai-context generate --ai copilot
 npx create-universal-ai-context generate --ai cline
 npx create-universal-ai-context generate --ai antigravity
+npx create-universal-ai-context generate --ai windsurf
+npx create-universal-ai-context generate --ai aider
+npx create-universal-ai-context generate --ai continue
 ```
 
 ## Path Reference Updates

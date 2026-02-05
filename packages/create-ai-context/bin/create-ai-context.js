@@ -34,6 +34,7 @@ const {
 const {
   checkSyncStatus,
   syncAllFromCodebase,
+  updateSyncStateOnly,
   propagateContextChange,
   resolveConflict,
   formatSyncStatus,
@@ -604,6 +605,34 @@ program
   });
 
 program
+  .command('sync:state')
+  .description('Update sync state without regenerating files (used by post-commit hooks)')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--quiet', 'Suppress output')
+  .action(async (options) => {
+    if (!options.quiet) {
+      console.log(banner);
+    }
+
+    const projectRoot = path.resolve(options.path);
+
+    try {
+      const result = updateSyncStateOnly(projectRoot);
+
+      if (!options.quiet) {
+        console.log(chalk.green('✓ Sync state updated'));
+        console.log(chalk.gray(`  Timestamp: ${result.timestamp}`));
+        console.log(chalk.gray(`  Tools tracked: ${Object.keys(result.hashes).length}`));
+      }
+    } catch (error) {
+      if (!options.quiet) {
+        console.error(chalk.red('\n✖ Error:'), error.message);
+      }
+      process.exit(1);
+    }
+  });
+
+program
   .command('sync:from <tool>')
   .description('Propagate context from a specific tool to all others')
   .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
@@ -768,6 +797,709 @@ program
       installHooks();
     } catch (error) {
       console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// MCP Server Commands
+program
+  .command('mcp:start')
+  .description('Start the AI Context MCP server for Claude Desktop')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--db <path>', 'Database filename (defaults to .ai-context.db)')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    
+    console.log(chalk.cyan('\n  Starting MCP server...'));
+    console.log(chalk.gray(`  Project: ${projectRoot}`));
+    console.log(chalk.gray(`  Database: ${options.db || '.ai-context.db'}`));
+    console.log();
+
+    try {
+      // Check if database exists
+      const dbPath = path.join(projectRoot, options.db || '.ai-context.db');
+      const dbExists = fs.existsSync(dbPath);
+      
+      if (!dbExists) {
+        console.log(chalk.yellow('  ⚠ Database not found. Run `npx create-ai-context mcp:init` first.'));
+        console.log(chalk.gray('    Continuing with empty database...'));
+        console.log();
+      }
+
+      // Set environment variables for the MCP server
+      process.env.AI_CONTEXT_PROJECT_ROOT = projectRoot;
+      if (options.db) {
+        process.env.AI_CONTEXT_DB_PATH = options.db;
+      }
+
+      // Import and start the MCP server
+      // The MCP server package should be installed alongside this CLI
+      try {
+        const mcpServerPath = require.resolve('@ai-context/mcp-server', { paths: [projectRoot, __dirname] });
+        const { main } = require(mcpServerPath);
+        await main();
+      } catch (resolveError) {
+        // Try relative path as fallback (for development)
+        const devPath = path.join(__dirname, '../../ai-context-mcp-server/dist/server.js');
+        if (fs.existsSync(devPath)) {
+          const { main } = require(devPath);
+          await main();
+        } else {
+          console.error(chalk.red('\n✖ MCP server package not found.'));
+          console.error(chalk.gray('  Install with: npm install @ai-context/mcp-server'));
+          console.error(chalk.gray('  Or run from the ai-context-mcp-server package directly.'));
+          process.exit(1);
+        }
+      }
+    } catch (error) {
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('mcp:init')
+  .description('Initialize MCP database and index existing context')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--db <path>', 'Database filename (defaults to .ai-context.db)')
+  .option('--skip-code', 'Skip code indexing')
+  .option('--skip-git', 'Skip git history indexing')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    const spinner = createSpinner();
+    
+    console.log(chalk.cyan('\n  Initializing MCP database...'));
+    console.log(chalk.gray(`  Project: ${projectRoot}`));
+    console.log();
+
+    try {
+      // Set environment variables
+      process.env.AI_CONTEXT_PROJECT_ROOT = projectRoot;
+      if (options.db) {
+        process.env.AI_CONTEXT_DB_PATH = options.db;
+      }
+
+      // Import MCP server components
+      let mcpPackage;
+      try {
+        const mcpServerPath = require.resolve('@ai-context/mcp-server', { paths: [projectRoot, __dirname] });
+        mcpPackage = require(mcpServerPath);
+      } catch {
+        // Try relative path as fallback (for development)
+        const devPath = path.join(__dirname, '../../ai-context-mcp-server/dist/index.js');
+        if (fs.existsSync(devPath)) {
+          mcpPackage = require(devPath);
+        } else {
+          console.error(chalk.red('\n✖ MCP server package not found.'));
+          console.error(chalk.gray('  Install with: npm install @ai-context/mcp-server'));
+          process.exit(1);
+        }
+      }
+
+      const { DatabaseClient, EmbeddingsManager, ContextIndexer, CodeIndexer, GitIndexer } = mcpPackage;
+      
+      // Initialize database
+      spinner.start('Creating database...');
+      const db = new DatabaseClient(projectRoot, options.db || '.ai-context.db');
+      spinner.succeed(`Database created: ${options.db || '.ai-context.db'}`);
+
+      // Create mock embeddings manager (no API key required for init)
+      const embeddings = {
+        search: async () => [],
+        queueForEmbedding: () => {},
+        processQueue: async () => 0,
+        getCount: () => 0,
+        deleteEmbedding: () => false
+      };
+
+      // Index context documents
+      spinner.start('Indexing context documents...');
+      const contextIndexer = new ContextIndexer(db, embeddings, projectRoot);
+      const contextResult = await contextIndexer.indexAll();
+      spinner.succeed(`Indexed ${contextResult.indexed} context documents`);
+
+      // Index code (unless skipped)
+      if (!options.skipCode) {
+        spinner.start('Indexing source code...');
+        const codeIndexer = new CodeIndexer(db, embeddings, projectRoot);
+        const codeResult = await codeIndexer.indexAll();
+        spinner.succeed(`Indexed ${codeResult.files} source files (${codeResult.chunks} chunks)`);
+      }
+
+      // Index git history (unless skipped)
+      if (!options.skipGit) {
+        spinner.start('Indexing git history...');
+        const gitIndexer = new GitIndexer(db, embeddings, projectRoot);
+        const gitResult = await gitIndexer.indexHistory({ maxCommits: 100 });
+        spinner.succeed(`Indexed ${gitResult.commits} commits`);
+      }
+
+      // Print summary
+      const stats = db.getStats();
+      console.log(chalk.bold('\n  Database Summary:'));
+      console.log(chalk.gray(`    • Context items: ${stats.items}`));
+      console.log(chalk.gray(`    • Relations: ${stats.relations}`));
+      console.log(chalk.gray(`    • Commits: ${stats.commits}`));
+
+      console.log(chalk.bold('\n  Next steps:'));
+      console.log(chalk.gray('    1. Set OPENROUTER_API_KEY for embeddings (optional)'));
+      console.log(chalk.gray('    2. Run `npx create-ai-context mcp:start` to start the server'));
+      console.log(chalk.gray('    3. Configure Claude Desktop to use the MCP server'));
+      console.log();
+
+      // Close database
+      db.close();
+    } catch (error) {
+      spinner.fail('Initialization failed');
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('mcp:status')
+  .description('Show MCP database status and statistics')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--db <path>', 'Database filename (defaults to .ai-context.db)')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    const dbFile = options.db || '.ai-context.db';
+    const dbPath = path.join(projectRoot, dbFile);
+
+    console.log(chalk.bold('\nMCP Database Status:\n'));
+
+    // Check if database exists
+    if (!fs.existsSync(dbPath)) {
+      console.log(chalk.yellow('  ○ Database not initialized'));
+      console.log(chalk.gray(`    Run \`npx create-ai-context mcp:init\` to create database\n`));
+      process.exit(0);
+    }
+
+    try {
+      // Import MCP server components
+      let mcpPackage;
+      try {
+        const mcpServerPath = require.resolve('@ai-context/mcp-server', { paths: [projectRoot, __dirname] });
+        mcpPackage = require(mcpServerPath);
+      } catch {
+        // Try relative path as fallback (for development)
+        const devPath = path.join(__dirname, '../../ai-context-mcp-server/dist/index.js');
+        if (fs.existsSync(devPath)) {
+          mcpPackage = require(devPath);
+        } else {
+          console.error(chalk.red('\n✖ MCP server package not found.'));
+          process.exit(1);
+        }
+      }
+
+      const { DatabaseClient, SCHEMA_VERSION } = mcpPackage;
+      
+      // Open database
+      const db = new DatabaseClient(projectRoot, dbFile);
+      const stats = db.getStats();
+
+      console.log(chalk.green('  ✓ Database initialized'));
+      console.log(chalk.gray(`    Path: ${dbPath}`));
+      console.log(chalk.gray(`    Schema: v${SCHEMA_VERSION}`));
+      console.log();
+
+      console.log(chalk.bold('  Statistics:'));
+      console.log(chalk.gray(`    • Context items: ${stats.items}`));
+      console.log(chalk.gray(`    • Knowledge relations: ${stats.relations}`));
+      console.log(chalk.gray(`    • Indexed commits: ${stats.commits}`));
+      console.log(chalk.gray(`    • Embeddings: ${stats.embeddings}`));
+      console.log();
+
+      // Show items by type
+      const types = ['workflow', 'agent', 'command', 'code', 'commit', 'knowledge', 'config'];
+      console.log(chalk.bold('  Items by type:'));
+      for (const type of types) {
+        const items = db.getItemsByType(type);
+        if (items.length > 0) {
+          console.log(chalk.gray(`    • ${type}: ${items.length}`));
+        }
+      }
+      console.log();
+
+      // Check embeddings status
+      if (!process.env.OPENROUTER_API_KEY) {
+        console.log(chalk.yellow('  ⚠ Embeddings disabled (OPENROUTER_API_KEY not set)'));
+        console.log(chalk.gray('    Set OPENROUTER_API_KEY to enable semantic search\n'));
+      } else {
+        console.log(chalk.green('  ✓ Embeddings enabled'));
+      }
+
+      db.close();
+    } catch (error) {
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// MCP Watch Command - Auto-sync file changes
+program
+  .command('mcp:watch')
+  .description('Watch for file changes and auto-sync to MCP database')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--db <path>', 'Database filename (defaults to .ai-context.db)')
+  .option('--debounce <ms>', 'Debounce delay in milliseconds', '500')
+  .option('-v, --verbose', 'Show detailed output')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    const spinner = createSpinner();
+    
+    console.log(chalk.cyan('\n  Starting file watcher...'));
+    console.log(chalk.gray(`  Project: ${projectRoot}`));
+    console.log(chalk.gray(`  Debounce: ${options.debounce}ms`));
+    console.log();
+
+    try {
+      // Check if database exists
+      const dbPath = path.join(projectRoot, options.db || '.ai-context.db');
+      if (!fs.existsSync(dbPath)) {
+        console.log(chalk.yellow('  ⚠ Database not found. Run `npx create-ai-context mcp:init` first.'));
+        process.exit(1);
+      }
+
+      // Import MCP server components
+      let mcpPackage;
+      try {
+        const mcpServerPath = require.resolve('@ai-context/mcp-server', { paths: [projectRoot, __dirname] });
+        mcpPackage = require(mcpServerPath);
+      } catch {
+        const devPath = path.join(__dirname, '../../ai-context-mcp-server/dist/index.js');
+        if (fs.existsSync(devPath)) {
+          mcpPackage = require(devPath);
+        } else {
+          console.error(chalk.red('\n✖ MCP server package not found.'));
+          process.exit(1);
+        }
+      }
+
+      const { DatabaseClient, SyncService, EmbeddingsManager } = mcpPackage;
+      
+      // Initialize database
+      const db = new DatabaseClient(projectRoot, options.db || '.ai-context.db');
+
+      // Create mock embeddings manager
+      const embeddings = {
+        search: async () => [],
+        queueForEmbedding: () => {},
+        processQueue: async () => 0,
+        getCount: () => 0,
+        deleteEmbedding: () => false
+      };
+
+      // Create sync service
+      const syncService = new SyncService({
+        projectRoot,
+        db,
+        embeddings,
+        watcherConfig: {
+          debounceMs: parseInt(options.debounce, 10),
+          verbose: options.verbose
+        },
+        verbose: options.verbose
+      });
+
+      // Set up event handlers
+      syncService.on('started', () => {
+        console.log(chalk.green('  ✓ File watcher started'));
+        console.log(chalk.gray('    Watching for changes... (Press Ctrl+C to stop)\n'));
+      });
+
+      syncService.on('sync-complete', (result) => {
+        const timestamp = new Date().toLocaleTimeString();
+        console.log(chalk.gray(`  [${timestamp}] Synced: ${result.indexed} indexed, ${result.removed} removed (${result.duration}ms)`));
+      });
+
+      syncService.on('sync-error', ({ error }) => {
+        console.error(chalk.red('  ✖ Sync error:'), error.message);
+      });
+
+      // Start watching
+      await syncService.start();
+
+      // Handle graceful shutdown
+      process.on('SIGINT', () => {
+        console.log(chalk.yellow('\n  Stopping file watcher...'));
+        syncService.stop();
+        db.close();
+        process.exit(0);
+      });
+
+    } catch (error) {
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// MCP Migrate Command - Migrate file-based context to database
+program
+  .command('mcp:migrate')
+  .description('Migrate existing file-based AI context to MCP database')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--db <path>', 'Database filename (defaults to .ai-context.db)')
+  .option('--dry-run', 'Show what would be migrated without making changes')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    const spinner = createSpinner();
+    
+    console.log(chalk.cyan('\n  Migrating file-based context to MCP database...'));
+    console.log(chalk.gray(`  Project: ${projectRoot}`));
+    if (options.dryRun) {
+      console.log(chalk.yellow('  Mode: Dry run (no changes will be made)'));
+    }
+    console.log();
+
+    try {
+      // Find existing context files
+      const contextPatterns = [
+        '.claude/**/*.md',
+        '.ai-context/**/*.md',
+        'CLAUDE.md',
+        'AI_CONTEXT.md',
+        '.clinerules',
+        '.github/copilot-instructions.md'
+      ];
+
+      const foundFiles = [];
+      for (const pattern of contextPatterns) {
+        const { glob } = require('glob');
+        const files = await glob(pattern, {
+          cwd: projectRoot,
+          ignore: ['**/node_modules/**'],
+          absolute: true
+        });
+        foundFiles.push(...files);
+      }
+
+      if (foundFiles.length === 0) {
+        console.log(chalk.yellow('  ○ No context files found to migrate'));
+        process.exit(0);
+      }
+
+      console.log(chalk.bold(`  Found ${foundFiles.length} context files:\n`));
+      for (const file of foundFiles.slice(0, 10)) {
+        console.log(chalk.gray(`    • ${path.relative(projectRoot, file)}`));
+      }
+      if (foundFiles.length > 10) {
+        console.log(chalk.gray(`    ... and ${foundFiles.length - 10} more`));
+      }
+      console.log();
+
+      if (options.dryRun) {
+        console.log(chalk.yellow('  Dry run complete. Use without --dry-run to perform migration.'));
+        process.exit(0);
+      }
+
+      // Import MCP server components
+      let mcpPackage;
+      try {
+        const mcpServerPath = require.resolve('@ai-context/mcp-server', { paths: [projectRoot, __dirname] });
+        mcpPackage = require(mcpServerPath);
+      } catch {
+        const devPath = path.join(__dirname, '../../ai-context-mcp-server/dist/index.js');
+        if (fs.existsSync(devPath)) {
+          mcpPackage = require(devPath);
+        } else {
+          console.error(chalk.red('\n✖ MCP server package not found.'));
+          process.exit(1);
+        }
+      }
+
+      const { DatabaseClient, ContextIndexer } = mcpPackage;
+      
+      // Initialize database
+      spinner.start('Creating database...');
+      const db = new DatabaseClient(projectRoot, options.db || '.ai-context.db');
+      spinner.succeed('Database ready');
+
+      // Create mock embeddings manager
+      const embeddings = {
+        search: async () => [],
+        queueForEmbedding: () => {},
+        processQueue: async () => 0,
+        getCount: () => 0,
+        deleteEmbedding: () => false
+      };
+
+      // Index context files
+      spinner.start('Migrating context files...');
+      const contextIndexer = new ContextIndexer(db, embeddings, projectRoot);
+      const result = await contextIndexer.indexAll();
+      spinner.succeed(`Migrated ${result.indexed} context documents`);
+
+      if (result.errors.length > 0) {
+        console.log(chalk.yellow(`\n  ⚠ ${result.errors.length} errors during migration:`));
+        for (const error of result.errors.slice(0, 5)) {
+          console.log(chalk.gray(`    • ${error}`));
+        }
+      }
+
+      // Print summary
+      const stats = db.getStats();
+      console.log(chalk.bold('\n  Migration complete:'));
+      console.log(chalk.gray(`    • Context items: ${stats.items}`));
+      console.log(chalk.gray(`    • Database: ${options.db || '.ai-context.db'}`));
+      console.log();
+
+      db.close();
+    } catch (error) {
+      spinner.fail('Migration failed');
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// MCP Export Command - Export database to files
+program
+  .command('mcp:export')
+  .description('Export MCP database to markdown files')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--db <path>', 'Database filename (defaults to .ai-context.db)')
+  .option('-o, --output <dir>', 'Output directory for exported files', '.ai-context-export')
+  .option('--format <format>', 'Export format: shadow (individual files) or single (one file)', 'shadow')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    const outputDir = path.resolve(projectRoot, options.output);
+    const spinner = createSpinner();
+    
+    console.log(chalk.cyan('\n  Exporting MCP database...'));
+    console.log(chalk.gray(`  Project: ${projectRoot}`));
+    console.log(chalk.gray(`  Output: ${options.output}`));
+    console.log(chalk.gray(`  Format: ${options.format}`));
+    console.log();
+
+    try {
+      // Check if database exists
+      const dbPath = path.join(projectRoot, options.db || '.ai-context.db');
+      if (!fs.existsSync(dbPath)) {
+        console.log(chalk.yellow('  ⚠ Database not found. Run `npx create-ai-context mcp:init` first.'));
+        process.exit(1);
+      }
+
+      // Import MCP server components
+      let mcpPackage;
+      try {
+        const mcpServerPath = require.resolve('@ai-context/mcp-server', { paths: [projectRoot, __dirname] });
+        mcpPackage = require(mcpServerPath);
+      } catch {
+        const devPath = path.join(__dirname, '../../ai-context-mcp-server/dist/index.js');
+        if (fs.existsSync(devPath)) {
+          mcpPackage = require(devPath);
+        } else {
+          console.error(chalk.red('\n✖ MCP server package not found.'));
+          process.exit(1);
+        }
+      }
+
+      const { DatabaseClient, ShadowGenerator } = mcpPackage;
+      
+      // Open database
+      const db = new DatabaseClient(projectRoot, options.db || '.ai-context.db');
+
+      // Create output directory
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+
+      if (options.format === 'single') {
+        // Export to single file
+        spinner.start('Exporting to single file...');
+        const shadowGen = new ShadowGenerator(db, projectRoot, { outputDir: options.output });
+        const outputPath = path.join(outputDir, 'AI_CONTEXT_EXPORT.md');
+        shadowGen.exportToSingleFile(outputPath);
+        spinner.succeed(`Exported to ${options.output}/AI_CONTEXT_EXPORT.md`);
+      } else {
+        // Export as shadow files
+        spinner.start('Generating shadow files...');
+        const shadowGen = new ShadowGenerator(db, projectRoot, { outputDir: options.output });
+        const result = await shadowGen.generateAll();
+        spinner.succeed(`Generated ${result.generated.length + result.updated.length} files`);
+
+        if (result.errors.length > 0) {
+          console.log(chalk.yellow(`\n  ⚠ ${result.errors.length} errors during export:`));
+          for (const error of result.errors.slice(0, 5)) {
+            console.log(chalk.gray(`    • ${error}`));
+          }
+        }
+      }
+
+      // Print summary
+      const stats = db.getStats();
+      console.log(chalk.bold('\n  Export complete:'));
+      console.log(chalk.gray(`    • Context items: ${stats.items}`));
+      console.log(chalk.gray(`    • Output: ${options.output}/`));
+      console.log();
+
+      db.close();
+    } catch (error) {
+      spinner.fail('Export failed');
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// MCP Sync command - export database to all AI tool formats
+program
+  .command('mcp:sync')
+  .description('Export MCP database to all AI tool formats (Copilot, Cline, Antigravity, Windsurf, Aider, Continue)')
+  .option('-p, --path <dir>', 'Project directory (defaults to current)', '.')
+  .option('--db <path>', 'Database filename (defaults to .ai-context.db)')
+  .option('--tools <tools>', 'Comma-separated list of tools to export (copilot,cline,antigravity,windsurf,aider,continue,all)', 'all')
+  .option('-f, --force', 'Force overwrite of existing non-managed files')
+  .option('--status', 'Show sync status without exporting')
+  .option('-v, --verbose', 'Show detailed output')
+  .action(async (options) => {
+    console.log(banner);
+
+    const projectRoot = path.resolve(options.path);
+    const spinner = createSpinner();
+    
+    console.log(chalk.cyan('\n  Cross-Tool Sync...'));
+    console.log(chalk.gray(`  Project: ${projectRoot}`));
+    console.log();
+
+    try {
+      // Check if database exists
+      const dbPath = path.join(projectRoot, options.db || '.ai-context.db');
+      if (!fs.existsSync(dbPath)) {
+        console.log(chalk.yellow('  ⚠ Database not found. Run `npx create-ai-context mcp:init` first.'));
+        process.exit(1);
+      }
+
+      // Import MCP server components
+      let mcpPackage;
+      try {
+        const mcpServerPath = require.resolve('@ai-context/mcp-server', { paths: [projectRoot, __dirname] });
+        mcpPackage = require(mcpServerPath);
+      } catch {
+        const devPath = path.join(__dirname, '../../ai-context-mcp-server/dist/index.js');
+        if (fs.existsSync(devPath)) {
+          mcpPackage = require(devPath);
+        } else {
+          console.error(chalk.red('\n✖ MCP server package not found.'));
+          process.exit(1);
+        }
+      }
+
+      const { DatabaseClient, CrossToolExporter, getSupportedTools, getToolDisplayName, getToolOutputPath } = mcpPackage;
+      
+      // Open database
+      const db = new DatabaseClient(projectRoot, options.db || '.ai-context.db');
+
+      // Parse tools
+      const allTools = getSupportedTools();
+      let selectedTools = allTools;
+      if (options.tools && options.tools !== 'all') {
+        selectedTools = options.tools.split(',').map(t => t.trim().toLowerCase());
+        const invalid = selectedTools.filter(t => !allTools.includes(t));
+        if (invalid.length > 0) {
+          console.error(chalk.red(`\n✖ Invalid tools: ${invalid.join(', ')}`));
+          console.error(chalk.gray(`  Valid options: ${allTools.join(', ')}`));
+          db.close();
+          process.exit(1);
+        }
+      }
+
+      // Create exporter
+      const exporter = new CrossToolExporter(db, projectRoot, {
+        tools: selectedTools,
+        force: options.force || false,
+        verbose: options.verbose || false
+      });
+
+      // Status mode
+      if (options.status) {
+        console.log(chalk.bold('  Sync Status:'));
+        console.log();
+        
+        const status = exporter.getSyncStatus();
+        for (const tool of allTools) {
+          const toolStatus = status[tool];
+          const displayName = getToolDisplayName(tool);
+          const outputPath = getToolOutputPath(tool);
+          
+          let statusIcon = '✗';
+          let statusColor = chalk.gray;
+          let statusText = 'Not exported';
+          
+          if (toolStatus.exists) {
+            if (toolStatus.managed) {
+              statusIcon = '✓';
+              statusColor = chalk.green;
+              statusText = toolStatus.lastSync 
+                ? `Synced ${new Date(toolStatus.lastSync).toLocaleString()}`
+                : 'Synced';
+            } else {
+              statusIcon = '⚠';
+              statusColor = chalk.yellow;
+              statusText = 'Exists (not managed)';
+            }
+          }
+          
+          console.log(`  ${statusColor(statusIcon)} ${displayName.padEnd(20)} ${chalk.gray(outputPath)}`);
+          console.log(`    ${chalk.gray(statusText)}`);
+        }
+        
+        console.log();
+        db.close();
+        return;
+      }
+
+      // Export mode
+      spinner.start(`Exporting to ${selectedTools.length} tools...`);
+      
+      const result = await exporter.exportAll();
+      
+      spinner.succeed(`Exported to ${result.totalFiles} files`);
+      
+      console.log(chalk.bold('\n  Export Results:'));
+      console.log();
+      
+      for (const toolResult of result.results) {
+        const displayName = getToolDisplayName(toolResult.tool);
+        
+        if (toolResult.success) {
+          console.log(`  ${chalk.green('✓')} ${displayName}`);
+          for (const file of toolResult.files) {
+            console.log(chalk.gray(`    → ${file}`));
+          }
+        } else {
+          console.log(`  ${chalk.red('✗')} ${displayName}`);
+          for (const error of toolResult.errors) {
+            console.log(chalk.yellow(`    ⚠ ${error}`));
+          }
+        }
+      }
+      
+      if (result.totalErrors > 0) {
+        console.log(chalk.yellow(`\n  ⚠ ${result.totalErrors} errors during export.`));
+        console.log(chalk.gray('  Use --force to overwrite existing non-managed files.'));
+      }
+      
+      console.log();
+      db.close();
+      
+    } catch (error) {
+      spinner.fail('Sync failed');
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      if (options.verbose) {
+        console.error(chalk.gray(error.stack));
+      }
       process.exit(1);
     }
   });

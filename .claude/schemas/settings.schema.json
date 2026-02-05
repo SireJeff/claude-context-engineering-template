@@ -157,6 +157,12 @@
           "default": ["/rpi-research", "/rpi-plan", "/rpi-implement"],
           "description": "RPI workflow commands"
         },
+        "orchestration_commands": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["/context-optimize"],
+          "description": "Orchestration commands for context optimization"
+        },
         "validation_commands": {
           "type": "array",
           "items": { "type": "string" },

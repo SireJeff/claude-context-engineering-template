@@ -1,5 +1,9 @@
 # Claude Context Engineering - Ignored Files
 
+# MCP Database files
+.ai-context.db
+*.db
+
 # Articles (kept separate)
 linkedin-article-english.md
 virgool-article.md
@@ -27,8 +31,12 @@ social-post.md
 # .claude/knowledge/sessions/*.md
 
 # Node modules (for CLI tools)
+node_modules/
 .claude/tools/node_modules/
 packages/*/node_modules/
+
+# Build artifacts
+packages/*/dist/
 
 # Generated files
 .ai-context/

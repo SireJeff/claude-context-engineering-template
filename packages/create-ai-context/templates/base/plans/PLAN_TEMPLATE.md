@@ -5,12 +5,42 @@
 **Status:** DRAFT | APPROVED | IMPLEMENTING | COMPLETE
 **Estimated Changes:** X files, ~XXX lines
 **Context Budget:** Target <40% of 200k tokens
+**Total Chunks:** N (from research)
+**Chunk Dependencies:** [See Chunk Dependency Graph]
 
 ---
 
 ## Research Summary
 
 [Paste 150-word summary from research document]
+
+---
+
+## Chunk Manifest
+
+> **INTER-PHASE CONTRACT:** This manifest is designed for RPI-Implement consumption.
+> RPI-Implement will process each chunk's todolist, marking chunks complete as it progresses.
+
+| Chunk ID | From Research | Status | Todos | Dependencies | Ready |
+|----------|---------------|--------|-------|--------------|-------|
+| CHUNK-P1 | CHUNK-R1 | READY | 4 | None | ✅ |
+| CHUNK-P2 | CHUNK-R2 | READY | 5 | CHUNK-P1 | ⏳ |
+| CHUNK-P3 | CHUNK-R3 | READY | 3 | CHUNK-P2 | ⏳ |
+| CHUNK-P4 | CHUNK-R4 | READY | 2 | None | ✅ |
+| CHUNK-P5 | CHUNK-R5 | READY | 6 | CHUNK-P1, P2 | ⏳ |
+
+### Chunk Dependency Graph
+
+```
+CHUNK-P1 (API) ─────┬───→ CHUNK-P2 (Logic) ───→ CHUNK-P3 (DB)
+                    │              │
+CHUNK-P4 (External) │              │
+                    │              ↓
+                    └───→ CHUNK-P5 (Tests) ←───┘
+                         (depends on P1 and P2)
+```
+
+**Execution Order:** P1 → P4 (parallel) → P2 → P3 → P5
 
 ---
 
@@ -28,22 +58,24 @@
 
 ---
 
-## Files to Modify
+## CHUNK-P1: API/Routes (from CHUNK-R1)
 
-**CRITICAL:** All file references MUST include explicit line numbers
+**Status:** DRAFT | READY | IMPLEMENTING | IMPLEMENTED | COMPLETE
+**Research Chunk:** CHUNK-R1
+**Dependencies:** None
+**Update Research Status When Complete:** Mark CHUNK-R1 as IMPLEMENTED
 
-| File | Lines | Change Description | Risk Level | Test Required |
-|------|-------|-------------------|------------|---------------|
-| `path/file.ext` | XXX-YYY | [What changes] | LOW/MED/HIGH | `test_name` |
-| `path/other.ext` | XXX-YYY | [What changes] | LOW/MED/HIGH | `test_name` |
+### Todolist
 
----
+| # | Action | File | Lines | Risk | Test | Status |
+|---|--------|------|-------|------|------|--------|
+| 1 | [Action description] | `path/file.ext` | XXX-YYY | LOW | `test_name` | ⏳ |
+| 2 | [Action description] | `path/file.ext` | XXX-YYY | MED | `test_name` | ⏳ |
+| 3 | [Action description] | `path/file.ext` | XXX-YYY | LOW | `test_name` | ⏳ |
+| 4 | [Action description] | `path/file.ext` | XXX-YYY | LOW | `test_name` | ⏳ |
 
-## Step-by-Step Implementation
+### Todo 1: [Action Name]
 
-### Step 1: [Action Name]
-
-**Priority:** 1 of N
 **File:** `path/to/file.ext`
 **Lines:** XXX-YYY
 **Risk:** LOW/MEDIUM/HIGH
@@ -58,27 +90,62 @@
 [New code after modification]
 ```
 
-**Rationale:**
-[Why this change is needed - 1-2 sentences]
-
 **Test After:**
 ```bash
 [Test command to run]
 ```
 
-**Success Criteria:**
-- [ ] [What should work after this step]
+### Chunk Completion Criteria
+- [ ] All todos in CHUNK-P1 complete
+- [ ] All tests passing
+- [ ] Update CHUNK-R1 status to IMPLEMENTED
+- [ ] Proceed to dependent chunks (CHUNK-P2, CHUNK-P5)
 
 ---
 
-### Step 2: [Action Name]
+## CHUNK-P2: Business Logic (from CHUNK-R2)
 
-**Priority:** 2 of N
-**File:** `path/to/file.ext`
-**Lines:** XXX-YYY
-**Risk:** LOW/MEDIUM/HIGH
+**Status:** DRAFT | READY | IMPLEMENTING | IMPLEMENTED | COMPLETE
+**Research Chunk:** CHUNK-R2
+**Dependencies:** CHUNK-P1
+**Update Research Status When Complete:** Mark CHUNK-R2 as IMPLEMENTED
 
-[Same structure as Step 1...]
+### Todolist
+
+| # | Action | File | Lines | Risk | Test | Status |
+|---|--------|------|-------|------|------|--------|
+| 1 | [Action description] | `path/file.ext` | XXX-YYY | LOW | `test_name` | ⏳ |
+| 2 | [Action description] | `path/file.ext` | XXX-YYY | HIGH | `test_name` | ⏳ |
+
+### Chunk Completion Criteria
+- [ ] All todos in CHUNK-P2 complete
+- [ ] All tests passing
+- [ ] Update CHUNK-R2 status to IMPLEMENTED
+
+---
+
+## Inter-Phase Contract (RPI-Implement Consumption)
+
+```
+EXPECTED_CONSUMER: rpi-implement
+CHUNK_PROCESSING_ORDER: dependency-ordered (see Chunk Dependency Graph)
+MARK_AS_IMPLEMENTED_WHEN: all chunk todos complete
+UPDATE_RESEARCH_STATUS: true (mark CHUNK-Rn as IMPLEMENTED)
+CONTEXT_RESET_TRIGGER: every 3 chunks or 35% utilization
+```
+
+**What RPI-Implement Should Do:**
+1. Load chunk manifest and dependency graph
+2. Process chunks in dependency order
+3. For each chunk:
+   a. Execute todos atomically (one change → one test → one commit)
+   b. Mark todos complete as they pass
+   c. When all todos done, mark chunk IMPLEMENTED
+   d. Update corresponding research chunk status
+   e. Proceed to next ready chunk
+4. Loop until all chunks IMPLEMENTED
+5. Run full test suite
+6. Archive documents
 
 ---
 
@@ -100,20 +167,16 @@ Check `.ai-context/context/CODE_TO_WORKFLOW_MAP.md`:
 
 ## Testing Strategy
 
-### Unit Tests
-| Test | Purpose | Command |
-|------|---------|---------|
-| `test_file::test_name` | [What it verifies] | `pytest path -k name` |
+### Unit Tests (Per Chunk)
+| Chunk | Test | Purpose | Command |
+|-------|------|---------|---------|
+| P1 | `test_file::test_name` | [What it verifies] | `pytest path -k name` |
+| P2 | `test_file::test_name` | [What it verifies] | `pytest path -k name` |
 
 ### Integration Tests
 | Test | Purpose | Command |
 |------|---------|---------|
 | `test_file::test_name` | [What it verifies] | `pytest path -k name` |
-
-### E2E Tests (if applicable)
-| Scenario | Purpose | Command |
-|----------|---------|---------|
-| [User flow] | [What it verifies] | `pytest path -k name` |
 
 ---
 
@@ -123,17 +186,21 @@ Check `.ai-context/context/CODE_TO_WORKFLOW_MAP.md`:
 - [ ] Research document reviewed
 - [ ] Plan approved by human
 - [ ] Current branch is clean (`git status`)
-- [ ] Tests passing before changes (`pytest`)
+- [ ] Tests passing before changes
+- [ ] **Chunk manifest understood**
 
-### After Each Step
-- [ ] Syntax check passes
-- [ ] Step-specific test passes
+### After Each Chunk
+- [ ] All chunk todos complete
+- [ ] Chunk tests passing
 - [ ] Commit created with descriptive message
+- [ ] Research chunk status updated
+- [ ] **Context reset if needed**
 
-### After All Steps
-- [ ] All unit tests pass
-- [ ] All integration tests pass
-- [ ] Documentation updated (see below)
+### After All Chunks
+- [ ] All chunks marked IMPLEMENTED
+- [ ] All research chunks marked IMPLEMENTED
+- [ ] Full test suite passes
+- [ ] Documentation updated
 - [ ] No linting errors
 
 ---
@@ -165,18 +232,16 @@ Check `.ai-context/context/CODE_TO_WORKFLOW_MAP.md`:
 
 ## Rollback Plan
 
-### Quick Rollback
+### Per-Chunk Rollback
+| Chunk | Rollback Command | Safe Commit |
+|-------|------------------|-------------|
+| P1 | `git revert [hash]` | `[hash]` |
+| P2 | `git revert [hash]` | `[hash]` |
+
+### Full Rollback
 ```bash
 git revert HEAD~N  # Revert last N commits
 ```
-
-### Safe State
-- **Commit:** `[hash]`
-- **Description:** Last known working state before changes
-
-### Recovery Steps
-1. [Step to recover if rollback needed]
-2. [Step to verify recovery]
 
 ---
 
@@ -185,14 +250,10 @@ git revert HEAD~N  # Revert last N commits
 | Phase | Tokens | Percentage |
 |-------|--------|------------|
 | Plan Loading | ~15k | 7.5% |
-| Active Code | ~30k | 15% |
-| Test Results | ~15k | 7.5% |
-| **Total** | **~60k** | **30%** |
-
-**Compaction Strategy:**
-- After Step 3: Archive completed step results
-- After Step 6: Full compaction, reload plan
-- On 35% trigger: Save progress, compact, continue
+| Active Code (per chunk) | ~10k | 5% |
+| Test Results (per chunk) | ~5k | 2.5% |
+| **Per Chunk Total** | **~15k** | **7.5%** |
+| **Max Active (3 chunks)** | **~45k** | **22.5%** |
 
 ---
 
@@ -201,10 +262,11 @@ git revert HEAD~N  # Revert last N commits
 **Before approval, human should verify:**
 
 1. **Scope Check:** Are we solving the right problem?
-2. **Impact Analysis:** What else might break?
-3. **Prior Art:** Did we check KNOWN_GOTCHAS.md?
-4. **Testing Strategy:** Is coverage adequate?
-5. **Rollback Path:** Can we undo safely?
+2. **Chunk Structure:** Are chunks properly ordered?
+3. **Dependencies:** Are chunk dependencies correct?
+4. **Impact Analysis:** What else might break?
+5. **Testing Strategy:** Is coverage adequate per chunk?
+6. **Rollback Path:** Can we undo each chunk safely?
 
 **Human Notes:**
 ```
@@ -219,32 +281,36 @@ git revert HEAD~N  # Revert last N commits
 
 ## Execution Log
 
-### Step Progress
+### Chunk Progress
 
-| Step | Status | Commit | Notes |
-|------|--------|--------|-------|
-| 1 | ⏳ Pending | - | - |
-| 2 | ⏳ Pending | - | - |
-| 3 | ⏳ Pending | - | - |
+| Chunk | Status | Todos Done | Commit | Research Updated |
+|-------|--------|------------|--------|------------------|
+| P1 | ⏳ Pending | 0/4 | - | - |
+| P2 | ⏳ Pending | 0/5 | - | - |
+| P3 | ⏳ Pending | 0/3 | - | - |
+| P4 | ⏳ Pending | 0/2 | - | - |
+| P5 | ⏳ Pending | 0/6 | - | - |
 
 ### Issues Encountered
 
-| Step | Issue | Resolution |
-|------|-------|------------|
+| Chunk | Issue | Resolution |
+|-------|-------|------------|
 | - | - | - |
 
 ---
 
 ## Next Steps After Completion
 
-1. ✅ All steps completed
-2. ⏳ Run full test suite
-3. ⏳ Update documentation
-4. ⏳ Run `/verify-docs-current`
-5. ⏳ Move plan to `.ai-context/plans/completed/`
-6. ⏳ Create PR/merge to main
+1. ✅ All chunks IMPLEMENTED
+2. ✅ All research chunks IMPLEMENTED
+3. ⏳ Run full test suite
+4. ⏳ Update documentation
+5. ⏳ Run `/verify-docs-current`
+6. ⏳ Move plan to `.ai-context/plans/completed/`
+7. ⏳ Move research to `.ai-context/research/completed/`
+8. ⏳ Create PR/merge to main
 
 ---
 
-**Plan Version:** 1.0
+**Plan Version:** 2.0 (Chunk-Based with Inter-Phase Awareness)
 **Last Updated:** YYYY-MM-DD

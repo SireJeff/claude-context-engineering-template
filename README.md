@@ -2,99 +2,181 @@
   <img src="ccl_logo.jpg" alt="CCL Logo" width="200" height="200">
 </p>
 
-# Universal AI Context Engineering
+# AI Context Engineering
 
-![npm](https://img.shields.io/npm/v/create-universal-ai-context)
-![npm downloads](https://img.shields.io/npm/dm/create-universal-ai-context)
+![npm](https://img.shields.io/npm/v/ai-context)
+![npm downloads](https://img.shields.io/npm/dm/ai-context)
 ![GitHub Stars](https://img.shields.io/github/stars/SireJeff/claude-context-engineering-template?style=social)
 ![GitHub License](https://img.shields.io/github/license/SireJeff/claude-context-engineering-template)
 
 **One command to supercharge your AI coding assistant with intelligent context.**
 
-Supports: **Claude Code**, **GitHub Copilot**, **Cline**, **Antigravity**, **Windsurf**, **Aider**, **Continue**
+Supports: **Claude Code**, **GitHub Copilot**, **Cline**, **Antigravity**, **Windsurf**, **Aider**, **Continue**, **Cursor**, **Gemini**
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
 ```bash
-npx create-universal-ai-context
+# Set your OpenRouter API key for intelligent analysis
+export OPENROUTER_API_KEY="your-key-here"
+
+# Install globally
+npm install -g ai-context
+
+# Initialize with intelligent analysis
+ai-context init
+
+# Start MCP server
+ai-context mcp
+
+# Generate context for all AI tools
+ai-context generate
+```
+
+---
+
+## 📦 Packages
+
+### Primary Package
+
+| Package | Version | Description |
+|---------|---------|-------------|
+| [`ai-context`](./packages/ai-context/) | **3.0.0** | **Unified AI context package** with OpenRouter-powered analysis, MCP server, and cross-tool sync |
+
+### Legacy Packages ⚠️
+
+> **⚠️ Deprecated:** The following packages are **deprecated** as of v3.0.0. Users should migrate to the unified `ai-context` package.
+
+| Package | Status | Migration Guide |
+|---------|--------|-----------------|
+| [`create-ai-context`](./packages/create-ai-context/) | ⚠️ Deprecated | [Migrate to ai-context](./docs/MIGRATE_TO_UNIFIED.md) |
+| [`ai-context-mcp-server`](./packages/ai-context-mcp-server/) | ⚠️ Deprecated | Included in `ai-context` |
+| [`claude-context-plugin`](./packages/claude-context-plugin/) | ⚠️ Deprecated | Use `ai-context` skills |
+
+### Support Timeline
+
+- **v2.x LTS:** Security updates only until **2026-06-01**
+- **v1.x:** End of life - no updates
+
+---
+
+## 📁 Repository Structure
+
+```
+ai-context-monorepo/
+├── packages/
+│   ├── ai-context/              ← Primary package (v3.0.0)
+│   │   ├── src/
+│   │   │   ├── analyzer/        # Intelligent analysis (595 lines)
+│   │   │   ├── cli/             # Unified CLI (481 lines)
+│   │   │   ├── db/              # SQLite database (935 lines)
+│   │   │   ├── embeddings/      # OpenRouter integration (367 lines)
+│   │   │   └── mcp.ts           # MCP server (354 lines)
+│   │   ├── agents/              # Agent definitions
+│   │   ├── skills/              # RPI workflow skills
+│   │   └── tests/               # Test suite
+│   │
+│   ├── create-ai-context/       ⚠️ Legacy (v2.5.0)
+│   ├── ai-context-mcp-server/   ⚠️ Legacy (v1.0.0)
+│   └── claude-context-plugin/   ⚠️ Legacy (v2.1.4)
+│
+├── docs/                        # Documentation
+│   ├── MIGRATE_TO_UNIFIED.md    # Migration guide
+│   ├── QUICK_START_5MIN.md
+│   └── TROUBLESHOOTING.md
+│
+├── .claude/                     # Claude Code context
+│   ├── commands/                # RPI commands
+│   ├── agents/                  # Agent definitions
+│   └── skills/                  # RPI skills
+│
+└── README.md                    # This file
 ```
 
 ---
 
 ## Complete CLI Reference
 
-### Initialization Commands
+### Primary Package Commands (`ai-context`)
 
 | Command | One-Line Explanation |
 |---------|----------------------|
-| `npx create-universal-ai-context` | Initialize AI context for your codebase (interactive mode) |
-| `npx create-universal-ai-context --yes` | Initialize with defaults, skip all prompts |
-| `npx create-universal-ai-context --ai <tools>` | Generate for specific AI tools only (e.g., `--ai claude,copilot`) |
-| `npx create-universal-ai-context --static` | Force standalone mode - static analysis only, no AI setup |
-| `npx create-universal-ai-context --analyze-only` | Run codebase analysis without installation |
-| `npx create-universal-ai-context --stack <preset>` | Use tech stack preset (python-fastapi, node-express, etc.) |
-| `npx create-universal-ai-context --mode <mode>` | Handle existing docs: `merge`, `overwrite`, or `interactive` |
-| `npx create-universal-ai-context --backup` | Create backup before modifying existing files |
-| `npx create-ai-context --fail-on-unreplaced` | Error if any placeholder values remain unreplaced |
-| `npx create-universal-ai-context --force` | Force overwrite of existing files (use with caution) |
+| `ai-context init` | Initialize with intelligent OpenRouter-powered analysis |
+| `ai-context init --no-intelligent` | Initialize with basic static analysis only |
+| `ai-context generate` | Generate context files for all AI tools |
+| `ai-context sync` | Synchronize context across all AI tools |
+| `ai-context mcp` | Start MCP server for AI tools to connect |
+| `ai-context index` | Index codebase into the database |
+| `ai-context search <query>` | Semantic search across indexed content |
+| `ai-context stats` | Show database statistics |
 
-### Regeneration Commands
+### Legacy Commands (Deprecated)
 
-| Command | One-Line Explanation |
-|---------|----------------------|
-| `npx create-universal-ai-context generate` | Regenerate AI context files for existing project |
-| `npx create-universal-ai-context generate --ai <tools>` | Regenerate for specific AI tools only |
-| `npx create-universal-ai-context generate --dryRun` | Show what would be regenerated without making changes |
-
-### Status & Validation Commands
+> ⚠️ These commands still work but are deprecated. Please migrate to `ai-context`.
 
 | Command | One-Line Explanation |
 |---------|----------------------|
-| `npx create-universal-ai-context status` | Show current AI context installation status |
-| `npx create-universal-ai-context drift` | Check if documentation is out of sync with codebase |
-| `npx create-universal-ai-context drift --all` | Check drift for all documents with detailed report |
-| `npx create-universal-ai-context validate-all` | Run full validation suite on documentation |
-
-### Synchronization Commands
-
-| Command | One-Line Explanation |
-|---------|----------------------|
+| `npx create-universal-ai-context` | Initialize AI context (use `ai-context init` instead) |
+| `npx create-universal-ai-context generate` | Regenerate AI context files |
 | `npx create-universal-ai-context sync:check` | Check if AI tool contexts are synchronized |
-| `npx create-universal-ai-context sync:all` | Synchronize all AI tool contexts from codebase |
-| `npx create-universal-ai-context sync:from <tool>` | Propagate context from specific tool to all others |
-| `npx create-universal-ai-context sync:resolve --strategy <strategy>` | Resolve conflicts between AI tool contexts |
-| `npx create-universal-ai-context sync:history` | Show synchronization history |
-
-### Migration Commands
-
-| Command | One-Line Explanation |
-|---------|----------------------|
-| `npx create-universal-ai-context migrate` | Migrate from v1.x (.claude/) to v2.0 (.ai-context/) |
-| `npx create-universal-ai-context migrate --dryRun` | Show migration plan without making changes |
-| `npx create-universal-ai-context migrate --backup` | Create backup before migrating |
-
-### Git Integration
-
-| Command | One-Line Explanation |
-|---------|----------------------|
-| `npx create-universal-ai-context hooks:install` | Install git hooks for automatic sync (pre-commit, post-commit) |
-
-### Helper Flags
-
-| Flag | Purpose |
-|------|---------|
-| `-v, --verbose` | Show detailed output |
-| `-n, --dry-run` | Show what would be done without making changes |
-| `-f, --force` | Force overwrite of existing files (use with caution) |
-| `-p, --path <dir>` | Specify project directory (defaults to current) |
-| `--no-git` | Skip git initialization |
-| `--no-plugin` | Skip plugin installation |
+| `npx create-universal-ai-context sync:all` | Synchronize all AI tool contexts |
+| `npx create-universal-ai-context status` | Show current AI context installation status |
 
 ---
 
-## AI Tools Generated
+## MCP Server
+
+The unified `ai-context` package includes a complete MCP server for AI assistant integration.
+
+### Features
+
+- **SQLite + sqlite-vec** - Single portable `.ai-context.db` file
+- **Semantic Search** - OpenRouter-powered embeddings for intelligent search
+- **Knowledge Graph** - 14 typed relationships between context items
+- **Cross-Tool Sync** - Export to all AI tools from one source
+- **Intelligent Analysis** - OpenRouter-powered codebase understanding
+- **Automatic Discovery** - Scans docs, code, and tool configs automatically
+
+### Quick Start
+
+```bash
+# Set OpenRouter API key
+export OPENROUTER_API_KEY="your-key"
+
+# Initialize with intelligent analysis
+ai-context init
+
+# Start MCP server
+ai-context mcp
+
+# Check stats
+ai-context stats
+```
+
+### Claude Desktop Configuration
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "ai-context": {
+      "command": "node",
+      "args": ["/path/to/ai-context/dist/mcp.js"],
+      "env": {
+        "OPENROUTER_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+See [MCP Quick Start](./packages/ai-context/docs/MCP_QUICKSTART.md) for full documentation.
+
+---
+
+## AI Tools Supported
 
 | Tool | Output File | One-Line Explanation |
 |------|-------------|----------------------|
@@ -105,6 +187,8 @@ npx create-universal-ai-context
 | **Windsurf** | `.windsurf/rules.md` | XML-tagged rules for Windsurf Cascade AI |
 | **Aider** | `.aider.conf.yml` | Configuration for terminal-based pair programming |
 | **Continue** | `.continue/config.json` | Configuration with slash commands for VS Code autopilot |
+| **Cursor** | `.cursor/`, `.cursorrules` | Rules and settings for Cursor AI |
+| **Gemini** | `.gemini/` | Configuration for Google Gemini |
 
 ---
 
@@ -128,112 +212,10 @@ npx create-universal-ai-context
 | `/rpi-research` | Explore codebase, create research document | Deep dive into unknown code, investigate features |
 | `/rpi-plan` | Create implementation plan from research | Design step-by-step implementation strategy |
 | `/rpi-implement` | Execute plan with atomic commits | Build feature with validation between steps |
+| `/context-optimize` | Orchestrate context optimization | Generate RPI TODO list with interactive scoping |
+| `/verify-docs-current` | Validate documentation accuracy | Check doc line references against code |
 | `/validate-all` | Run validation suite on documentation | Check completeness, consistency, accuracy |
-| `/auto-sync` | Synchronize docs with codebase | Update docs after code changes |
-| `/session-save` | Save current Claude Code session state | Preserve work across restarts |
-| `/session-resume` | Restore previously saved session | Continue where you left off |
-| `/collab` | Handoff context to team members | Transfer knowledge, coordinate work |
-| `/analytics` | View context metrics and statistics | Understand usage patterns |
 | `/help` | Display all available commands | Discover available tools |
-
----
-
-## Repository Structure: With vs Without Context Engineering
-
-### ❌ Without Context Engineering
-
-```
-my-project/
-├── src/
-├── package.json
-├── README.md
-└── .git/
-
-❌ AI has no context about:
-   - Project purpose and domain
-   - Architecture and patterns
-   - Entry points and workflows
-   - Team conventions
-   - Database schema
-   - API routes
-   - Testing strategy
-
-→ AI: "Guesses intent, reads everything, asks generic questions"
-```
-
-### ✅ With Context Engineering
-
-```
-my-project/
-├── AI_CONTEXT.md                    ← Universal entry point for AI
-├── .ai-context/                     ← Single source of truth
-│   ├── agents/                       ← 6 specialized agents
-│   │   ├── context-engineer.md
-│   │   ├── core-architect.md
-│   │   ├── api-developer.md
-│   │   ├── database-ops.md
-│   │   ├── deployment-ops.md
-│   │   └── integration-hub.md
-│   ├── commands/                     ← 11 slash commands
-│   │   ├── rpi-research.md
-│   │   ├── rpi-plan.md
-│   │   ├── rpi-implement.md
-│   │   ├── validate-all.md
-│   │   ├── auto-sync.md
-│   │   ├── session-save.md
-│   │   ├── session-resume.md
-│   │   ├── collab.md
-│   │   ├── analytics.md
-│   │   └── help.md
-│   ├── context/workflows/            ← Auto-generated workflow docs
-│   │   ├── analytics.md
-│   │   ├── api-endpoints.md
-│   │   ├── configuration.md
-│   │   ├── data-processing.md
-│   │   ├── database-operations.md
-│   │   ├── search.md
-│   │   ├── testing.md
-│   │   └── user-authentication.md
-│   ├── context/                        ← Core context files
-│   │   ├── ARCHITECTURE_SNAPSHOT.md   ← System map
-│   │   ├── CODE_TO_WORKFLOW_MAP.md    ← Navigation guide
-│   │   ├── KNOWN_GOTCHAS.md           → Common pitfalls
-│   │   ├── INTEGRATION_POINTS.md     → External deps
-│   │   └── TESTING_MAP.md             → Test strategy
-│   └── indexes/                       ← 3-level navigation chain
-├── .claude/                          ← Claude Code symlinks to .ai-context/
-├── .github/copilot-instructions.md  ← Copilot context
-├── .clinerules                       ← Cline context
-├── .windsurf/rules.md                ← Windsurf context
-├── .aider.conf.yml                  ← Aider context
-└── .continue/config.json            ← Continue context
-
-✅ AI has complete context:
-   → Knows project purpose, domain, and architecture
-   → Understands workflows and entry points
-   → Aware of team conventions and gotchas
-   → Can ask specific questions using /commands
-   → Can delegate work to specialized /agents
-```
-
----
-
-## Tech Stack Presets
-
-| Preset | Framework | Use When |
-|--------|-----------|----------|
-| `python` | Python (generic) | Pure Python projects |
-| `python-django` | Django | Django web applications |
-| `python-fastapi` | FastAPI | FastAPI applications |
-| `node` | Node.js (generic) | Pure Node projects |
-| `node-nestjs` | NestJS | NestJS applications |
-| `typescript-remix` | Remix | Remix applications |
-| `go` | Go | Go applications |
-| `rust` | Rust | Rust applications |
-| `ruby` | Ruby (generic) | Pure Ruby projects |
-| `java-spring` | Spring Boot | Spring applications |
-| `csharp-dotnet` | .NET/C# | .NET applications |
-| `php-laravel` | Laravel | Laravel applications |
 
 ---
 
@@ -256,21 +238,12 @@ Auto-sync on commits ensures docs stay up-to-date.
 
 ---
 
-## Installation
+## Documentation
 
-```bash
-# For new projects
-npx create-universal-ai-context
-
-# For existing projects
-npx create-universal-ai-context --yes
-
-# For specific AI tools only
-npx create-universal-ai-context --ai claude,copilot
-
-# With tech stack preset
-npx create-universal-ai-context --stack python-django
-```
+- [Quick Start Guide](./docs/QUICK_START_5MIN.md) - Get started in 5 minutes
+- [Migration Guide](./docs/MIGRATE_TO_UNIFIED.md) - Migrate from legacy packages
+- [Troubleshooting](./docs/TROUBLESHOOTING.md) - 61 error codes with solutions
+- [MCP Quick Start](./packages/ai-context/docs/MCP_QUICKSTART.md) - MCP server setup
 
 ---
 
@@ -280,4 +253,4 @@ MIT
 
 ---
 
-**Version:** 2.5.0 | **Updated:** 2026-01-31
+**Version:** 3.0.0 | **Updated:** 2026-02-05 | **Primary Package:** `ai-context`

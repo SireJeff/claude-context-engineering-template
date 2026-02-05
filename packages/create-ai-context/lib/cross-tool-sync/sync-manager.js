@@ -317,6 +317,33 @@ function checkSyncStatus(projectRoot) {
 }
 
 /**
+ * Update sync state only (no file regeneration)
+ * Used by post-commit hooks to avoid creating new uncommitted changes
+ */
+function updateSyncStateOnly(projectRoot) {
+  const state = initSyncState(projectRoot);
+  const { currentHashes } = detectChangedTool(projectRoot, state);
+  
+  // Only update hashes, don't regenerate files
+  state.toolHashes = currentHashes;
+  state.lastSync = new Date().toISOString();
+  state.syncHistory.push({
+    timestamp: new Date().toISOString(),
+    source: 'post-commit',
+    strategy: 'state_only',
+    propagatedCount: 0,
+    errorCount: 0
+  });
+  saveSyncState(projectRoot, state);
+  
+  return {
+    updated: true,
+    timestamp: state.lastSync,
+    hashes: currentHashes
+  };
+}
+
+/**
  * Sync all tools from codebase (fresh regeneration)
  */
 async function syncAllFromCodebase(projectRoot, config) {
@@ -495,6 +522,7 @@ module.exports = {
   propagateContextChange,
   checkSyncStatus,
   syncAllFromCodebase,
+  updateSyncStateOnly,
   resolveConflict,
   getSyncHistory,
 

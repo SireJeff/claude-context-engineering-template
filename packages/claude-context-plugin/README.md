@@ -1,5 +1,15 @@
 # claude-context-plugin
 
+> **⚠️ DEPRECATION NOTICE**
+>
+> This plugin is **deprecated** as of v3.0.0. All skills and commands are now included in the unified [`ai-context`](../ai-context/) package.
+>
+> **Migration:** Use `ai-context` skills and commands directly.
+>
+> **Support:** Use unified package instead
+>
+> ---
+
 Claude Code plugin for context engineering - RPI workflow and documentation optimization.
 
 ## Installation
@@ -78,6 +88,20 @@ Verify documentation line numbers match code.
 ```
 /context-eng:verify-docs path/to/file.py
 ```
+
+### /context-eng:context-optimize
+
+Orchestrate context optimization with interactive scoping.
+
+```
+/context-eng:context-optimize
+/context-eng:context-optimize --auto
+/context-eng:context-optimize --scope documentation
+```
+
+Generates:
+- Context audit in `.claude/research/active/context-audit_research.md`
+- RPI TODO plan in `.claude/plans/active/context-optimization_plan.md`
 
 ## Agents
 

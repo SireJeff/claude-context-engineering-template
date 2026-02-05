@@ -1,6 +1,16 @@
 # create-universal-ai-context
 
-Universal AI context engineering for any codebase. Generates optimized context for **Claude Code**, **GitHub Copilot**, **Cline**, **Antigravity**, and more.
+> **⚠️ DEPRECATION NOTICE**
+>
+> This package is **deprecated** as of v3.0.0. Please migrate to the unified [`ai-context`](../ai-context/) package.
+>
+> **Migration Guide:** [docs/MIGRATE_TO_UNIFIED.md](../../docs/MIGRATE_TO_UNIFIED.md)
+>
+> **Support:** Security updates only until **2026-06-01**
+>
+> ---
+
+Universal AI context engineering for any codebase. Generates optimized context for **Claude Code**, **GitHub Copilot**, **Cline**, **Antigravity**, **Windsurf**, **Aider**, and **Continue**.
 
 ![npm](https://img.shields.io/npm/v/create-universal-ai-context)
 ![npm downloads](https://img.shields.io/npm/dm/create-universal-ai-context)
@@ -24,6 +34,10 @@ That's it. The CLI automatically:
 | **GitHub Copilot** | `.github/copilot-instructions.md` | Copilot workspace instructions |
 | **Cline** | `.clinerules` | Cline rules file |
 | **Antigravity** | `.agent/` | Identity, architecture, workflows, skills |
+| **Windsurf** | `.windsurf/rules.md` | XML-tagged rules for Windsurf Cascade AI |
+| **Aider** | `.aider.conf.yml` | Configuration for terminal-based pair programming |
+| **Continue** | `.continue/config.json` | Configuration with slash commands for VS Code autopilot |
+| **MCP Server** | `.ai-context.db` | SQLite + vector database for MCP integrations |
 
 ## CLI Options
 
@@ -36,6 +50,9 @@ npx create-universal-ai-context --ai claude        # Claude Code only
 npx create-universal-ai-context --ai copilot       # GitHub Copilot only
 npx create-universal-ai-context --ai cline         # Cline only
 npx create-universal-ai-context --ai antigravity   # Antigravity only
+npx create-universal-ai-context --ai windsurf      # Windsurf only
+npx create-universal-ai-context --ai aider         # Aider only
+npx create-universal-ai-context --ai continue      # Continue only
 npx create-universal-ai-context --ai all           # All tools (default)
 
 # Analysis modes
@@ -56,6 +73,9 @@ npx create-universal-ai-context generate --ai copilot
 
 # Check installation status
 npx create-universal-ai-context status
+
+# Generate MCP server artifacts from database
+npx create-ai-context mcp:sync --force
 
 # Migrate from v1.x
 npx create-universal-ai-context migrate
@@ -183,6 +203,23 @@ npx create-universal-ai-context --preserve-custom     # Keep user customizations
 npx create-universal-ai-context --update-refs         # Auto-fix line numbers
 npx create-universal-ai-context --backup              # Create backup first
 ```
+
+## MCP Server (Database-Backed Context)
+
+The MCP server provides a SQLite + vector database backend for AI context, with cross-tool exports and semantic search.
+
+```bash
+# Initialize the database
+npx create-ai-context mcp:init
+
+# Start the MCP server (for Claude Desktop)
+npx create-ai-context mcp:start
+
+# Export to all AI tools
+npx create-ai-context mcp:sync --force
+```
+
+See the MCP server docs in [`packages/ai-context-mcp-server`](../ai-context-mcp-server/README.md) for full configuration details.
 
 ## What Gets Analyzed
 

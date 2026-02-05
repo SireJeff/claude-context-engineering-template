@@ -28,6 +28,7 @@ module.exports.detectChangedTool = SyncManager.detectChangedTool;
 module.exports.propagateContextChange = SyncManager.propagateContextChange;
 module.exports.checkSyncStatus = SyncManager.checkSyncStatus;
 module.exports.syncAllFromCodebase = SyncManager.syncAllFromCodebase;
+module.exports.updateSyncStateOnly = SyncManager.updateSyncStateOnly;
 module.exports.resolveConflict = SyncManager.resolveConflict;
 module.exports.getSyncHistory = SyncManager.getSyncHistory;
 module.exports.initSyncState = SyncManager.initSyncState;

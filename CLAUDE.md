@@ -6,13 +6,13 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Project Identity
 
-**Platform:** Universal AI Context Engineering - CLI tools and templates for Claude Code, GitHub Copilot, Cline, and Antigravity
+**Platform:** Universal AI Context Engineering - CLI tools and templates for Claude Code, GitHub Copilot, Cline, Antigravity, Cursor, Gemini, and more
 **Domain:** https://github.com/SireJeff/claude-context-engineering-template
-**Tech Stack:** Node.js, JavaScript, Jest, npm
-**Status:** Active (v2.4.0)
+**Tech Stack:** Node.js, TypeScript, Vitest, npm
+**Status:** Active (v3.0.0)
 
 **Quick Reference:**
-- **API:** N/A (CLI tool)
+- **API:** MCP Server for AI tools
 - **Repo:** https://github.com/SireJeff/claude-context-engineering-template
 - **Deploy:** npm registry
 
@@ -20,7 +20,14 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Essential Commands
 
-### Development
+### Development (New Unified Package)
+```bash
+cd packages/ai-context && npm install
+npm run build
+npm test
+```
+
+### Development (Legacy Package)
 ```bash
 cd packages/create-ai-context && npm install
 npm test
@@ -29,12 +36,14 @@ npm test
 ### Testing
 ```bash
 npm test                           # All tests
-npm run test:coverage              # With coverage
+npm run test:run                   # Run once (no watch)
 ```
 
 ### Database
 ```bash
-# N/A - No database in this project
+# SQLite database at .ai-context.db
+npx ai-context stats               # View database stats
+npx ai-context index               # Index codebase
 ```
 
 ### Deployment
@@ -42,7 +51,19 @@ npm run test:coverage              # With coverage
 npm publish --access public        # Publish to npm
 ```
 
-### Cross-Tool Sync
+### New Package Commands
+```bash
+npx ai-context init                           # Initialize with intelligent analysis
+npx ai-context init --no-intelligent          # Skip OpenRouter analysis
+npx ai-context generate                       # Generate context for all AI tools
+npx ai-context mcp                            # Start MCP server
+npx ai-context sync                           # Sync across AI tools
+npx ai-context index                          # Index codebase into database
+npx ai-context search <query>                 # Semantic search
+npx ai-context stats                          # Database statistics
+```
+
+### Legacy Cross-Tool Sync
 ```bash
 npx create-ai-context sync:check              # Check if contexts are synchronized
 npx create-ai-context sync:all                # Sync all tools from codebase
@@ -116,7 +137,14 @@ grep -r "https://" packages/ --include="*.js"
 
 ### Finding Business Logic
 
-**Core Files:**
+**New Package Core Files (TypeScript):**
+- `packages/ai-context/src/analyzer/intelligent-analyzer.ts` - Intelligent codebase analysis
+- `packages/ai-context/src/db/client.ts` - SQLite database operations
+- `packages/ai-context/src/embeddings/openrouter.ts` - OpenRouter API integration
+- `packages/ai-context/src/mcp.ts` - MCP server implementation
+- `packages/ai-context/src/cli/index.ts` - CLI commands
+
+**Legacy Package Core Files (JavaScript):**
 - `packages/create-ai-context/lib/static-analyzer.js` - Codebase analysis
 - `packages/create-ai-context/lib/template-populator.js` - Template generation
 - `packages/create-ai-context/lib/detector.js` - Tech stack detection
@@ -129,8 +157,8 @@ grep -r "https://" packages/ --include="*.js"
 
 ### Finding Database Schema
 
-**Models:** N/A
-**Migrations:** N/A
+**Models:** `packages/ai-context/src/db/schema.ts`
+**Database:** SQLite at `.ai-context.db`
 
 ---
 
@@ -139,6 +167,7 @@ grep -r "https://" packages/ --include="*.js"
 - npm registry (publishing)
 - GitHub Actions (CI/CD)
 - Git hooks (automatic sync)
+- OpenRouter API (embeddings and chat for intelligent analysis)
 
 ---
 
@@ -146,21 +175,29 @@ grep -r "https://" packages/ --include="*.js"
 
 ```
 packages/
-├── create-ai-context/          # Main CLI package
+├── ai-context/                 # NEW: Unified package (v3.0)
+│   ├── bin/                    # CLI entry point
+│   ├── src/                    # TypeScript source
+│   │   ├── cli/                # CLI commands
+│   │   ├── db/                 # SQLite database client
+│   │   ├── embeddings/         # OpenRouter integration
+│   │   ├── analyzer/           # Intelligent codebase analysis
+│   │   └── mcp.ts              # MCP server
+│   ├── agents/                 # Agent definitions
+│   ├── skills/                 # RPI workflow skills
+│   └── tests/                  # Vitest tests
+├── create-ai-context/          # Legacy CLI package
 │   ├── bin/                    # CLI entry point
 │   ├── lib/                    # Core modules
 │   │   ├── static-analyzer.js  # Codebase analysis
 │   │   ├── detector.js         # Tech detection
 │   │   ├── installer.js        # File generation
-│   │   ├── cross-tool-sync/    # NEW: Cross-tool synchronization
-│   │   │   ├── sync-manager.js # Core sync logic
-│   │   │   ├── file-watcher.js # Change detection
-│   │   │   └── sync-service.js # Background service
+│   │   ├── cross-tool-sync/    # Cross-tool synchronization
 │   │   └── adapters/           # AI tool adapters
 │   ├── templates/              # Output templates
 │   └── tests/                  # Jest tests
+├── ai-context-mcp-server/      # Legacy MCP server
 └── claude-context-plugin/      # Claude Code plugin
-    └── skills/                 # RPI workflow skills
 ```
 
 ---
@@ -183,14 +220,17 @@ packages/
 ## Critical Constants
 
 ### Domain & URLs
-- npm package: `create-universal-ai-context`
+- npm package (new): `ai-context`
+- npm package (legacy): `create-universal-ai-context`
 - GitHub: `SireJeff/claude-context-engineering-template`
 
 ### Business Constants
-- Supported AI tools: Claude Code, GitHub Copilot, Cline, Antigravity, Windsurf, Aider, Continue
+- Supported AI tools: Claude Code, GitHub Copilot, Cline, Antigravity, Windsurf, Aider, Continue, Cursor, Gemini
 - Node.js minimum: 18.0.0
+- Database file: `.ai-context.db`
 - Sync state stored in: `.ai-context/sync-state.json`
 - Git hooks location: `.claude/automation/hooks/`
+- OpenRouter API key: `OPENROUTER_API_KEY` environment variable
 
 ---
 
@@ -209,7 +249,7 @@ packages/
 **Agents:** @context-engineer (setup), @core-architect (design), @api-developer (endpoints), @database-ops (schema), @integration-hub (external), @deployment-ops (CI/CD)
 **Full matrix:** [.claude/indexes/agents/router.md](./.claude/indexes/agents/router.md)
 
-**Commands:** /rpi-research, /rpi-plan, /rpi-implement, /verify-docs-current, /validate-all, /help, /collab, /analytics
+**Commands:** /rpi-research, /rpi-plan, /rpi-implement, /context-optimize, /verify-docs-current, /validate-all, /help, /collab, /analytics
 **All commands:** [.claude/commands/](./.claude/commands/)
 
 ---
@@ -270,5 +310,5 @@ packages/
 
 ---
 
-**Version:** 2.4.0 | **Last Updated:** 2026-01-31 | **Context Target:** 200k
+**Version:** 3.0.0 | **Last Updated:** 2026-02-05 | **Context Target:** 200k
 **Architecture:** 3-Level Chain-of-Index | **Index Files:** 20
