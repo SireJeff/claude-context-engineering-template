@@ -216,19 +216,27 @@ export class IntelligentAnalyzer {
    * Read file content safely
    */
   private readFileContent(filePath: string, maxBytes: number = 50000): string | null {
+    let fd: number | null = null;
     try {
       const stats = fs.statSync(filePath);
       if (stats.size > maxBytes) {
         // Read only first part of large files
-        const fd = fs.openSync(filePath, 'r');
+        fd = fs.openSync(filePath, 'r');
         const buffer = Buffer.alloc(maxBytes);
         fs.readSync(fd, buffer, 0, maxBytes, 0);
-        fs.closeSync(fd);
         return buffer.toString('utf-8') + '\n\n... [truncated]';
       }
       return fs.readFileSync(filePath, 'utf-8');
     } catch {
       return null;
+    } finally {
+      if (fd !== null) {
+        try {
+          fs.closeSync(fd);
+        } catch {
+          // Ignore errors when closing the file descriptor
+        }
+      }
     }
   }
 
@@ -466,8 +474,9 @@ Provide your analysis in the following JSON format:
 Return ONLY valid JSON, no markdown formatting.
 `;
 
+    let response: string = '';
     try {
-      const response = await this.client.chat([
+      response = await this.client.chat([
         { 
           role: 'system', 
           content: 'You are an expert code analyzer and AI context engineer. Analyze codebases to understand their structure, workflows, and suggest optimal AI context configurations. Always return valid JSON.'
@@ -475,13 +484,34 @@ Return ONLY valid JSON, no markdown formatting.
         { role: 'user', content: analysisPrompt }
       ], { temperature: 0.2, maxTokens: 4096 });
 
-      // Parse JSON response
-      const jsonMatch = response.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
+      // First, try to parse the whole response as JSON.
+      try {
+        return JSON.parse(response);
+      } catch {
+        // If that fails, attempt to extract the JSON substring between the
+        // first '{' and the last '}' and parse that.
+        if (typeof response === 'string') {
+          const start = response.indexOf('{');
+          const end = response.lastIndexOf('}');
+
+          if (start !== -1 && end !== -1 && end > start) {
+            const jsonSubstring = response.slice(start, end + 1);
+            return JSON.parse(jsonSubstring);
+          }
+        }
       }
     } catch (error) {
-      console.warn('Failed to parse intelligent analysis:', error);
+      console.warn('Failed to parse intelligent analysis response.');
+      // Log a preview of the raw response to aid debugging of malformed JSON.
+      try {
+        const preview = typeof response === 'string'
+          ? response.slice(0, 1000)
+          : JSON.stringify(response).slice(0, 1000);
+        console.warn('Raw response preview (truncated to 1000 chars):', preview);
+      } catch {
+        // If preview logging fails for any reason, ignore and just log the error.
+      }
+      console.warn('Error details:', error);
     }
 
     return {};

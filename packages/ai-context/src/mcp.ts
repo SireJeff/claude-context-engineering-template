@@ -179,9 +179,7 @@ export async function createServer(config: ServerConfig): Promise<McpServer> {
         type: z.enum(['full', 'docs', 'code', 'tools']).optional().describe('Analysis type')
       }
     },
-    async (args) => {
-      const { type = 'full' } = args as { type?: string };
-      
+    async (_args) => {
       const analyzer = createIntelligentAnalyzer(ctx.projectRoot);
       const analysis = await analyzer.analyze();
       
@@ -231,7 +229,7 @@ export async function createServer(config: ServerConfig): Promise<McpServer> {
       }
     },
     async (args) => {
-      const { startId, direction = 'both', maxDepth = 3 } = args as { startId: string; direction?: string; maxDepth?: number };
+      const { startId, maxDepth = 3 } = args as { startId: string; maxDepth?: number };
       
       const results = ctx.db.traverseGraph(startId, maxDepth);
       

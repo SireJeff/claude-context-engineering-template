@@ -6,7 +6,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import { IntelligentAnalyzer, createIntelligentAnalyzer } from '../src/analyzer/intelligent-analyzer.js';
+import { createIntelligentAnalyzer } from '../src/analyzer/intelligent-analyzer.js';
 
 describe('IntelligentAnalyzer', () => {
   let tempDir: string;

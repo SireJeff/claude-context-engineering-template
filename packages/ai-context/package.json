@@ -23,7 +23,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "lint": "eslint src/",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "ai-context",

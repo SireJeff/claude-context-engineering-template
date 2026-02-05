@@ -589,10 +589,11 @@ export class DatabaseClient {
       SELECT 
         e.context_id,
         e.embedding,
-        ci.*
+        ci.*,
+        vec_distance_cosine(e.embedding, ?) as distance
       FROM embeddings e
       JOIN context_items ci ON e.context_id = ci.id
-      ORDER BY vec_distance_cosine(e.embedding, ?)
+      ORDER BY distance
       LIMIT ?
     `);
     

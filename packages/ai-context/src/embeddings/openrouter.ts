@@ -127,6 +127,17 @@ export class OpenRouterClient {
     }
 
     const data = await response.json() as EmbeddingResponse;
+
+    if (
+      !data ||
+      !Array.isArray(data.data) ||
+      data.data.length === 0 ||
+      !data.data[0] ||
+      !Array.isArray(data.data[0].embedding)
+    ) {
+      throw new Error('OpenRouter API error: no embedding data returned in response');
+    }
+
     const embedding = data.data[0].embedding;
 
     // Cache the result
@@ -222,7 +233,15 @@ export class OpenRouterClient {
     }
 
     const data = await response.json() as ChatResponse;
-    return data.choices[0]?.message?.content || '';
+
+    const firstChoice = data?.choices && Array.isArray(data.choices) ? data.choices[0] : undefined;
+    const content = firstChoice?.message?.content;
+
+    if (typeof content !== 'string' || content.trim().length === 0) {
+      throw new Error('OpenRouter Chat API returned an unexpected response structure: missing or empty message content.');
+    }
+
+    return content;
   }
 
   /**

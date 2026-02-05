@@ -72,11 +72,7 @@ function createProgram(): Command {
     .command('init')
     .description('Initialize AI context for a project with intelligent analysis')
     .argument('[project-name]', 'Name of the project (defaults to current directory)')
-    .option('-y, --yes', 'Skip prompts and use defaults')
-    .option('--ai <tools>', 'Generate for specific AI tools (comma-separated)', 'all')
-    .option('-v, --verbose', 'Show detailed output')
     .option('--no-intelligent', 'Skip OpenRouter-powered intelligent analysis')
-    .option('--force', 'Force overwrite existing context files')
     .action(async (projectName, options) => {
       showBanner();
       
@@ -131,9 +127,9 @@ function createProgram(): Command {
 
         console.log(`\n${chalk.green('✓')} AI Context initialized successfully!`);
         console.log(`\n${chalk.bold('Next Steps:')}`);
-        console.log(`  ${chalk.cyan('1.')} Run ${chalk.white('ai-context generate')} to create context files`);
+        console.log(`  ${chalk.cyan('1.')} Run ${chalk.white('ai-context stats')} to view database statistics`);
         console.log(`  ${chalk.cyan('2.')} Run ${chalk.white('ai-context mcp')} to start the MCP server`);
-        console.log(`  ${chalk.cyan('3.')} Run ${chalk.white('ai-context sync')} to sync across AI tools`);
+        console.log(`  ${chalk.cyan('3.')} Run ${chalk.white('ai-context --help')} to explore all available commands`);
         
       } catch (error) {
         spinner.fail('Analysis failed');
@@ -145,14 +141,11 @@ function createProgram(): Command {
   // ==================== Generate Command ====================
   program
     .command('generate')
-    .description('Generate or regenerate context files for AI tools')
+    .description('Generate or regenerate context files for AI tools (coming soon)')
     .option('--ai <tools>', 'Generate for specific AI tools (comma-separated)', 'all')
-    .option('-v, --verbose', 'Show detailed output')
-    .option('--force', 'Force regenerate even if files exist')
     .action(async (options) => {
       showBanner();
       
-      const targetDir = process.cwd();
       const tools = parseAiTools(options.ai);
       const spinner = ora();
 
@@ -161,7 +154,7 @@ function createProgram(): Command {
         
         // TODO: Implement generation from database
         
-        spinner.succeed(`Generated context files for ${tools.length} tools`);
+        spinner.warn('Generate functionality is not yet implemented. No changes were made.');
         
       } catch (error) {
         spinner.fail('Generation failed');
@@ -175,8 +168,6 @@ function createProgram(): Command {
     .command('mcp')
     .description('Start the MCP server for AI tools to connect')
     .option('--db <path>', 'Database file path', '.ai-context.db')
-    .option('--port <port>', 'HTTP port (for HTTP transport)', '3000')
-    .option('--stdio', 'Use stdio transport (default for Claude Desktop)')
     .action(async (options) => {
       const projectRoot = process.cwd();
       
@@ -200,7 +191,7 @@ function createProgram(): Command {
   // ==================== Sync Command ====================
   program
     .command('sync')
-    .description('Synchronize context across all AI tools')
+    .description('Synchronize context across all AI tools (coming soon)')
     .option('--check', 'Only check sync status, do not modify')
     .option('--from <tool>', 'Sync from a specific tool to others')
     .option('--to <tool>', 'Sync to a specific tool')
@@ -208,14 +199,36 @@ function createProgram(): Command {
     .action(async (options) => {
       showBanner();
       
+      const { check, from, to, verbose } = options;
       const spinner = ora();
-      
+
+      // Build human-readable description of the requested sync/check operation.
+      const scopeParts: string[] = [];
+      if (from) {
+        scopeParts.push(`from "${from}"`);
+      }
+      if (to) {
+        scopeParts.push(`to "${to}"`);
+      }
+      const scopeDescription =
+        scopeParts.length > 0 ? ` ${scopeParts.join(' ')}` : ' across all tools';
+
+      const operationDescription = check ? 'Checking sync status' : 'Synchronizing context';
+      const startMessage = `${operationDescription}${scopeDescription}...`;
+
       try {
-        spinner.start('Checking sync status...');
-        
+        if (verbose) {
+          console.error(chalk.gray('\nSync options:'));
+          console.error(chalk.gray(`  check: ${Boolean(check)}`));
+          console.error(chalk.gray(`  from: ${from ?? 'N/A'}`));
+          console.error(chalk.gray(`  to: ${to ?? 'N/A'}`));
+        }
+
+        spinner.start(startMessage);
+
         // TODO: Implement sync logic
-        
-        spinner.succeed('All tools synchronized');
+
+        spinner.warn('Sync functionality is not yet implemented. No changes were made.');
         
       } catch (error) {
         spinner.fail('Sync failed');
@@ -237,67 +250,197 @@ function createProgram(): Command {
       showBanner();
       
       const spinner = ora();
+      let db: any | undefined;
       
       try {
-        spinner.start('Indexing content...');
+        spinner.start('Discovering content...');
         
         const analyzer = createIntelligentAnalyzer(process.cwd());
+        const { DatabaseClient } = await import('../db/client.js');
+        db = new DatabaseClient(process.cwd());
         
-        let indexed = 0;
+        let discoveredCount = 0;
+        let indexedCount = 0;
         
         if (options.all || (!options.docs && !options.code && !options.tools)) {
-          // Index everything
+          // Discover everything
           const [docs, code, tools] = await Promise.all([
             analyzer.discoverDocs(),
             analyzer.discoverCode(),
             analyzer.discoverToolConfigs()
           ]);
-          indexed = docs.length + code.length + tools.length;
+          discoveredCount = docs.length + code.length + tools.length;
+          
+          spinner.text = `Indexing ${discoveredCount} files...`;
+          
+          // Store docs in database
+          for (const doc of docs) {
+            const content = fs.existsSync(doc.path) ? fs.readFileSync(doc.path, 'utf-8').slice(0, 50000) : '';
+            db.upsertItem({
+              type: 'doc',
+              name: path.basename(doc.relativePath),
+              content,
+              filePath: doc.relativePath,
+              metadata: { size: doc.size }
+            });
+            indexedCount++;
+          }
+          
+          // Store tool configs in database
+          for (const config of tools) {
+            const content = fs.existsSync(config.path) ? fs.readFileSync(config.path, 'utf-8').slice(0, 50000) : '';
+            db.upsertItem({
+              type: 'tool_config',
+              name: `${config.tool}:${path.basename(config.relativePath)}`,
+              content,
+              filePath: config.relativePath,
+              metadata: { tool: config.tool, size: config.size }
+            });
+            indexedCount++;
+          }
+          
+          // Store code in database (first N files to avoid overwhelming the db)
+          const maxCodeFiles = 100;
+          for (const codeFile of code.slice(0, maxCodeFiles)) {
+            const content = fs.existsSync(codeFile.path) ? fs.readFileSync(codeFile.path, 'utf-8').slice(0, 20000) : '';
+            db.upsertItem({
+              type: 'code',
+              name: path.basename(codeFile.relativePath),
+              content,
+              filePath: codeFile.relativePath,
+              metadata: { size: codeFile.size }
+            });
+            indexedCount++;
+          }
+          if (code.length > maxCodeFiles) {
+            console.log(chalk.gray(`\nNote: Indexed first ${maxCodeFiles} of ${code.length} code files.`));
+          }
         } else {
           if (options.docs) {
             const docs = await analyzer.discoverDocs();
-            indexed += docs.length;
+            discoveredCount += docs.length;
+            spinner.text = `Indexing ${docs.length} docs...`;
+            for (const doc of docs) {
+              const content = fs.existsSync(doc.path) ? fs.readFileSync(doc.path, 'utf-8').slice(0, 50000) : '';
+              db.upsertItem({
+                type: 'doc',
+                name: path.basename(doc.relativePath),
+                content,
+                filePath: doc.relativePath,
+                metadata: { size: doc.size }
+              });
+              indexedCount++;
+            }
           }
           if (options.code) {
             const code = await analyzer.discoverCode();
-            indexed += code.length;
+            discoveredCount += code.length;
+            const maxCodeFiles = 100;
+            spinner.text = `Indexing code files...`;
+            for (const codeFile of code.slice(0, maxCodeFiles)) {
+              const content = fs.existsSync(codeFile.path) ? fs.readFileSync(codeFile.path, 'utf-8').slice(0, 20000) : '';
+              db.upsertItem({
+                type: 'code',
+                name: path.basename(codeFile.relativePath),
+                content,
+                filePath: codeFile.relativePath,
+                metadata: { size: codeFile.size }
+              });
+              indexedCount++;
+            }
+            if (code.length > maxCodeFiles) {
+              console.log(chalk.gray(`\nNote: Indexed first ${maxCodeFiles} of ${code.length} code files.`));
+            }
           }
           if (options.tools) {
             const tools = await analyzer.discoverToolConfigs();
-            indexed += tools.length;
+            discoveredCount += tools.length;
+            spinner.text = `Indexing ${tools.length} tool configs...`;
+            for (const config of tools) {
+              const content = fs.existsSync(config.path) ? fs.readFileSync(config.path, 'utf-8').slice(0, 50000) : '';
+              db.upsertItem({
+                type: 'tool_config',
+                name: `${config.tool}:${path.basename(config.relativePath)}`,
+                content,
+                filePath: config.relativePath,
+                metadata: { tool: config.tool, size: config.size }
+              });
+              indexedCount++;
+            }
           }
         }
         
-        spinner.succeed(`Indexed ${indexed} files`);
+        spinner.succeed(`Discovered ${discoveredCount} files, indexed ${indexedCount} into database`);
         
       } catch (error) {
         spinner.fail('Indexing failed');
         console.error(chalk.red(`\nError: ${error instanceof Error ? error.message : error}`));
         process.exit(1);
+      } finally {
+        if (db && typeof db.close === 'function') {
+          try {
+            db.close();
+          } catch {
+            // Ignore close errors
+          }
+        }
       }
     });
 
   // ==================== Search Command ====================
   program
     .command('search <query>')
-    .description('Semantic search across indexed content')
+    .description('Search across indexed content')
     .option('-t, --type <type>', 'Filter by type (workflow, agent, command, code, doc)')
     .option('-l, --limit <n>', 'Maximum results', '10')
     .action(async (query, options) => {
       const spinner = ora();
+      let db: any | undefined;
       
       try {
+        const limit =
+          typeof options.limit === 'string'
+            ? Number.parseInt(options.limit, 10) || 10
+            : 10;
+
         spinner.start('Searching...');
-        
-        // TODO: Implement search
-        
+
+        const { DatabaseClient } = await import('../db/client.js');
+        db = new DatabaseClient(process.cwd());
+
+        const results = db.searchText(query, options.type);
+        const items = Array.isArray(results) ? results.slice(0, limit) : [];
+
         spinner.stop();
-        console.log(chalk.yellow('\nSearch functionality coming soon...'));
+
+        if (items.length === 0) {
+          console.log(chalk.yellow('\nNo matching results found.'));
+          return;
+        }
+
+        console.log(chalk.bold(`\nSearch results for "${query}":`));
+
+        for (const [index, item] of items.entries()) {
+          const idx = chalk.cyan(`#${index + 1}`);
+          const title = item.name || item.id || '(untitled)';
+          const typeLabel = item.type ? String(item.type) : 'item';
+          const pathInfo = item.filePath ? chalk.gray(` (${item.filePath})`) : '';
+
+          console.log(`  ${idx} ${chalk.bold(String(title))} [${typeLabel}]${pathInfo}`);
+        }
         
       } catch (error) {
         spinner.fail('Search failed');
         console.error(chalk.red(`\nError: ${error instanceof Error ? error.message : error}`));
         process.exit(1);
+      } finally {
+        if (db && typeof db.close === 'function') {
+          try {
+            db.close();
+          } catch {
+            // Ignore close errors
+          }
+        }
       }
     });
 
