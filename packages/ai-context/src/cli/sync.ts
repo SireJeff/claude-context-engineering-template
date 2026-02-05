@@ -72,7 +72,8 @@ export class SyncManager {
 
     for (const [tool, hash] of Object.entries(hashes)) {
       const stored = await this.db.getSyncState(tool);
-      if (stored && stored.hash !== hash) {
+      const storedHash = Array.isArray(stored) ? stored[0]?.hash : stored?.hash;
+      if (storedHash !== undefined && storedHash !== hash) {
         differences.push(tool);
       }
     }
