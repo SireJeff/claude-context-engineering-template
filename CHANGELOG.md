@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to the `ai-context` package will be documented in this file.
 
 ## [3.0.0] - 2026-02-05
 
