@@ -395,7 +395,7 @@ Check `settings.json` includes the command:
 ```json
   "commands": {
     "rpi_commands": ["/rpi-research", "/rpi-plan", "/rpi-implement"],
-    "orchestration_commands": ["/context-optimize"]
+    "validation_commands": ["/context-optimize"]
   }
 ```
 
