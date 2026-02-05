@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] - 2026-02-05
+
+### 🎉 Major Release - Unified AI Context Package
+
+### Breaking Changes
+
+- **Package consolidation**: `create-universal-ai-context`, `@ai-context/mcp-server`, and `claude-context-plugin` are now consolidated into the unified `ai-context` package
+- **New primary package**: `ai-context` (v3.0.0) is now the main package
+- **Legacy deprecation**: Previous packages marked as deprecated (see [Migration Guide](./docs/MIGRATE_TO_UNIFIED.md))
+
+### Added
+
+#### Unified Package Features
+- **Intelligent Analysis**: OpenRouter-powered codebase analysis with 595-line intelligent analyzer
+- **MCP Server**: Complete Model Context Protocol server with 10 tools and 6 prompts
+- **Database Storage**: SQLite + sqlite-vec for vector embeddings and semantic search
+- **Cross-Tool Sync**: Support for 9 AI tools (Claude, Copilot, Cline, Antigravity, Windsurf, Aider, Continue, Cursor, Gemini)
+- **CLI Commands**: 7 primary commands (init, index, search, stats, mcp, generate, sync)
+
+#### RPI Workflow v2.0
+- **Parallel Agents**: 3-5 simultaneous research agents with chunk-based processing
+- **Chunk-Based Todolists**: Structured output for sequential phase processing
+- **Inter-Phase Communication**: Explicit contracts between research, plan, and implement phases
+- **Context Optimization**: `/context-optimize` command for workflow orchestration
+
+#### Documentation
+- **Comprehensive Guides**: README, troubleshooting, quick start, migration guide
+- **MCP Documentation**: Complete MCP server configuration and usage
+- **61 Error Codes**: Detailed troubleshooting with specific solutions
+
+### Fixed
+
+- **Post-commit hook revision loop**: Added `sync:state` command to prevent infinite loops
+- **Aider config defaults**: Improved template with better defaults
+- **Context Engineer v2.0**: Enhanced with cross-tool sync support
+
+### Deprecated
+
+- `create-universal-ai-context` (v2.5.0) - Security updates only until 2026-06-01
+- `@ai-context/mcp-server` (v1.0.0) - Functionality included in `ai-context`
+- `claude-context-plugin` (v2.1.4) - Use `ai-context` skills instead
+
+### Migration
+
+See [Migration Guide](./docs/MIGRATE_TO_UNIFIED.md) for detailed instructions.
+
+---
+
 ## [2.5.0] - 2026-02-04
 
 ### Added
