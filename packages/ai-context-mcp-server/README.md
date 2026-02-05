@@ -1,5 +1,15 @@
 # @ai-context/mcp-server
 
+> **⚠️ DEPRECATION NOTICE**
+>
+> This package is **deprecated** as of v3.0.0. The MCP server is now included in the unified [`ai-context`](../ai-context/) package.
+>
+> **Migration:** Use `ai-context mcp` command instead.
+>
+> **Support:** Functionality is included in `ai-context` v3.0.0+
+>
+> ---
+
 **MCP Server for AI Context** - A database-backed Model Context Protocol server that replaces file-based `.ai-context/` folders with a SQLite + vector database.
 
 ## Features

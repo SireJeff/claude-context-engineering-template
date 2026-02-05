@@ -1,5 +1,15 @@
 # claude-context-plugin
 
+> **⚠️ DEPRECATION NOTICE**
+>
+> This plugin is **deprecated** as of v3.0.0. All skills and commands are now included in the unified [`ai-context`](../ai-context/) package.
+>
+> **Migration:** Use `ai-context` skills and commands directly.
+>
+> **Support:** Use unified package instead
+>
+> ---
+
 Claude Code plugin for context engineering - RPI workflow and documentation optimization.
 
 ## Installation
