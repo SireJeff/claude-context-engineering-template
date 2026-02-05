@@ -79,6 +79,20 @@ Verify documentation line numbers match code.
 /context-eng:verify-docs path/to/file.py
 ```
 
+### /context-eng:context-optimize
+
+Orchestrate context optimization with interactive scoping.
+
+```
+/context-eng:context-optimize
+/context-eng:context-optimize --auto
+/context-eng:context-optimize --scope documentation
+```
+
+Generates:
+- Context audit in `.claude/research/active/context-audit_research.md`
+- RPI TODO plan in `.claude/plans/active/context-optimization_plan.md`
+
 ## Agents
 
 ### @context-eng:context-engineer

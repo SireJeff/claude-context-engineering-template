@@ -28,6 +28,7 @@ npx .ai-context/tools/bin/claude-context.js diagnose --fix
 4. [Validation Errors](#validation-errors)
 5. [Agent/Command Issues](#agentcommand-issues)
 6. [Performance Issues](#performance-issues)
+7. [MCP Server Issues](#mcp-server-issues)
 
 ---
 
@@ -392,9 +393,10 @@ ls .ai-context/commands/
 **B. Verify command is registered**
 Check `settings.json` includes the command:
 ```json
-"commands": {
-  "rpi_commands": ["/rpi-research", "/rpi-plan", "/rpi-implement"]
-}
+  "commands": {
+    "rpi_commands": ["/rpi-research", "/rpi-plan", "/rpi-implement"],
+    "validation_commands": ["/context-optimize"]
+  }
 ```
 
 ---
@@ -447,6 +449,69 @@ Ensure this is disabled (default):
 "validation": {
   "link_check_external": false
 }
+```
+
+---
+
+## MCP Server Issues
+
+### TSG-060: MCP Server Won't Start
+
+**Symptoms:**
+- `mcp:start` exits immediately
+- "Database not found" or "Missing OPENROUTER_API_KEY"
+
+**Diagnosis:**
+```bash
+npx create-ai-context mcp:status
+```
+
+**Solutions:**
+
+**A. Initialize the database first**
+```bash
+npx create-ai-context mcp:init
+```
+
+**B. Set the OpenRouter API key**
+```bash
+export OPENROUTER_API_KEY="your-api-key-here"
+```
+
+**C. Start the server again**
+```bash
+npx create-ai-context mcp:start
+```
+
+---
+
+### TSG-061: MCP Sync Exports Missing
+
+**Symptoms:**
+- `mcp:sync` finishes without generating files
+- Output files remain unchanged
+
+**Diagnosis:**
+```bash
+npx create-ai-context mcp:sync --status
+```
+
+**Solutions:**
+
+**A. Force overwrite managed files**
+```bash
+npx create-ai-context mcp:sync --force
+```
+
+**B. Recreate database index**
+```bash
+rm -f .ai-context.db
+npx create-ai-context mcp:init
+```
+
+**C. Ensure database exists**
+```bash
+ls -la .ai-context.db
 ```
 
 ---

@@ -60,9 +60,12 @@ This directory contains a comprehensive context engineering system for the {{PRO
 ### System Commands (NEW in v1.1)
 | Command | Description |
 |---------|-------------|
+| `/context-optimize` | Generate RPI TODO list with interactive scoping |
 | `/help` | Comprehensive help system |
 | `/collab` | Team collaboration (handoffs, sync) |
 | `/analytics` | Local usage statistics |
+| `/session-save` | Save current Claude Code session state |
+| `/session-resume` | Restore previously saved session |
 
 **Command Location:** `.ai-context/commands/*.md`
 
